@@ -1,0 +1,52 @@
+services:
+  - type: web
+    name: abogadovirtual-api
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: starter
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3001
+      - key: JWT_SECRET
+        generateValue: true
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_ANON_KEY
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: AI_PROVIDER
+        value: openai
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: AI_MODEL_OPENAI
+        value: gpt-4o
+      - key: AI_MODEL_ANTHROPIC
+        value: claude-sonnet-4-6
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: abogadovirtual-redis
+          property: connectionString
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: RESEND_FROM
+        value: noreply@abogadovirtual.com
+      - key: FRONTEND_URL
+        sync: false
+    healthCheckPath: /api/health
+    autoDeploy: true
+
+  - type: redis
+    name: abogadovirtual-redis
+    plan: starter
+    maxmemoryPolicy: allkeys-lru

@@ -1,0 +1,80 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --sidebar-width: 240px;
+  --header-height: 60px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: var(--font-dm-sans), system-ui, sans-serif;
+  background: #f8fafc;
+  color: #0f172a;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #f1f5f9; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+/* Chat bubble animations */
+.chat-bubble-enter {
+  animation: slideIn 0.2s ease-out;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Prose for AI responses */
+.ai-content h1, .ai-content h2, .ai-content h3 { font-weight: 600; margin: 12px 0 6px; }
+.ai-content p { margin-bottom: 8px; line-height: 1.6; }
+.ai-content ul, .ai-content ol { padding-left: 20px; margin-bottom: 8px; }
+.ai-content li { margin-bottom: 4px; }
+.ai-content code { background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 0.875em; }
+.ai-content pre { background: #1e293b; color: #e2e8f0; padding: 16px; border-radius: 8px; overflow-x: auto; }
+.ai-content blockquote { border-left: 3px solid #3b82f6; padding-left: 12px; color: #64748b; margin: 8px 0; }
+.ai-content strong { font-weight: 600; }
+.ai-content table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+.ai-content td, .ai-content th { border: 1px solid #e2e8f0; padding: 8px 12px; text-align: left; }
+.ai-content th { background: #f8fafc; font-weight: 600; }
+
+/* Contract saved button animation */
+@keyframes pulse-once {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+.pulse-once { animation: pulse-once 0.3s ease-in-out; }
+
+/* Landing dark theme */
+.dots-grid {
+  background-image: radial-gradient(circle, #303443 1px, transparent 1px);
+  background-size: 30px 30px;
+}
+.metallic-sheen {
+  background: linear-gradient(135deg, #adc6ff 0%, #4d8eff 100%);
+}
+.glass-panel {
+  background: rgba(37, 42, 56, 0.7);
+  backdrop-filter: blur(20px);
+}
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  -webkit-font-smoothing: antialiased;
+}
