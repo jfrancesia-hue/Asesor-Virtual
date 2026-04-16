@@ -1,11 +1,16 @@
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, HttpAdapterHost } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import helmet from 'helmet';
 import { pino } from 'pino';
 import { AppModule } from './app.module';
 import { GlobalExceptionFilter } from './common/filters/global-exception.filter';
+import { SentryExceptionFilter } from './common/filters/sentry-exception.filter';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor';
+import { initSentry } from './config/sentry.config';
+
+// Initialize Sentry before app creation to capture bootstrap errors
+initSentry();
 
 async function bootstrap() {
   const logger = pino({ level: process.env.LOG_LEVEL || 'info' });
@@ -47,7 +52,11 @@ async function bootstrap() {
   );
 
   // Global filters and interceptors
-  app.useGlobalFilters(new GlobalExceptionFilter());
+  const { httpAdapter } = app.get(HttpAdapterHost);
+  app.useGlobalFilters(
+    new GlobalExceptionFilter(),
+    new SentryExceptionFilter(httpAdapter),
+  );
   app.useGlobalInterceptors(new ResponseInterceptor());
 
   // Swagger

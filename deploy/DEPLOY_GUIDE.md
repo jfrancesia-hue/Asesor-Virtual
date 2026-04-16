@@ -40,6 +40,7 @@ RESEND_API_KEY=re_...
 FRONTEND_URL=https://tuapp.com
 NODE_ENV=production
 PORT=3001
+SENTRY_DSN=https://...  # opcional
 ```
 
 ### Deploy en Railway
@@ -66,6 +67,9 @@ railway variables set DATABASE_URL=... OPENAI_API_KEY=... # etc
 
 ```env
 NEXT_PUBLIC_API_URL=https://api.tudominio.com/api
+NEXT_PUBLIC_SENTRY_DSN=https://...  # opcional
+SENTRY_ORG=tu-organizacion           # opcional
+SENTRY_PROJECT=asesor-virtual-web    # opcional
 ```
 
 ### Deploy
@@ -87,6 +91,36 @@ O conectar el repo en vercel.com → Project Settings → Environment Variables.
    - `customer.subscription.updated`
    - `customer.subscription.deleted`
 4. Copiar el `Signing secret` → `STRIPE_WEBHOOK_SECRET`
+
+---
+
+## Sentry (monitoreo de errores)
+
+### 1. Crear proyecto en Sentry
+
+1. Ir a [sentry.io](https://sentry.io) → Create Project
+2. Crear **dos proyectos**: uno para NestJS (Node) y otro para Next.js
+3. Copiar el DSN de cada uno
+
+### 2. Variables de entorno
+
+**Backend** (Render / Railway):
+```env
+SENTRY_DSN=https://examplePublicKey@o0.ingest.sentry.io/0
+```
+
+**Frontend** (Vercel):
+```env
+NEXT_PUBLIC_SENTRY_DSN=https://examplePublicKey@o0.ingest.sentry.io/0
+SENTRY_ORG=tu-organizacion
+SENTRY_PROJECT=asesor-virtual-web
+```
+
+### 3. Comportamiento
+
+- **Backend**: Sentry captura solo errores 5xx (errores de servidor). Los errores de validación (4xx) no se reportan.
+- **Frontend**: Sentry captura errores no controlados, con Session Replay habilitado para debugging visual.
+- Si `SENTRY_DSN` no está configurado, Sentry no se inicializa (no rompe nada).
 
 ---
 
@@ -115,3 +149,4 @@ El `docker-compose.yml` levanta:
 - [ ] Dominio personalizado configurado en Vercel/Render
 - [ ] Supabase RLS habilitado (viene activo por defecto con las migraciones)
 - [ ] CORS en backend apuntando al dominio del frontend (`FRONTEND_URL`)
+- [ ] Sentry DSN configurado en backend y frontend (opcional pero recomendado)
