@@ -232,6 +232,7 @@ export const api = {
     wallet: () => request<any>('/billing/wallet'),
     transactions: (params?: string) => request<any>(`/billing/transactions${params ? '?' + params : ''}`),
     checkout: (body: any) => request<any>('/billing/checkout', { method: 'POST', body: JSON.stringify(body) }),
+    subscribe: (plan: string) => request<any>('/billing/subscribe', { method: 'POST', body: JSON.stringify({ plan }) }),
     buyCredits: (pack: string) => request<any>('/billing/credits/buy', { method: 'POST', body: JSON.stringify({ pack }) }),
   },
 

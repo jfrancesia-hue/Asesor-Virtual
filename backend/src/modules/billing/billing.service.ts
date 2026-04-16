@@ -79,6 +79,12 @@ export class BillingService {
     return { url: session.url, sessionId: session.id };
   }
 
+  async createPlanCheckout(tenantId: string, userId: string, plan: 'start' | 'pro' | 'enterprise') {
+    const priceId = this.config.get(`STRIPE_PRICE_${plan.toUpperCase()}`);
+    if (!priceId) throw new BadRequestException(`Plan "${plan}" no configurado en Stripe`);
+    return this.createCheckoutSession(tenantId, userId, priceId, 'subscription');
+  }
+
   async createCreditCheckout(tenantId: string, userId: string, pack: 'credits_10' | 'credits_30' | 'credits_100') {
     const packConfig = CREDIT_PACKS[pack];
     if (!packConfig) throw new BadRequestException('Pack de créditos inválido');

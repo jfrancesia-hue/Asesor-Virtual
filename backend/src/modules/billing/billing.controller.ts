@@ -19,6 +19,10 @@ class CreditPackDto {
   @IsEnum(['credits_10', 'credits_30', 'credits_100']) pack: 'credits_10' | 'credits_30' | 'credits_100';
 }
 
+class SubscribePlanDto {
+  @IsEnum(['start', 'pro', 'enterprise']) plan: 'start' | 'pro' | 'enterprise';
+}
+
 @ApiTags('billing')
 @Controller('billing')
 export class BillingController {
@@ -47,6 +51,13 @@ export class BillingController {
   @UseGuards(AuthGuard('jwt'))
   createCheckout(@Body() dto: CheckoutDto, @CurrentUser() user: JwtPayload) {
     return this.billingService.createCheckoutSession(user.tenantId, user.sub, dto.priceId, dto.mode);
+  }
+
+  @Post('subscribe')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  subscribePlan(@Body() dto: SubscribePlanDto, @CurrentUser() user: JwtPayload) {
+    return this.billingService.createPlanCheckout(user.tenantId, user.sub, dto.plan);
   }
 
   @Post('credits/buy')

@@ -150,6 +150,19 @@ export class NotificationsService {
             metadata: { contractId: contract.id, daysLeft: days },
             dedupKey,
           });
+
+          // Send email notification
+          const user = contract.users as any;
+          if (user?.email) {
+            const frontendUrl = this.config.get('FRONTEND_URL', 'http://localhost:3000');
+            const template = emailTemplates.contractExpiring(
+              user.full_name || 'Usuario',
+              contract.title,
+              days,
+              `${frontendUrl}/contracts/${contract.id}`,
+            );
+            this.sendEmail(user.email, template.subject, template.html).catch(() => {});
+          }
         }
 
         hasMore = contracts.length === pageSize;
@@ -168,7 +181,7 @@ export class NotificationsService {
     while (hasMore) {
       const { data: items } = await this.supabase
         .from('compliance_items')
-        .select('id, title, tenant_id, user_id, due_date')
+        .select('id, title, tenant_id, user_id, due_date, users!inner(email, full_name)')
         .eq('status', 'overdue')
         .range(page * pageSize, (page + 1) * pageSize - 1);
 
@@ -191,6 +204,18 @@ export class NotificationsService {
           metadata: { itemId: item.id },
           dedupKey,
         });
+
+        // Send email notification
+        const user = (item as any).users;
+        if (user?.email) {
+          const dueDate = new Date(item.due_date).toLocaleDateString('es-AR');
+          const template = emailTemplates.complianceOverdue(
+            user.full_name || 'Usuario',
+            item.title,
+            dueDate,
+          );
+          this.sendEmail(user.email, template.subject, template.html).catch(() => {});
+        }
       }
 
       hasMore = items.length === pageSize;

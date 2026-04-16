@@ -34,6 +34,19 @@ function SettingsContent() {
   const [loadingBilling, setLoadingBilling] = useState(false);
   const [purchasingCredits, setPurchasingCredits] = useState<string | null>(null);
 
+  // Handle Stripe callback
+  useEffect(() => {
+    if (searchParams.get('success') === 'true') {
+      toast.success('¡Pago procesado correctamente!');
+      setActiveTab('billing');
+      loadBilling();
+      loadProfile();
+    } else if (searchParams.get('canceled') === 'true') {
+      toast.error('Pago cancelado');
+      setActiveTab('billing');
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   useEffect(() => {
     if (activeTab === 'billing') loadBilling();
     if (activeTab === 'equipo') loadUsers();
@@ -85,9 +98,9 @@ function SettingsContent() {
     }
   };
 
-  const handleUpgradePlan = async (priceId: string) => {
+  const handleUpgradePlan = async (plan: string) => {
     try {
-      const result = await api.billing.checkout({ priceId, mode: 'subscription' }) as any;
+      const result = await api.billing.subscribe(plan) as any;
       if (result.url) window.location.href = result.url;
     } catch (error: any) {
       toast.error(error.message || 'Error al procesar suscripción');
