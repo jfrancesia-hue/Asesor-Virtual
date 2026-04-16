@@ -213,7 +213,12 @@ function SettingsContent() {
                       {tenant?.plan === plan.id ? (
                         <Badge color="green" className="w-full justify-center">Plan actual</Badge>
                       ) : (
-                        <Button size="sm" fullWidth variant={plan.popular ? 'primary' : 'outline'}>
+                        <Button
+                          size="sm"
+                          fullWidth
+                          variant={plan.popular ? 'primary' : 'outline'}
+                          onClick={() => handleUpgradePlan(plan.id)}
+                        >
                           Cambiar a {plan.label}
                         </Button>
                       )}

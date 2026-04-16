@@ -6,6 +6,14 @@ import { ArrowLeft, Download, History } from 'lucide-react';
 import { api } from '@/lib/api';
 import { Card, Button, Badge, Spinner, Select } from '@/components/ui';
 
+function sanitizeHtml(html: string): string {
+  return html
+    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+    .replace(/on\w+\s*=\s*"[^"]*"/gi, '')
+    .replace(/on\w+\s*=\s*'[^']*'/gi, '')
+    .replace(/javascript\s*:/gi, '');
+}
+
 const STATUS_OPTIONS = [
   { value: 'draft', label: 'Borrador' },
   { value: 'review', label: 'En Revisión' },
@@ -128,8 +136,8 @@ export default function ContractDetailPage() {
 
       {/* Content */}
       {contract.content_html ? (
-        <Card className="p-6">
-          <div dangerouslySetInnerHTML={{ __html: contract.content_html }} />
+        <Card className="p-6 prose prose-sm max-w-none">
+          <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(contract.content_html) }} />
         </Card>
       ) : (
         <Card className="p-6 text-center text-slate-400">

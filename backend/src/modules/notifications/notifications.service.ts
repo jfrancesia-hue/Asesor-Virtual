@@ -92,12 +92,20 @@ export class NotificationsService {
     }
   }
 
-  async sendEmail(to: string, subject: string, html: string): Promise<void> {
-    try {
-      await this.resend.emails.send({ from: this.fromEmail, to, subject, html });
-    } catch (error) {
-      this.logger.warn('Email send failed', error.message);
+  async sendEmail(to: string, subject: string, html: string, retries = 2): Promise<boolean> {
+    for (let attempt = 1; attempt <= retries; attempt++) {
+      try {
+        await this.resend.emails.send({ from: this.fromEmail, to, subject, html });
+        return true;
+      } catch (error) {
+        this.logger.warn(`Email send failed (attempt ${attempt}/${retries}): ${error.message}`);
+        if (attempt < retries) {
+          await new Promise((r) => setTimeout(r, 1000 * attempt));
+        }
+      }
     }
+    this.logger.error(`Email to ${to} failed after ${retries} attempts — subject: "${subject}"`);
+    return false;
   }
 
   // Daily at 9am: check contracts expiring in 30, 15, 7 days

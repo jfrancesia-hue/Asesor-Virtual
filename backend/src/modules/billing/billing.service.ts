@@ -136,7 +136,8 @@ export class BillingService {
       });
     } else if (session.mode === 'subscription') {
       // Update subscription info
-      const subscription = await this.stripe!.subscriptions.retrieve(session.subscription as string);
+      if (!this.stripe) return;
+      const subscription = await this.stripe.subscriptions.retrieve(session.subscription as string);
       const priceId = subscription.items.data[0]?.price.id;
       const plan = this.getPlanFromPriceId(priceId);
 
@@ -187,7 +188,8 @@ export class BillingService {
 
     if (tenant.stripe_customer_id) return tenant;
 
-    const customer = await this.stripe!.customers.create({
+    if (!this.stripe) throw new BadRequestException('Pagos no configurados');
+    const customer = await this.stripe.customers.create({
       name: tenant.name,
       metadata: { tenantId },
     });

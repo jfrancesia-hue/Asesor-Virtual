@@ -1,4 +1,6 @@
+'use client';
 import Link from 'next/link';
+import toast from 'react-hot-toast';
 
 const ADVISORS_MOCKUP = [
   { icon: 'gavel', name: 'Advisor Legal Senior', sub: 'Disponible • Derecho Civil', color: 'text-primary', bg: 'bg-primary/20', active: true },
@@ -292,8 +294,13 @@ export default function LandingPage() {
           <div>
             <h6 className="font-bold text-white mb-6 uppercase text-xs tracking-widest">Producto</h6>
             <ul className="space-y-4 text-sm text-slate-500">
-              {['Características', 'Asesores IA', 'Seguridad', 'API'].map((item) => (
-                <li key={item}><a href="#" className="hover:text-primary transition-colors">{item}</a></li>
+              {[
+                { label: 'Características', href: '#funciones' },
+                { label: 'Asesores IA', href: '#funciones' },
+                { label: 'Precios', href: '#precios' },
+                { label: 'FAQ', href: '#faq' },
+              ].map((item) => (
+                <li key={item.label}><a href={item.href} className="hover:text-primary transition-colors">{item.label}</a></li>
               ))}
             </ul>
           </div>
@@ -301,7 +308,7 @@ export default function LandingPage() {
             <h6 className="font-bold text-white mb-6 uppercase text-xs tracking-widest">Compañía</h6>
             <ul className="space-y-4 text-sm text-slate-500">
               {['Sobre nosotros', 'Blog', 'Carreras', 'Legal'].map((item) => (
-                <li key={item}><a href="#" className="hover:text-primary transition-colors">{item}</a></li>
+                <li key={item}><span className="text-slate-600 cursor-default">{item}</span></li>
               ))}
             </ul>
           </div>
@@ -314,12 +321,17 @@ export default function LandingPage() {
                 placeholder="email@ejemplo.com"
                 className="bg-surface-container-high border-none rounded-lg text-xs w-full px-3 py-2 text-on-surface placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-primary"
               />
-              <button className="bg-primary text-on-primary px-4 py-2 rounded-lg text-xs font-bold whitespace-nowrap">Unirse</button>
+              <button
+                onClick={() => toast.success('¡Pronto recibirás novedades!')}
+                className="bg-primary text-on-primary px-4 py-2 rounded-lg text-xs font-bold whitespace-nowrap"
+              >
+                Unirse
+              </button>
             </div>
           </div>
         </div>
         <div className="max-w-7xl mx-auto mt-16 pt-8 border-t border-outline-variant/10 text-center text-[10px] text-slate-600 uppercase tracking-widest">
-          © 2025 Asesor Virtual. Todos los derechos reservados. Tecnología de Inteligencia Artificial para Humanos.
+          © 2026 Asesor Virtual. Todos los derechos reservados. Tecnología de Inteligencia Artificial para Humanos.
         </div>
       </footer>
 

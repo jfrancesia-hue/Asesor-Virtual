@@ -135,7 +135,8 @@ export class ComplianceService {
         .select('id')
         .range(page * pageSize, (page + 1) * pageSize - 1);
 
-      if (error || !data || data.length < pageSize) hasMore = false;
+      if (error || !data) break;
+      if (data.length < pageSize) hasMore = false;
       page++;
     }
   }

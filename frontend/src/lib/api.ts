@@ -1,5 +1,7 @@
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || '/api';
 const TOKEN_KEY = 'av_token';
+const REQUEST_TIMEOUT_MS = 30_000;
+const STREAM_TIMEOUT_MS = 120_000;
 
 export class ApiError extends Error {
   constructor(
@@ -47,8 +49,10 @@ async function request<T>(
   };
 
   for (let attempt = 1; attempt <= retries; attempt++) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
     try {
-      const response = await fetch(`${API_BASE}${endpoint}`, config);
+      const response = await fetch(`${API_BASE}${endpoint}`, { ...config, signal: controller.signal });
 
       if (response.status === 401) {
         clearToken();
@@ -69,9 +73,15 @@ async function request<T>(
       // Unwrap { success, data, timestamp } envelope
       return (data.data !== undefined ? data.data : data) as T;
     } catch (error) {
+      clearTimeout(timeout);
       if (error instanceof ApiError) throw error;
+      if (error instanceof DOMException && error.name === 'AbortError') {
+        throw new ApiError('La solicitud tardó demasiado', 0);
+      }
       if (attempt === retries) throw new ApiError('Error de conexión', 0);
       await new Promise((r) => setTimeout(r, 1000 * attempt));
+    } finally {
+      clearTimeout(timeout);
     }
   }
 
@@ -85,6 +95,9 @@ export async function* streamSSE(
 ): AsyncGenerator<{ type: string; content?: string; messageId?: string; model?: string; error?: string }> {
   const token = getToken();
 
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), STREAM_TIMEOUT_MS);
+
   const response = await fetch(`${API_BASE}${endpoint}`, {
     method: 'POST',
     headers: {
@@ -92,6 +105,7 @@ export async function* streamSSE(
       ...(token && { Authorization: `Bearer ${token}` }),
     },
     body: JSON.stringify(body),
+    signal: controller.signal,
   });
 
   if (!response.ok || !response.body) {
@@ -102,23 +116,27 @@ export async function* streamSSE(
   const decoder = new TextDecoder();
   let buffer = '';
 
-  while (true) {
-    const { done, value } = await reader.read();
-    if (done) break;
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
 
-    buffer += decoder.decode(value, { stream: true });
-    const lines = buffer.split('\n');
-    buffer = lines.pop() ?? '';
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split('\n');
+      buffer = lines.pop() ?? '';
 
-    for (const line of lines) {
-      if (line.startsWith('data: ')) {
-        try {
-          yield JSON.parse(line.slice(6));
-        } catch {
-          // skip malformed chunks
+      for (const line of lines) {
+        if (line.startsWith('data: ')) {
+          try {
+            yield JSON.parse(line.slice(6));
+          } catch {
+            // skip malformed chunks
+          }
         }
       }
     }
+  } finally {
+    clearTimeout(timeout);
   }
 }
 

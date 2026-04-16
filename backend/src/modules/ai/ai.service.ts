@@ -37,6 +37,9 @@ export interface StreamChunk {
 }
 
 type AnthropicMessage = { role: 'user' | 'assistant'; content: string };
+type SystemBlock = string | Array<{ type: 'text'; text: string; cache_control?: { type: 'ephemeral' } }>;
+
+const AI_TIMEOUT_MS = 60_000;
 
 @Injectable()
 export class AiService {
@@ -201,7 +204,7 @@ export class AiService {
 
       const stream = this.anthropic.messages.stream({
         model,
-        system: systemBlock as any,
+        system: systemBlock as Anthropic.MessageCreateParams['system'],
         messages: dedupedMessages,
         max_tokens: 4096,
       });
@@ -479,11 +482,21 @@ Siempre usás la herramienta save_risk_analysis para entregar el resultado estru
   }
 
   /** Build system block with optional prompt caching */
-  private buildSystemBlock(systemPrompt: string) {
+  private buildSystemBlock(systemPrompt: string): SystemBlock {
     if (this.promptCacheEnabled) {
-      return [{ type: 'text', text: systemPrompt, cache_control: { type: 'ephemeral' } }];
+      return [{ type: 'text' as const, text: systemPrompt, cache_control: { type: 'ephemeral' as const } }];
     }
     return systemPrompt;
+  }
+
+  /** Wrap a promise with a timeout */
+  private withTimeout<T>(promise: Promise<T>, ms = AI_TIMEOUT_MS): Promise<T> {
+    return Promise.race([
+      promise,
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error('Timeout: el servicio de IA no respondió a tiempo')), ms),
+      ),
+    ]);
   }
 
   /** Ensure messages alternate user/assistant (Anthropic requirement) */
@@ -547,12 +560,12 @@ Siempre usás la herramienta save_risk_analysis para entregar el resultado estru
     const dedupedMessages = this.dedupeMessages(messages);
     const systemBlock = this.buildSystemBlock(systemPrompt);
 
-    const response = await this.anthropic.messages.create({
+    const response = await this.withTimeout(this.anthropic.messages.create({
       model: resolvedModel,
-      system: systemBlock as any,
+      system: systemBlock as Anthropic.MessageCreateParams['system'],
       messages: dedupedMessages,
       max_tokens: 4096,
-    });
+    }));
 
     const content = response.content[0].type === 'text' ? response.content[0].text : '';
 
@@ -610,14 +623,14 @@ Siempre usás la herramienta save_risk_analysis para entregar el resultado estru
 
     const systemBlock = this.buildSystemBlock(systemPrompt);
 
-    const response = await this.anthropic.messages.create({
+    const response = await this.withTimeout(this.anthropic.messages.create({
       model,
-      system: systemBlock as any,
+      system: systemBlock as Anthropic.MessageCreateParams['system'],
       messages: [{ role: 'user', content: userMessage }],
       tools: [analysisSchema],
       tool_choice: { type: 'tool', name: 'save_risk_analysis' },
       max_tokens: 4096,
-    });
+    }));
 
     const toolUseBlock = response.content.find((b) => b.type === 'tool_use');
     if (!toolUseBlock || toolUseBlock.type !== 'tool_use') {
@@ -633,12 +646,12 @@ Siempre usás la herramienta save_risk_analysis para entregar el resultado estru
   ) {
     const model = this.config.get<string>('AI_MODEL_OPENAI') ?? 'gpt-4o';
 
-    const response = await this.openai.chat.completions.create({
+    const response = await this.withTimeout(this.openai.chat.completions.create({
       model,
       messages: [{ role: 'system', content: systemPrompt }, ...messages],
       temperature: 0.7,
       max_tokens: 4096,
-    });
+    }));
 
     return {
       content: response.choices[0].message.content || '',
