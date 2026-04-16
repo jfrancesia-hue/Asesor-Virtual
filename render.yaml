@@ -19,7 +19,7 @@ services:
       - key: SUPABASE_SERVICE_ROLE_KEY
         sync: false
       - key: AI_PROVIDER
-        value: openai
+        value: anthropic
       - key: OPENAI_API_KEY
         sync: false
       - key: ANTHROPIC_API_KEY
@@ -43,7 +43,34 @@ services:
         value: noreply@abogadovirtual.com
       - key: FRONTEND_URL
         sync: false
+      - key: STRIPE_PRICE_START
+        sync: false
+      - key: STRIPE_PRICE_PRO
+        sync: false
+      - key: STRIPE_PRICE_ENTERPRISE
+        sync: false
+      - key: STRIPE_PRICE_CREDITS_10
+        sync: false
+      - key: STRIPE_PRICE_CREDITS_30
+        sync: false
+      - key: STRIPE_PRICE_CREDITS_100
+        sync: false
+      - key: SENTRY_DSN
+        sync: false
     healthCheckPath: /api/health
+    autoDeploy: true
+
+  - type: web
+    name: abogadovirtual-web
+    runtime: docker
+    dockerfilePath: ./frontend/Dockerfile
+    dockerContext: ./frontend
+    plan: starter
+    envVars:
+      - key: NEXT_PUBLIC_API_URL
+        sync: false
+      - key: NEXT_PUBLIC_SENTRY_DSN
+        sync: false
     autoDeploy: true
 
   - type: redis
