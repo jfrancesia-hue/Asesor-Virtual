@@ -6,18 +6,45 @@ const config: Config = {
     extend: {
       fontFamily: {
         sans: ['var(--font-dm-sans)', 'system-ui', 'sans-serif'],
-        headline: ['Newsreader', 'Georgia', 'serif'],
-        body: ['Manrope', 'system-ui', 'sans-serif'],
-        label: ['Manrope', 'system-ui', 'sans-serif'],
+        display: ['var(--font-fraunces)', 'Georgia', 'serif'],
+        body: ['var(--font-geist)', 'system-ui', 'sans-serif'],
+        mono: ['var(--font-geist-mono)', 'ui-monospace', 'monospace'],
+        // legacy aliases used by dashboard
+        headline: ['var(--font-fraunces)', 'Georgia', 'serif'],
+        label: ['var(--font-geist)', 'system-ui', 'sans-serif'],
       },
       colors: {
-        // Advisor colors (dashboard)
+        // Editorial palette — landing
+        paper: {
+          DEFAULT: '#F4EEE3',
+          soft: '#FAF6EC',
+          sink: '#EBE2D1',
+        },
+        ink: {
+          DEFAULT: '#18120D',
+          muted: '#6B5D4F',
+          subtle: '#A89B8B',
+          rule: '#D9CFBF',
+        },
+        oxblood: {
+          DEFAULT: '#8B2E2A',
+          deep: '#5A1A18',
+          soft: '#B85A52',
+        },
+        sage: {
+          DEFAULT: '#3D5447',
+          soft: '#7A8F80',
+        },
+        gold: '#B8914C',
+
+        // Advisor colors (dashboard — preserved)
         legal: '#3b82f6',
         health: '#10b981',
         finance: '#f59e0b',
         psychology: '#8b5cf6',
         home: '#f97316',
-        // Dark theme (landing)
+
+        // Dark theme (dashboard — preserved)
         'background': '#0e1320',
         'surface': '#0e1320',
         'surface-dim': '#0e1320',
@@ -66,13 +93,37 @@ const config: Config = {
         'inverse-surface': '#dee2f5',
         'inverse-on-surface': '#2b303e',
       },
+      letterSpacing: {
+        'editorial': '0.22em',
+        'display': '-0.03em',
+      },
       animation: {
         'fade-in': 'fadeIn 0.2s ease-in-out',
         'slide-in': 'slideIn 0.3s ease-out',
+        'edit-rise': 'editRise 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both',
+        'edit-fade': 'editFade 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) both',
+        'rule-draw': 'ruleDraw 1.1s cubic-bezier(0.65, 0, 0.35, 1) both',
+        'marquee': 'marquee 42s linear infinite',
       },
       keyframes: {
         fadeIn: { from: { opacity: '0' }, to: { opacity: '1' } },
         slideIn: { from: { transform: 'translateY(10px)', opacity: '0' }, to: { transform: 'translateY(0)', opacity: '1' } },
+        editRise: {
+          from: { opacity: '0', transform: 'translateY(14px)' },
+          to: { opacity: '1', transform: 'translateY(0)' },
+        },
+        editFade: {
+          from: { opacity: '0' },
+          to: { opacity: '1' },
+        },
+        ruleDraw: {
+          from: { transform: 'scaleX(0)' },
+          to: { transform: 'scaleX(1)' },
+        },
+        marquee: {
+          from: { transform: 'translateX(0)' },
+          to: { transform: 'translateX(-50%)' },
+        },
       },
     },
   },

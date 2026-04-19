@@ -1,7 +1,26 @@
 import type { Metadata } from 'next';
-import { DM_Sans } from 'next/font/google';
+import { Fraunces, Instrument_Sans, JetBrains_Mono, DM_Sans } from 'next/font/google';
 import { Toaster } from 'react-hot-toast';
 import '@/styles/globals.css';
+
+const fraunces = Fraunces({
+  subsets: ['latin'],
+  variable: '--font-fraunces',
+  display: 'swap',
+  axes: ['opsz', 'SOFT', 'WONK'],
+});
+
+const instrumentSans = Instrument_Sans({
+  subsets: ['latin'],
+  variable: '--font-geist',
+  display: 'swap',
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  variable: '--font-geist-mono',
+  display: 'swap',
+});
 
 const dmSans = DM_Sans({
   subsets: ['latin'],
@@ -10,24 +29,20 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: { default: 'Asesor Virtual', template: '%s | Asesor Virtual' },
-  description: 'Plataforma SaaS multi-asesor con IA — Legal, Salud, Finanzas, Bienestar y Hogar',
+  title: { default: 'Asesor Virtual — Cinco especialistas. Una conversación.', template: '%s | Asesor Virtual' },
+  description: 'Asesoría inteligente para Latinoamérica. Legal, Salud, Finanzas, Bienestar y Hogar bajo una sola suscripción.',
   keywords: ['asesor virtual', 'asesoría legal', 'inteligencia artificial', 'contratos', 'LATAM'],
   openGraph: {
     title: 'Asesor Virtual',
-    description: '5 asesores IA especializados bajo una sola suscripción',
+    description: 'Cinco especialistas. Una conversación. Asesoría inteligente para LATAM.',
     type: 'website',
   },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es" className={dmSans.variable}>
+    <html lang="es" className={`${fraunces.variable} ${instrumentSans.variable} ${jetbrainsMono.variable} ${dmSans.variable}`}>
       <head>
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Manrope:wght@200;400;600;800&display=swap"
-        />
         <link
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
@@ -39,7 +54,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           position="top-right"
           toastOptions={{
             duration: 4000,
-            style: { borderRadius: '10px', fontSize: '14px' },
+            style: {
+              borderRadius: '2px',
+              fontSize: '13px',
+              fontFamily: 'var(--font-geist), system-ui, sans-serif',
+              background: '#18120D',
+              color: '#F4EEE3',
+              border: '1px solid #2a1f17',
+            },
           }}
         />
       </body>
