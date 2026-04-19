@@ -86,6 +86,9 @@ html:has(.editorial-body) {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
 }
 
 /* Subtle paper grain overlay — adds material depth */
@@ -436,13 +439,178 @@ html:has(.editorial-body) {
   opacity: 0.95;
 }
 
+/* ---------- Scroll progress bar (editorial) ---------- */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #8B2E2A 0%, #C8A74D 100%);
+  z-index: 60;
+  transform-origin: left;
+  transform: scaleX(0);
+  transition: transform 80ms linear;
+}
+
+/* ---------- Live ticker — news-feed style ---------- */
+.ticker-panel {
+  position: relative;
+  height: 22px;
+  overflow: hidden;
+}
+.ticker-track {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  animation: tickerRoll 18s steps(6) infinite;
+}
+.ticker-track > * {
+  height: 22px;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+@keyframes tickerRoll {
+  0%, 14% { transform: translateY(0); }
+  16%, 30% { transform: translateY(-22px); }
+  32%, 46% { transform: translateY(-44px); }
+  48%, 62% { transform: translateY(-66px); }
+  64%, 78% { transform: translateY(-88px); }
+  80%, 94% { transform: translateY(-110px); }
+  96%, 100% { transform: translateY(-132px); }
+}
+
+/* ---------- Dark "Manifesto" section ---------- */
+.manifesto {
+  background: #18120D;
+  color: #F4EEE3;
+  position: relative;
+  overflow: hidden;
+}
+.manifesto::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle at 20% 50%, rgba(200, 167, 77, 0.08) 0%, transparent 45%),
+                    radial-gradient(circle at 80% 30%, rgba(139, 46, 42, 0.12) 0%, transparent 50%);
+  pointer-events: none;
+}
+.manifesto .manifesto-grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.45;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.95  0 0 0 0 0.93  0 0 0 0 0.89  0 0 0 0.18 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  pointer-events: none;
+}
+
+/* ---------- Pulsing "en vivo" stamp ---------- */
+.pulse-stamp {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  position: relative;
+}
+.pulse-stamp::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #C8A74D;
+  box-shadow: 0 0 0 0 rgba(200, 167, 77, 0.7);
+  animation: pulseDot 1.8s ease-out infinite;
+}
+@keyframes pulseDot {
+  0% { box-shadow: 0 0 0 0 rgba(200, 167, 77, 0.9); }
+  70% { box-shadow: 0 0 0 10px rgba(200, 167, 77, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(200, 167, 77, 0); }
+}
+
+/* ---------- Counter animation entry ---------- */
+.counter-slot {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 800ms ease, transform 800ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.counter-slot.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ---------- Mustard highlight (editorial marker) ---------- */
+.mustard-mark {
+  background: linear-gradient(180deg, transparent 60%, rgba(200, 167, 77, 0.55) 60%, rgba(200, 167, 77, 0.55) 92%, transparent 92%);
+  padding: 0 0.1em;
+}
+
+/* ---------- Rotating stamp (editorial imperfection) ---------- */
+.stamp-tilt {
+  transform: rotate(-6deg);
+  transition: transform 420ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.stamp-tilt:hover {
+  transform: rotate(-3deg) scale(1.03);
+}
+
+/* Floating badge — "Leer más" */
+.floating-badge {
+  position: absolute;
+  background: #C8A74D;
+  color: #18120D;
+  border-radius: 50%;
+  width: 92px;
+  height: 92px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  line-height: 1.25;
+  transform: rotate(-12deg);
+  box-shadow: 0 4px 18px rgba(24, 18, 13, 0.12);
+  animation: floatingBob 4s ease-in-out infinite;
+}
+@keyframes floatingBob {
+  0%, 100% { transform: rotate(-12deg) translateY(0); }
+  50% { transform: rotate(-9deg) translateY(-6px); }
+}
+
+/* ---------- Reveal on scroll ---------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 900ms cubic-bezier(0.2, 0.8, 0.2, 1), transform 900ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 /* Reduce motion */
 @media (prefers-reduced-motion: reduce) {
   .edit-stagger > *,
   .masthead-marquee,
+  .clients-marquee,
+  .ticker-track,
   .advisor-entry *,
   .editorial-link::after,
-  .editorial-navlink::after {
+  .editorial-navlink::after,
+  .pulse-stamp::before,
+  .floating-badge,
+  .counter-slot,
+  .reveal {
     animation: none !important;
     transition: none !important;
     transform: none !important;

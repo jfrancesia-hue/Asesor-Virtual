@@ -31,10 +31,16 @@ const config: Config = {
           deep: '#5A1A18',
           soft: '#B85A52',
         },
+        mustard: {
+          DEFAULT: '#C8A74D',
+          deep: '#9A7F2E',
+          soft: '#E6C977',
+        },
         sage: {
           DEFAULT: '#3D5447',
           soft: '#7A8F80',
         },
+        saffron: '#D97A2A',
         gold: '#B8914C',
 
         // Advisor colors (dashboard — preserved)

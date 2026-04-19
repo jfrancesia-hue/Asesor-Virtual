@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 /* ------------------------------------------------------------------ */
 /*  Editorial landing — "Asesor Virtual"                              */
@@ -200,6 +200,70 @@ const CITIES = [
   'Montevideo', 'Asunción', 'Quito', 'São Paulo', 'Caracas',
 ];
 
+const LIVE_QUERIES = [
+  'Contrato de locación · CABA',
+  'Deducción de monotributo · AR',
+  'Síntomas persistentes · consulta preventiva',
+  'Reforma de baño · presupuesto',
+  'Regulación emocional · pausa laboral',
+  'Herencia intestada · proceso sucesorio',
+];
+
+const HERO_STATS: Array<{ k: string; target: number; render: (n: number) => string }> = [
+  { k: 'Jurisdicciones', target: 7, render: (n) => `${n} países` },
+  { k: 'Idiomas', target: 2, render: (n) => (n < 2 ? '—' : 'ES · PT') },
+  { k: 'Disponibilidad', target: 24, render: (n) => `${n} / 7` },
+  { k: 'Cifrado', target: 256, render: (n) => `AES-${n}` },
+];
+
+const BIG_STATS = [
+  { k: '2.400', v: 'Suscriptores activos' },
+  { k: '97%', v: 'Retención anual' },
+  { k: '4,8 / 5', v: 'Calificación media' },
+  { k: '< 2 s', v: 'Tiempo de respuesta' },
+];
+
+function useReveal<T extends HTMLElement>() {
+  const ref = useRef<T | null>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || typeof IntersectionObserver === 'undefined') return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            el.classList.add('is-visible');
+            io.unobserve(el);
+          }
+        });
+      },
+      { threshold: 0.15, rootMargin: '0px 0px -80px 0px' }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  return ref;
+}
+
+function useCountUp(target: number, active: boolean, duration = 1400) {
+  const [value, setValue] = useState(0);
+  useEffect(() => {
+    if (!active) return;
+    const start = performance.now();
+    let raf = 0;
+    const tick = (now: number) => {
+      const t = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - t, 3);
+      setValue(Math.round(target * eased));
+      if (t < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [target, active, duration]);
+  return value;
+}
+
+
 function formatDate() {
   const d = new Date();
   return d.toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
@@ -233,10 +297,19 @@ function Crest({ className = 'w-8 h-8' }: { className?: string }) {
 export default function LandingPage() {
   const [scrolled, setScrolled] = useState(false);
   const [date, setDate] = useState<string>('');
+  const progressRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     setDate(formatDate());
-    const onScroll = () => setScrolled(window.scrollY > 12);
+    const onScroll = () => {
+      setScrolled(window.scrollY > 12);
+      if (progressRef.current) {
+        const h = document.documentElement;
+        const max = h.scrollHeight - h.clientHeight;
+        const p = max > 0 ? window.scrollY / max : 0;
+        progressRef.current.style.transform = `scaleX(${p})`;
+      }
+    };
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
@@ -244,25 +317,34 @@ export default function LandingPage() {
 
   return (
     <div className="editorial-body editorial-grain min-h-screen font-body selection:bg-oxblood selection:text-paper">
+      {/* Scroll progress bar */}
+      <div ref={progressRef} className="scroll-progress" aria-hidden="true" />
       {/* -------------------- MASTHEAD -------------------- */}
       <div className="relative z-20 border-b border-ink/15 bg-paper/95">
-        <div className="max-w-[1400px] mx-auto px-6 py-2 flex items-center justify-between text-[10px] font-mono uppercase tracking-editorial text-ink-muted">
-          <div className="flex items-center gap-4">
+        <div className="max-w-[1400px] mx-auto px-6 py-2 flex items-center justify-between text-[10px] font-mono uppercase tracking-editorial text-ink-muted gap-4">
+          <div className="flex items-center gap-4 shrink-0">
             <span className="hidden sm:inline">Edición N° 007</span>
             <span className="hidden sm:inline opacity-30">·</span>
             <span>{date || '—'}</span>
           </div>
-          <div className="hidden md:block marquee-wrap flex-1 mx-10 max-w-[640px]">
-            <div className="masthead-marquee whitespace-nowrap">
-              {[...CITIES, ...CITIES].map((c, i) => (
-                <span key={i} className="inline-flex items-center mx-6">
-                  <span className="w-1 h-1 bg-oxblood mr-3" />
-                  {c}
-                </span>
-              ))}
+          {/* Live ticker */}
+          <div className="hidden md:flex items-center gap-4 flex-1 min-w-0 justify-center">
+            <span className="text-mustard-deep shrink-0 inline-flex items-center gap-2">
+              <span className="w-1.5 h-1.5 bg-mustard rounded-full" style={{ boxShadow: '0 0 0 0 rgba(200,167,77,0.7)', animation: 'pulseDot 1.8s ease-out infinite' }} />
+              En vivo
+            </span>
+            <div className="ticker-panel flex-1 text-ink max-w-[420px]">
+              <div className="ticker-track">
+                {LIVE_QUERIES.concat(LIVE_QUERIES[0]).map((q, i) => (
+                  <span key={i} className="truncate">
+                    <span className="text-oxblood mr-2">—</span>
+                    {q}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 shrink-0">
             <span className="w-1.5 h-1.5 bg-oxblood rounded-full animate-pulse" />
             <span>En servicio</span>
           </div>
@@ -335,7 +417,7 @@ export default function LandingPage() {
               </div>
 
               <h1
-                className="font-display text-ink leading-[0.92] tracking-display text-[clamp(3.2rem,9vw,7.5rem)]"
+                className="font-display text-ink leading-[0.95] tracking-display text-[clamp(2.6rem,7vw,6rem)]"
                 style={{ fontVariationSettings: "'opsz' 144, 'SOFT' 50, 'WONK' 0" }}
               >
                 Cinco especialistas.
@@ -368,23 +450,11 @@ export default function LandingPage() {
                 </a>
               </div>
 
-              <div className="mt-16 flex flex-wrap gap-8 pt-8 border-t border-ink/12">
-                {[
-                  { k: 'Jurisdicciones', v: '7 países' },
-                  { k: 'Idiomas', v: 'ES · PT' },
-                  { k: 'Disponibilidad', v: '24 / 7' },
-                  { k: 'Cifrado', v: 'AES-256' },
-                ].map((s) => (
-                  <div key={s.k}>
-                    <div className="font-mono text-[10px] uppercase tracking-editorial text-ink-muted">{s.k}</div>
-                    <div
-                      className="font-display text-[22px] text-ink mt-1 tracking-display"
-                      style={{ fontVariationSettings: "'opsz' 72" }}
-                    >
-                      {s.v}
-                    </div>
-                  </div>
-                ))}
+              <HeroStats />
+              <div className="mt-8 flex items-center gap-3">
+                <span className="pulse-stamp text-oxblood">
+                  Consultas respondidas hoy · <CountUpInline target={184} />
+                </span>
               </div>
             </div>
 
@@ -460,7 +530,7 @@ export default function LandingPage() {
                     Sumario
                   </div>
                   <h3
-                    className="font-display text-paper text-[clamp(1.8rem,4vw,3.6rem)] leading-[0.95] tracking-display max-w-[22ch]"
+                    className="font-display text-paper text-[clamp(1.4rem,3.2vw,2.8rem)] leading-[1.1] tracking-display max-w-[24ch]"
                     style={{ fontVariationSettings: "'opsz' 144, 'SOFT' 50, 'WONK' 0" }}
                   >
                     El oficio de preguntar{' '}
@@ -480,6 +550,10 @@ export default function LandingPage() {
             <div className="photo-caption">
               <span>Fig. 01 — Escena editorial</span>
               <span>Redacción · LATAM</span>
+            </div>
+            {/* Floating badge */}
+            <div className="floating-badge hidden md:flex" style={{ top: '-30px', right: '-30px' }}>
+              Edición<br />especial<br />N° 007
             </div>
           </div>
         </div>
@@ -524,31 +598,12 @@ export default function LandingPage() {
                 style={{ fontVariationSettings: "'opsz' 24" }}
               >
                 El formato es deliberadamente sencillo. Cinco voces, cada una con su oficio, todas entrenadas
-                para responder con citas, jurisdicción y nivel de certeza. No hay sermones ni respuestas de relleno:
+                para responder con <span className="mustard-mark">citas, jurisdicción y nivel de certeza</span>. No hay sermones ni respuestas de relleno:
                 si algo requiere un humano, el propio asesor te lo indica.
               </p>
             </div>
             <div className="col-span-12 lg:col-span-8">
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                {[
-                  { k: '2.400', v: 'Suscriptores activos' },
-                  { k: '97%', v: 'Retención anual' },
-                  { k: '4,8 / 5', v: 'Calificación media' },
-                  { k: '< 2 s', v: 'Tiempo de respuesta' },
-                ].map((s) => (
-                  <div key={s.k} className="border-t border-ink pt-4">
-                    <div
-                      className="font-display text-[42px] leading-none text-ink tracking-display"
-                      style={{ fontVariationSettings: "'opsz' 72, 'SOFT' 30" }}
-                    >
-                      {s.k}
-                    </div>
-                    <div className="mt-2 font-mono text-[10px] uppercase tracking-editorial text-ink-muted">
-                      {s.v}
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <BigStats />
             </div>
           </div>
 
@@ -605,6 +660,81 @@ export default function LandingPage() {
             ))}
             <li className="border-t border-ink/15" />
           </ul>
+        </div>
+      </section>
+
+      {/* -------------------- MANIFIESTO (dark break) -------------------- */}
+      <section className="manifesto relative">
+        <div className="manifesto-grain" />
+        <div className="relative max-w-[1400px] mx-auto px-6 py-28 md:py-36">
+          <div className="grid grid-cols-12 gap-8">
+            <div className="col-span-12 md:col-span-3">
+              <div className="font-mono text-[10px] uppercase tracking-editorial text-mustard mb-4">
+                Manifiesto
+              </div>
+              <div className="hidden md:block h-px w-24 bg-mustard/60 mb-6" />
+              <p className="font-mono text-[11px] uppercase tracking-editorial text-paper/60 leading-relaxed">
+                Lo que creemos<br />sobre el oficio<br />de aconsejar
+              </p>
+            </div>
+
+            <div className="col-span-12 md:col-span-9">
+              <h2
+                className="font-display text-[clamp(2rem,5vw,4.2rem)] leading-[1] tracking-display text-paper"
+                style={{ fontVariationSettings: "'opsz' 144, 'SOFT' 50, 'WONK' 0" }}
+              >
+                Creemos que el{' '}
+                <em className="text-mustard" style={{ fontVariationSettings: "'opsz' 144, 'SOFT' 100, 'WONK' 1" }}>
+                  consejo
+                </em>{' '}
+                no es un producto. Es una{' '}
+                <em className="text-oxblood-soft" style={{ fontVariationSettings: "'opsz' 144, 'SOFT' 100, 'WONK' 1" }}>
+                  conversación
+                </em>{' '}
+                con alguien que <span className="mustard-mark text-ink">sabe</span>, en el momento en que la necesitás.
+              </h2>
+
+              <div className="mt-14 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
+                {[
+                  {
+                    n: '01',
+                    h: 'Nada se inventa',
+                    b: 'Cada respuesta cita su fuente. Si el asesor no tiene evidencia, lo dice. Preferimos decir "no sé" antes que sonar seguros sin estarlo.',
+                  },
+                  {
+                    n: '02',
+                    h: 'No reemplaza humanos',
+                    b: 'Cuando tu consulta exige firma, criterio clínico o empatía profunda, el mismo sistema te recomienda un profesional. No peleamos por territorio.',
+                  },
+                  {
+                    n: '03',
+                    h: 'La conversación es tuya',
+                    b: 'Tu historial se cifra, se exporta y se elimina cuando vos decidas. No entrenamos modelos con tus preguntas. Nunca vendemos datos.',
+                  },
+                ].map((p) => (
+                  <div key={p.n} className="border-t border-paper/20 pt-5">
+                    <div className="font-mono text-[11px] uppercase tracking-editorial text-mustard mb-3">
+                      {p.n} · Principio
+                    </div>
+                    <h4
+                      className="font-display text-[26px] leading-[1.1] text-paper tracking-display"
+                      style={{ fontVariationSettings: "'opsz' 48, 'SOFT' 40" }}
+                    >
+                      {p.h}
+                    </h4>
+                    <p className="mt-3 text-[14px] leading-[1.65] text-paper/70">{p.b}</p>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-14 flex items-center gap-6">
+                <div className="pulse-stamp text-mustard">Transmitido desde Buenos Aires</div>
+                <div className="text-[11px] font-mono uppercase tracking-editorial text-paper/40">
+                  Firmado por la redacción · 2026
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -907,12 +1037,14 @@ export default function LandingPage() {
                 Colofón
               </div>
               <h2
-                className="font-display text-[clamp(2.6rem,6vw,5.4rem)] leading-[0.95] tracking-display text-paper"
+                className="font-display text-[clamp(2rem,5vw,4.4rem)] leading-[1] tracking-display text-paper"
                 style={{ fontVariationSettings: "'opsz' 144, 'SOFT' 50" }}
               >
-                La próxima consulta que <em className="text-oxblood-soft" style={{ fontVariationSettings: "'opsz' 144, 'SOFT' 100, 'WONK' 1" }}>evitabas</em>,
-                <br />
-                la podés hacer ahora.
+                La próxima consulta que{' '}
+                <em className="text-oxblood-soft" style={{ fontVariationSettings: "'opsz' 144, 'SOFT' 100, 'WONK' 1" }}>
+                  evitabas
+                </em>
+                , la podés hacer ahora.
               </h2>
             </div>
             <div className="col-span-12 lg:col-span-4 flex flex-col lg:items-end gap-4">
@@ -1022,6 +1154,143 @@ export default function LandingPage() {
   );
 }
 
+/* -------------------- Hero stats (with count-up) -------------------- */
+function HeroStats() {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const [active, setActive] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            setActive(true);
+            io.unobserve(el);
+          }
+        });
+      },
+      { threshold: 0.4 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  return (
+    <div
+      ref={ref}
+      className="mt-16 flex flex-wrap gap-8 pt-8 border-t border-ink/12"
+    >
+      {HERO_STATS.map((s, i) => (
+        <HeroStatTile key={s.k} stat={s} active={active} delay={1000 + i * 180} />
+      ))}
+    </div>
+  );
+}
+
+function HeroStatTile({ stat, active, delay }: { stat: typeof HERO_STATS[number]; active: boolean; delay: number }) {
+  const val = useCountUp(stat.target, active, delay);
+  return (
+    <div>
+      <div className="font-mono text-[10px] uppercase tracking-editorial text-ink-muted">{stat.k}</div>
+      <div
+        className="font-display text-[22px] text-ink mt-1 tracking-display tabular-nums"
+        style={{ fontVariationSettings: "'opsz' 72" }}
+      >
+        {stat.render(val)}
+      </div>
+    </div>
+  );
+}
+
+/* -------------------- Big stats block (advisors intro) -------------------- */
+function BigStats() {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const [active, setActive] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            setActive(true);
+            io.unobserve(el);
+          }
+        });
+      },
+      { threshold: 0.35 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  return (
+    <div ref={ref} className="grid grid-cols-2 md:grid-cols-4 gap-6">
+      <BigStatTile label="Suscriptores activos" target={2400} format={(n) => n.toLocaleString('es-AR')} active={active} delay={0} />
+      <BigStatTile label="Retención anual" target={97} format={(n) => `${n}%`} active={active} delay={150} />
+      <BigStatTile label="Calificación media" target={48} format={(n) => `${(n / 10).toFixed(1).replace('.', ',')} / 5`} active={active} delay={300} />
+      <BigStatTile label="Tiempo de respuesta" target={2} format={(n) => `< ${n} s`} active={active} delay={450} />
+    </div>
+  );
+}
+
+function BigStatTile({
+  label,
+  target,
+  format,
+  active,
+  delay,
+}: {
+  label: string;
+  target: number;
+  format: (n: number) => string;
+  active: boolean;
+  delay: number;
+}) {
+  const [started, setStarted] = useState(false);
+  useEffect(() => {
+    if (!active) return;
+    const t = setTimeout(() => setStarted(true), delay);
+    return () => clearTimeout(t);
+  }, [active, delay]);
+  const val = useCountUp(target, started, 1600);
+  return (
+    <div className="border-t border-ink pt-4">
+      <div
+        className="font-display text-[42px] leading-none text-ink tracking-display tabular-nums"
+        style={{ fontVariationSettings: "'opsz' 72, 'SOFT' 30" }}
+      >
+        {format(val)}
+      </div>
+      <div className="mt-2 font-mono text-[10px] uppercase tracking-editorial text-ink-muted">{label}</div>
+    </div>
+  );
+}
+
+/* -------------------- Count-up inline (for stamps) -------------------- */
+function CountUpInline({ target }: { target: number }) {
+  const [active, setActive] = useState(false);
+  const ref = useRef<HTMLSpanElement | null>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            setActive(true);
+            io.unobserve(el);
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  const val = useCountUp(target, active, 1400);
+  return <span ref={ref} className="tabular-nums">{val}</span>;
+}
+
 /* -------------------- Editorial section header -------------------- */
 function SectionHeader({ eyebrow, title, kicker }: { eyebrow: string; title: string; kicker: string }) {
   return (
@@ -1032,7 +1301,7 @@ function SectionHeader({ eyebrow, title, kicker }: { eyebrow: string; title: str
         <span className="font-mono text-[11px] uppercase tracking-editorial text-ink-muted">{kicker}</span>
       </div>
       <h2
-        className="font-display text-[clamp(2.4rem,6vw,4.8rem)] leading-[0.95] tracking-display text-ink"
+        className="font-display text-[clamp(2rem,5vw,4rem)] leading-[1] tracking-display text-ink"
         style={{ fontVariationSettings: "'opsz' 144, 'SOFT' 50" }}
       >
         {title}
