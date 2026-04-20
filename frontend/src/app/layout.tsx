@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Fraunces, Instrument_Sans, JetBrains_Mono, DM_Sans } from 'next/font/google';
+import { Fraunces, Instrument_Sans, JetBrains_Mono, DM_Sans, Inter } from 'next/font/google';
 import { Toaster } from 'react-hot-toast';
 import '@/styles/globals.css';
 
@@ -28,12 +28,19 @@ const dmSans = DM_Sans({
   display: 'swap',
 });
 
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+  weight: ['500', '600', '700', '800'],
+  display: 'swap',
+});
+
 export const metadata: Metadata = {
-  title: { default: 'Asesor Virtual — Cinco especialistas. Una conversación.', template: '%s | Asesor Virtual' },
+  title: { default: 'Mi Asesor — Cinco especialistas. Una conversación.', template: '%s | Mi Asesor' },
   description: 'Asesoría inteligente para Latinoamérica. Legal, Salud, Finanzas, Bienestar y Hogar bajo una sola suscripción.',
-  keywords: ['asesor virtual', 'asesoría legal', 'inteligencia artificial', 'contratos', 'LATAM'],
+  keywords: ['mi asesor', 'asesoría legal', 'inteligencia artificial', 'contratos', 'LATAM'],
   openGraph: {
-    title: 'Asesor Virtual',
+    title: 'Mi Asesor',
     description: 'Cinco especialistas. Una conversación. Asesoría inteligente para LATAM.',
     type: 'website',
   },
@@ -41,7 +48,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es" className={`${fraunces.variable} ${instrumentSans.variable} ${jetbrainsMono.variable} ${dmSans.variable}`}>
+    <html lang="es" className={`${fraunces.variable} ${instrumentSans.variable} ${jetbrainsMono.variable} ${dmSans.variable} ${inter.variable}`}>
       <head>
         <link
           rel="stylesheet"

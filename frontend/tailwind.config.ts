@@ -9,6 +9,7 @@ const config: Config = {
         display: ['var(--font-fraunces)', 'Georgia', 'serif'],
         body: ['var(--font-geist)', 'system-ui', 'sans-serif'],
         mono: ['var(--font-geist-mono)', 'ui-monospace', 'monospace'],
+        brand: ['var(--font-inter)', 'system-ui', 'sans-serif'],
         // legacy aliases used by dashboard
         headline: ['var(--font-fraunces)', 'Georgia', 'serif'],
         label: ['var(--font-geist)', 'system-ui', 'sans-serif'],
@@ -42,6 +43,16 @@ const config: Config = {
         },
         saffron: '#D97A2A',
         gold: '#B8914C',
+
+        // Brand system — "ma." logo tokens (Mi Asesor)
+        brand: {
+          ink: '#0f1011',
+          paper: '#f5f2ec',
+          mute: '#8a8680',
+          dot: '#00a86b',
+          dotAlt: '#0b6cf5',
+          dotAmber: '#f59e0b',
+        },
 
         // Advisor colors (dashboard — preserved)
         legal: '#3b82f6',

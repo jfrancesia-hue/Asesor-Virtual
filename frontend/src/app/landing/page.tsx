@@ -4,7 +4,7 @@ import toast from 'react-hot-toast';
 import { useEffect, useRef, useState } from 'react';
 
 /* ------------------------------------------------------------------ */
-/*  Editorial landing — "Asesor Virtual"                              */
+/*  Editorial landing — "Mi Asesor"                              */
 /*  Direction: warm paper + ink + oxblood. Magazine spread, not SaaS. */
 /* ------------------------------------------------------------------ */
 
@@ -142,7 +142,7 @@ const FAQS = [
     a: 'Español rioplatense, mexicano y neutro; portugués de Brasil. Jurisdicciones: Argentina, México, Colombia, Chile, Perú, Uruguay y Brasil. El asesor Legal adapta referencias normativas a tu país de residencia.',
   },
   {
-    q: '¿Puedo integrar Asesor Virtual con mis sistemas?',
+    q: '¿Puedo integrar Mi Asesor con mis sistemas?',
     a: 'El plan Corporativo incluye API REST y webhooks, SSO vía SAML u OIDC, y conectores para las principales suites de gestión documental. Nuestro equipo de implementación acompaña la integración.',
   },
 ];
@@ -269,27 +269,54 @@ function formatDate() {
   return d.toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 }
 
-/* ---------------- Editorial monogram — A·V ---------------- */
-function Crest({ className = 'w-8 h-8' }: { className?: string }) {
+/* ---------------- Brand logo — "ma." mark (Mi Asesor) ----------------
+ * Atomic mark per brandbook: Inter 800 lowercase, tight tracking,
+ * dot = 19% of size, gap = 4%, vertical offset from baseline = 8%.
+ * Color of dot signals sub-brand (green = general).
+ */
+function MaMark({
+  size = 32,
+  inkColor = '#0f1011',
+  dotColor = '#00a86b',
+  withDot = true,
+}: {
+  size?: number;
+  inkColor?: string;
+  dotColor?: string;
+  withDot?: boolean;
+}) {
+  const dotSize = size * 0.19;
+  const dotGap = size * 0.04;
+  const dotOffset = size * 0.08;
   return (
-    <svg viewBox="0 0 48 48" className={className} aria-hidden="true" fill="none">
-      <circle cx="24" cy="24" r="22.5" stroke="currentColor" strokeWidth="1" />
-      <circle cx="24" cy="24" r="18" stroke="currentColor" strokeWidth="0.6" opacity="0.35" />
-      <text
-        x="24"
-        y="30"
-        textAnchor="middle"
-        fontFamily="var(--font-fraunces), Georgia, serif"
-        fontSize="19"
-        fontStyle="italic"
-        fontWeight="500"
-        fill="currentColor"
-        style={{ fontVariationSettings: "'opsz' 144, 'SOFT' 100, 'WONK' 1" }}
-      >
-        Av
-      </text>
-      <line x1="10" y1="37" x2="38" y2="37" stroke="currentColor" strokeWidth="0.6" opacity="0.5" />
-    </svg>
+    <span
+      className="inline-flex items-baseline shrink-0"
+      style={{
+        fontFamily: 'var(--font-inter), system-ui, sans-serif',
+        fontWeight: 800,
+        fontSize: size,
+        lineHeight: 1,
+        letterSpacing: -size * 0.06,
+        color: inkColor,
+      }}
+    >
+      <span>ma</span>
+      {withDot && (
+        <span
+          style={{
+            width: dotSize,
+            height: dotSize,
+            background: dotColor,
+            borderRadius: '50%',
+            display: 'inline-block',
+            marginLeft: dotGap,
+            marginBottom: dotOffset,
+            flexShrink: 0,
+          }}
+          aria-hidden="true"
+        />
+      )}
+    </span>
   );
 }
 
@@ -345,7 +372,7 @@ export default function LandingPage() {
             </div>
           </div>
           <div className="flex items-center gap-2 shrink-0">
-            <span className="w-1.5 h-1.5 bg-oxblood rounded-full animate-pulse" />
+            <span className="w-1.5 h-1.5 bg-brand-dot rounded-full animate-pulse" />
             <span>En servicio</span>
           </div>
         </div>
@@ -358,17 +385,17 @@ export default function LandingPage() {
         }`}
       >
         <div className="max-w-[1400px] mx-auto px-6 h-20 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3 group shrink-0">
-            <Crest className="w-6 h-6 text-oxblood transition-transform duration-500 group-hover:rotate-45 shrink-0" />
-            <div className="flex flex-col leading-none min-w-0">
+          <Link href="/" className="flex items-center gap-3 md:gap-4 group shrink-0" aria-label="Mi Asesor">
+            <MaMark size={30} inkColor="#0f1011" dotColor="#00a86b" />
+            <div className="hidden sm:flex flex-col leading-none pl-4 border-l border-ink/20 min-w-0">
               <span
-                className="font-display text-[18px] md:text-[22px] text-ink tracking-display whitespace-nowrap"
-                style={{ fontVariationSettings: "'opsz' 144, 'SOFT' 50" }}
+                className="font-brand text-[15px] text-ink whitespace-nowrap"
+                style={{ fontWeight: 600, letterSpacing: '-0.01em' }}
               >
-                Asesor <em className="not-italic text-oxblood">Virtual</em>
+                Mi Asesor
               </span>
-              <span className="hidden sm:block font-mono text-[9px] uppercase tracking-editorial text-ink-muted mt-1 whitespace-nowrap">
-                Consejo especializado · LATAM
+              <span className="font-brand text-[9.5px] uppercase text-ink-muted mt-1 whitespace-nowrap" style={{ letterSpacing: '0.14em', fontWeight: 500 }}>
+                Asesoría virtual
               </span>
             </div>
           </Link>
@@ -784,7 +811,7 @@ export default function LandingPage() {
               </p>
 
               <p className="mt-5 text-[15px] leading-[1.7] text-ink-muted">
-                Asesor Virtual existe para esas preguntas. Las que importan pero no son urgentes. Las que serían
+                Mi Asesor existe para esas preguntas. Las que importan pero no son urgentes. Las que serían
                 obvias si estuvieras sentado frente a alguien que sabe. Las que hasta ahora costaban demasiado como
                 para hacerse.
               </p>
@@ -982,8 +1009,8 @@ export default function LandingPage() {
               >
                 Si tu duda no está acá, escribinos. Respondemos en el día — y casi siempre lo hace un humano.
               </p>
-              <a href="mailto:hola@asesorvirtual.app" className="editorial-link mt-4 inline-block text-[13px] text-oxblood">
-                hola@asesorvirtual.app
+              <a href="mailto:hola@miasesor.app" className="editorial-link mt-4 inline-block text-[13px] text-oxblood">
+                hola@miasesor.app
               </a>
               <div className="mt-8 edit-stamp">
                 Respuesta<br />
@@ -1067,17 +1094,20 @@ export default function LandingPage() {
         <div className="max-w-[1400px] mx-auto px-6 py-16">
           <div className="grid grid-cols-12 gap-8">
             <div className="col-span-12 md:col-span-5">
-              <div className="flex items-center gap-3">
-                <Crest className="w-8 h-8 text-oxblood" />
-                <div>
+              <div className="flex items-center gap-4">
+                <MaMark size={54} inkColor="#0f1011" dotColor="#00a86b" />
+                <div className="pl-4 border-l border-ink/20">
                   <div
-                    className="font-display text-[28px] text-ink leading-none tracking-display"
-                    style={{ fontVariationSettings: "'opsz' 72, 'SOFT' 50" }}
+                    className="font-brand text-[22px] text-ink leading-none"
+                    style={{ fontWeight: 600, letterSpacing: '-0.01em' }}
                   >
-                    Asesor <em className="not-italic text-oxblood">Virtual</em>
+                    Mi Asesor
                   </div>
-                  <div className="font-mono text-[10px] uppercase tracking-editorial text-ink-muted mt-1">
-                    Fundado en Buenos Aires · 2026
+                  <div
+                    className="font-brand text-[10px] uppercase text-ink-muted mt-1.5"
+                    style={{ letterSpacing: '0.14em', fontWeight: 500 }}
+                  >
+                    Asesoría virtual · LATAM
                   </div>
                 </div>
               </div>
@@ -1086,6 +1116,9 @@ export default function LandingPage() {
                 style={{ fontVariationSettings: "'opsz' 20, 'SOFT' 100" }}
               >
                 Una publicación de asesoría inteligente para quienes prefieren hacer las preguntas que corresponden.
+              </p>
+              <p className="mt-3 font-mono text-[10px] uppercase tracking-editorial text-ink-muted">
+                Fundado en Buenos Aires · 2026
               </p>
             </div>
 
@@ -1139,7 +1172,7 @@ export default function LandingPage() {
 
           <div className="mt-16 pt-8 border-t border-ink/15 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div className="font-mono text-[10px] uppercase tracking-editorial text-ink-muted">
-              © 2026 Asesor Virtual · Todos los derechos reservados
+              © 2026 Mi Asesor · Todos los derechos reservados
             </div>
             <div className="flex gap-6 font-mono text-[10px] uppercase tracking-editorial text-ink-muted">
               <a href="#" className="editorial-link">Privacidad</a>

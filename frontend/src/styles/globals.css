@@ -444,8 +444,10 @@ html:has(.editorial-body) {
   position: fixed;
   top: 0;
   left: 0;
+  right: 0;
+  width: 100%;
   height: 2px;
-  background: linear-gradient(90deg, #8B2E2A 0%, #C8A74D 100%);
+  background: linear-gradient(90deg, #00a86b 0%, #8B2E2A 60%, #C8A74D 100%);
   z-index: 60;
   transform-origin: left;
   transform: scaleX(0);
