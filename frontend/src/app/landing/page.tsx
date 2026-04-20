@@ -1175,10 +1175,10 @@ export default function LandingPage() {
               © 2026 Mi Asesor · Todos los derechos reservados
             </div>
             <div className="flex gap-6 font-mono text-[10px] uppercase tracking-editorial text-ink-muted">
-              <a href="#" className="editorial-link">Privacidad</a>
-              <a href="#" className="editorial-link">Términos</a>
-              <a href="#" className="editorial-link">Cookies</a>
-              <a href="#" className="editorial-link">Estado del servicio</a>
+              <Link href="/legal/privacidad" className="editorial-link">Privacidad</Link>
+              <Link href="/legal/terminos" className="editorial-link">Términos</Link>
+              <Link href="/legal/cookies" className="editorial-link">Cookies</Link>
+              <Link href="/status" className="editorial-link">Estado del servicio</Link>
             </div>
           </div>
         </div>
