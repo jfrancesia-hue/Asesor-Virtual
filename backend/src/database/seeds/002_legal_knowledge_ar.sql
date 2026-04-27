@@ -1,4 +1,4 @@
--- AbogadoVirtual — Legal Knowledge Base — Argentina
+-- TuAsesor — Legal Knowledge Base — Argentina
 INSERT INTO legal_documents (title, country, category, document_type, content, source) VALUES
 
 ('Ley 27.551 — Contrato de Locación Argentina',

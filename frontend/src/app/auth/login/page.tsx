@@ -68,7 +68,7 @@ export default function LoginPage() {
         <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center mx-auto mb-3">
           <Scale className="w-6 h-6 text-white" />
         </div>
-        <h1 className="text-xl font-bold text-slate-900">Asesor Virtual</h1>
+        <h1 className="text-xl font-bold text-slate-900">TuAsesor</h1>
         <p className="text-sm text-slate-500 mt-1">Ingresá a tu cuenta</p>
       </div>
 

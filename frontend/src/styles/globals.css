@@ -634,3 +634,232 @@ html:has(.editorial-body) {
   font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
   -webkit-font-smoothing: antialiased;
 }
+
+/* ---------- 3D product landing ---------- */
+.next3d-body {
+  background:
+    radial-gradient(circle at 18% 18%, rgba(45, 212, 191, 0.18), transparent 30%),
+    radial-gradient(circle at 74% 20%, rgba(250, 204, 21, 0.15), transparent 26%),
+    radial-gradient(circle at 80% 76%, rgba(251, 113, 133, 0.14), transparent 28%),
+    #07090e;
+  font-family: var(--font-dm-sans), system-ui, sans-serif;
+}
+
+.next3d-hero {
+  isolation: isolate;
+  perspective: 1400px;
+}
+
+.next3d-aurora {
+  position: absolute;
+  inset: -20% -10%;
+  background:
+    radial-gradient(circle at 70% 32%, rgba(52, 211, 153, 0.24), transparent 22%),
+    radial-gradient(circle at 84% 52%, rgba(125, 211, 252, 0.2), transparent 24%),
+    radial-gradient(circle at 62% 78%, rgba(251, 113, 133, 0.16), transparent 24%);
+  filter: blur(22px);
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+.next3d-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+  background-size: 58px 58px;
+  mask-image: linear-gradient(to bottom, transparent 0%, black 18%, black 70%, transparent 100%);
+  transform: rotateX(62deg) translateY(15%) scale(1.35);
+  transform-origin: center bottom;
+  pointer-events: none;
+}
+
+.next3d-scene-wrap {
+  --rx: 16deg;
+  --ry: 0deg;
+  perspective: 1200px;
+}
+
+.next3d-scene {
+  position: absolute;
+  right: clamp(12px, 5vw, 86px);
+  top: 18%;
+  width: min(42vw, 620px);
+  aspect-ratio: 1;
+  transform-style: preserve-3d;
+  transform:
+    rotateX(var(--rx))
+    rotateZ(-13deg)
+    rotateY(var(--ry));
+  opacity: 0.78;
+  transition: opacity 700ms ease, transform 160ms ease-out;
+}
+
+.next3d-scene.is-mounted {
+  opacity: 0.94;
+}
+
+.next3d-core,
+.next3d-core-inner,
+.next3d-ring,
+.next3d-orbit,
+.next3d-panel {
+  position: absolute;
+  transform-style: preserve-3d;
+}
+
+.next3d-core {
+  inset: 28%;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 32% 25%, rgba(255, 255, 255, 0.95), rgba(187, 247, 208, 0.78) 18%, rgba(45, 212, 191, 0.28) 45%, rgba(15, 23, 42, 0.15) 70%),
+    linear-gradient(135deg, rgba(125, 211, 252, 0.45), rgba(251, 113, 133, 0.18));
+  box-shadow:
+    0 0 70px rgba(45, 212, 191, 0.45),
+    inset 0 0 34px rgba(255, 255, 255, 0.3);
+  animation: next3dFloat 7s ease-in-out infinite;
+}
+
+.next3d-core-inner {
+  inset: 19%;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.35), transparent 58%);
+}
+
+.next3d-ring {
+  inset: 14%;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 0 45px rgba(125, 211, 252, 0.14);
+}
+
+.next3d-ring-a {
+  transform: translateZ(80px);
+  animation: next3dSpin 18s linear infinite;
+}
+
+.next3d-ring-b {
+  inset: 5%;
+  border-color: rgba(250, 204, 21, 0.18);
+  transform: translateZ(-40px) rotateZ(24deg);
+  animation: next3dSpinReverse 24s linear infinite;
+}
+
+.next3d-orbit {
+  inset: 22%;
+  border-radius: 999px;
+  border: 1px dashed rgba(187, 247, 208, 0.24);
+}
+
+.next3d-orbit-a {
+  transform: rotateX(74deg) translateZ(90px);
+  animation: next3dSpin 20s linear infinite;
+}
+
+.next3d-orbit-b {
+  inset: 9%;
+  border-color: rgba(251, 113, 133, 0.18);
+  transform: rotateY(68deg) translateZ(50px);
+  animation: next3dSpinReverse 28s linear infinite;
+}
+
+.next3d-panel {
+  min-width: 132px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 8px;
+  background: rgba(10, 14, 24, 0.58);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.32);
+  backdrop-filter: blur(18px);
+  padding: 14px 16px;
+  color: white;
+}
+
+.next3d-panel span {
+  display: block;
+  color: rgba(226, 232, 240, 0.68);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.next3d-panel strong {
+  display: block;
+  margin-top: 4px;
+  font-size: 28px;
+  line-height: 1;
+}
+
+.next3d-panel-a {
+  left: 8%;
+  top: 21%;
+  transform: translateZ(150px) rotateZ(16deg);
+}
+
+.next3d-panel-b {
+  right: 8%;
+  top: 45%;
+  transform: translateZ(120px) rotateZ(12deg);
+}
+
+.next3d-panel-c {
+  bottom: 10%;
+  left: 33%;
+  transform: translateZ(190px) rotateZ(21deg);
+}
+
+.next3d-footer-glow {
+  position: absolute;
+  inset: auto -10% -45% -10%;
+  height: 420px;
+  background:
+    radial-gradient(circle at 50% 40%, rgba(52, 211, 153, 0.2), transparent 28%),
+    radial-gradient(circle at 30% 60%, rgba(125, 211, 252, 0.16), transparent 30%),
+    radial-gradient(circle at 70% 62%, rgba(251, 113, 133, 0.14), transparent 32%);
+  filter: blur(14px);
+  pointer-events: none;
+}
+
+@keyframes next3dFloat {
+  0%, 100% { transform: translateZ(30px) translateY(0); }
+  50% { transform: translateZ(80px) translateY(-18px); }
+}
+
+@keyframes next3dSpin {
+  from { rotate: 0deg; }
+  to { rotate: 360deg; }
+}
+
+@keyframes next3dSpinReverse {
+  from { rotate: 360deg; }
+  to { rotate: 0deg; }
+}
+
+@media (max-width: 900px) {
+  .next3d-scene {
+    right: -260px;
+    top: 8%;
+    width: 780px;
+    opacity: 0.35;
+  }
+
+  .next3d-panel {
+    transform: scale(0.85);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .next3d-core,
+  .next3d-ring-a,
+  .next3d-ring-b,
+  .next3d-orbit-a,
+  .next3d-orbit-b {
+    animation: none !important;
+  }
+
+  .next3d-scene {
+    transition: opacity 200ms ease !important;
+  }
+}

@@ -14,7 +14,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://abogadovirtual-api.onrender.com/api/:path*"
+      "destination": "https://tuasesor-api.onrender.com/api/:path*"
     }
   ]
 }

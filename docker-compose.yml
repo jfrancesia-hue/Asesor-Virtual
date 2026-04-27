@@ -5,7 +5,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: abogadovirtual-api
+    container_name: tuasesor-api
     env_file: ./backend/.env
     environment:
       - NODE_ENV=development
@@ -27,7 +27,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: abogadovirtual-web
+    container_name: tuasesor-web
     env_file: ./frontend/.env.local
     ports:
       - "3000:3000"
@@ -37,7 +37,7 @@ services:
 
   redis:
     image: redis:7-alpine
-    container_name: abogadovirtual-redis
+    container_name: tuasesor-redis
     ports:
       - "6379:6379"
     volumes:

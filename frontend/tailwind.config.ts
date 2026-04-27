@@ -44,7 +44,7 @@ const config: Config = {
         saffron: '#D97A2A',
         gold: '#B8914C',
 
-        // Brand system — "ma." logo tokens (Mi Asesor)
+        // Brand system — "ma." logo tokens (TuAsesor)
         brand: {
           ink: '#0f1011',
           paper: '#f5f2ec',

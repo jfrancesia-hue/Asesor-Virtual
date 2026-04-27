@@ -1,4 +1,4 @@
--- AbogadoVirtual — Contract Templates Seeds
+-- TuAsesor — Contract Templates Seeds
 INSERT INTO contract_templates (type, jurisdiction, name, description, content_html, required_fields, default_clauses) VALUES
 
 ('alquiler', 'argentina',

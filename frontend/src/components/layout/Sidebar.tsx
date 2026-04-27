@@ -38,7 +38,7 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
             <Scale className="w-4 h-4 text-white" />
           </div>
           <div>
-            <p className="font-bold text-slate-900 text-sm leading-none">Asesor Virtual</p>
+            <p className="font-bold text-slate-900 text-sm leading-none">TuAsesor</p>
             <p className="text-xs text-slate-400 mt-0.5 capitalize">{tenant?.plan || 'start'}</p>
           </div>
         </div>
@@ -160,7 +160,7 @@ export function Sidebar() {
           <div className="w-6 h-6 bg-blue-600 rounded flex items-center justify-center">
             <Scale className="w-3.5 h-3.5 text-white" />
           </div>
-          <span className="font-bold text-slate-900 text-sm">Asesor Virtual</span>
+          <span className="font-bold text-slate-900 text-sm">TuAsesor</span>
         </div>
       </div>
 

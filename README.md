@@ -1,4 +1,4 @@
-# AbogadoVirtual
+# TuAsesor
 
 Plataforma SaaS multi-asesor con IA para Latinoamérica. 5 asesores especializados bajo una sola suscripción.
 
@@ -25,7 +25,7 @@ Plataforma SaaS multi-asesor con IA para Latinoamérica. 5 asesores especializad
 ## Estructura
 
 ```
-abogadovirtual/
+tuasesor/
 ├── backend/           # NestJS API
 │   ├── src/
 │   │   ├── modules/

@@ -37,7 +37,7 @@ export class PdfService {
           </div>`,
         footerTemplate: `
           <div style="font-size:9px; color:#666; width:100%; text-align:center; padding-bottom:5px;">
-            Generado por Asesor Virtual — <span class="pageNumber"></span> / <span class="totalPages"></span>
+            Generado por TuAsesor — <span class="pageNumber"></span> / <span class="totalPages"></span>
           </div>`,
       });
 
@@ -115,7 +115,7 @@ export class PdfService {
   <div class="contract-wrapper">
     ${content}
   </div>
-  <div class="watermark">Asesor Virtual — Generado con IA</div>
+  <div class="watermark">TuAsesor — Generado con IA</div>
 </body>
 </html>`;
   }

@@ -108,7 +108,7 @@ export default function CookiesPage() {
                 Desde el navegador: en Chrome, Configuración → Privacidad y seguridad → Borrar datos de navegación. En Firefox y Safari el proceso es análogo.
               </p>
               <p>
-                Desde tu cuenta: Panel → Configuración → Privacidad → "Borrar rastro de sesión". Esta opción cierra la sesión en todos los dispositivos.
+                Desde tu cuenta: Panel → Configuración → Privacidad → &quot;Borrar rastro de sesión&quot;. Esta opción cierra la sesión en todos los dispositivos.
               </p>
             </div>
           </div>

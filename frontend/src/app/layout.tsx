@@ -36,12 +36,12 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: { default: 'Mi Asesor — Cinco especialistas. Una conversación.', template: '%s | Mi Asesor' },
-  description: 'Asesoría inteligente para Latinoamérica. Legal, Salud, Finanzas, Bienestar y Hogar bajo una sola suscripción.',
-  keywords: ['mi asesor', 'asesoría legal', 'inteligencia artificial', 'contratos', 'LATAM'],
+  title: { default: 'TuAsesor - Cinco especialistas IA', template: '%s | TuAsesor' },
+  description: 'Asesoria inteligente para Latinoamerica. Legal, Salud, Finanzas, Bienestar y Hogar bajo una sola suscripcion.',
+  keywords: ['asesor virtual', 'asesoria legal', 'inteligencia artificial', 'contratos', 'LATAM'],
   openGraph: {
-    title: 'Mi Asesor',
-    description: 'Cinco especialistas. Una conversación. Asesoría inteligente para LATAM.',
+    title: 'TuAsesor',
+    description: 'Cinco especialistas IA en una experiencia 3D para LATAM.',
     type: 'website',
   },
 };
@@ -49,12 +49,6 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es" className={`${fraunces.variable} ${instrumentSans.variable} ${jetbrainsMono.variable} ${dmSans.variable} ${inter.variable}`}>
-      <head>
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
-        />
-      </head>
       <body>
         {children}
         <Toaster
@@ -62,12 +56,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           toastOptions={{
             duration: 4000,
             style: {
-              borderRadius: '2px',
+              borderRadius: '8px',
               fontSize: '13px',
               fontFamily: 'var(--font-geist), system-ui, sans-serif',
-              background: '#18120D',
-              color: '#F4EEE3',
-              border: '1px solid #2a1f17',
+              background: '#0b1019',
+              color: '#f8fafc',
+              border: '1px solid rgba(255,255,255,0.12)',
             },
           }}
         />

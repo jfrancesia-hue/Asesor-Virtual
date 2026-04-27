@@ -1,5 +1,5 @@
 /**
- * Asesor Virtual — RAG Legal Document Indexer
+ * TuAsesor — RAG Legal Document Indexer
  * Run: npm run db:index-legal
  */
 import 'reflect-metadata';
@@ -67,7 +67,7 @@ async function indexDocument(docId: string, content: string): Promise<void> {
 }
 
 async function main() {
-  console.log('🔍 Asesor Virtual — Indexador RAG Legal\n');
+  console.log('🔍 TuAsesor — Indexador RAG Legal\n');
 
   const { data: documents, error } = await supabase
     .from('legal_documents')

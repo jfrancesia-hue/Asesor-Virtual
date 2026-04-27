@@ -1,5 +1,5 @@
 -- ============================================================
--- AbogadoVirtual — Migration 001: Initial Schema
+-- TuAsesor — Migration 001: Initial Schema
 -- ============================================================
 
 -- Enable extensions

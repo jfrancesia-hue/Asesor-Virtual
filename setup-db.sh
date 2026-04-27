@@ -1,11 +1,11 @@
 #!/bin/bash
-# Asesor Virtual — Database Setup Script
+# TuAsesor — Database Setup Script
 # Usage: ./setup-db.sh
 # Requires: psql available in PATH, DATABASE_URL set in backend/.env
 
 set -e
 
-echo "🚀 Asesor Virtual — Database Setup"
+echo "🚀 TuAsesor — Database Setup"
 echo "====================================="
 
 # Load env
@@ -58,7 +58,7 @@ cd ..
 echo "✅ RAG indexing completed"
 
 echo ""
-echo "🎉 Asesor Virtual — database setup complete!"
+echo "🎉 TuAsesor — database setup complete!"
 echo ""
 echo "Next steps:"
 echo "  1. cd backend && npm run start:dev"

@@ -1,5 +1,5 @@
 -- ============================================================
--- Asesor Virtual — Supabase RLS Setup
+-- TuAsesor — Supabase RLS Setup
 -- EJECUTAR UNA SOLA VEZ en Supabase SQL Editor ANTES de las demás migraciones
 -- ============================================================
 

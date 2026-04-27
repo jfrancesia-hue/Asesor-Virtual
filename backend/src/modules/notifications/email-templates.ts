@@ -1,14 +1,14 @@
 export const emailTemplates = {
   welcome: (name: string, planName: string) => ({
-    subject: 'Bienvenido a Asesor Virtual',
+    subject: 'Bienvenido a TuAsesor',
     html: `
 <!DOCTYPE html><html><body style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px">
 <div style="background:#3b82f6;padding:20px;border-radius:8px 8px 0 0;text-align:center">
-  <h1 style="color:white;margin:0">⚖️ Asesor Virtual</h1>
+  <h1 style="color:white;margin:0">⚖️ TuAsesor</h1>
 </div>
 <div style="background:#f9fafb;padding:30px;border-radius:0 0 8px 8px">
   <h2>¡Hola ${name}!</h2>
-  <p>Bienvenido a <strong>Asesor Virtual</strong>. Tu cuenta con plan <strong>${planName}</strong> está activa.</p>
+  <p>Bienvenido a <strong>TuAsesor</strong>. Tu cuenta con plan <strong>${planName}</strong> está activa.</p>
   <p>Tenés acceso a <strong>5 asesores IA especializados</strong>:</p>
   <ul>
     <li>⚖️ <strong>Legal</strong> — Contratos y asesoría jurídica LATAM</li>
@@ -22,7 +22,7 @@ export const emailTemplates = {
   </a>
 </div>
 <p style="color:#9ca3af;font-size:12px;text-align:center;margin-top:20px">
-  Asesor Virtual — Nativos Consultora Digital
+  TuAsesor — Nativos Consultora Digital
 </p>
 </body></html>`,
   }),
@@ -78,14 +78,14 @@ export const emailTemplates = {
   }),
 
   invite: (inviterName: string, orgName: string, loginUrl: string) => ({
-    subject: `Te invitaron a ${orgName} en Asesor Virtual`,
+    subject: `Te invitaron a ${orgName} en TuAsesor`,
     html: `
 <!DOCTYPE html><html><body style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px">
 <div style="background:#3b82f6;padding:20px;border-radius:8px 8px 0 0;text-align:center">
-  <h1 style="color:white;margin:0">⚖️ Asesor Virtual</h1>
+  <h1 style="color:white;margin:0">⚖️ TuAsesor</h1>
 </div>
 <div style="background:#f9fafb;padding:30px;border-radius:0 0 8px 8px">
-  <p><strong>${inviterName}</strong> te invitó a unirte a <strong>${orgName}</strong> en Asesor Virtual.</p>
+  <p><strong>${inviterName}</strong> te invitó a unirte a <strong>${orgName}</strong> en TuAsesor.</p>
   <a href="${loginUrl}" style="background:#3b82f6;color:white;padding:12px 24px;border-radius:6px;text-decoration:none;display:inline-block;margin-top:20px">
     Aceptar invitación →
   </a>
@@ -93,7 +93,7 @@ export const emailTemplates = {
   }),
 
   creditsLow: (name: string, balance: number) => ({
-    subject: '⚡ Créditos bajos en Asesor Virtual',
+    subject: '⚡ Créditos bajos en TuAsesor',
     html: `
 <!DOCTYPE html><html><body style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px">
 <div style="background:#8b5cf6;padding:20px;border-radius:8px 8px 0 0;text-align:center">

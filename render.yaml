@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: abogadovirtual-api
+    name: tuasesor-api
     runtime: docker
     dockerfilePath: ./backend/Dockerfile
     dockerContext: ./backend
@@ -31,7 +31,7 @@ services:
       - key: REDIS_URL
         fromService:
           type: redis
-          name: abogadovirtual-redis
+          name: tuasesor-redis
           property: connectionString
       - key: STRIPE_SECRET_KEY
         sync: false
@@ -40,7 +40,7 @@ services:
       - key: RESEND_API_KEY
         sync: false
       - key: RESEND_FROM
-        value: noreply@abogadovirtual.com
+        value: noreply@tuasesor.app
       - key: FRONTEND_URL
         sync: false
       - key: STRIPE_PRICE_START
@@ -61,7 +61,7 @@ services:
     autoDeploy: true
 
   - type: web
-    name: abogadovirtual-web
+    name: tuasesor-web
     runtime: docker
     dockerfilePath: ./frontend/Dockerfile
     dockerContext: ./frontend
@@ -74,6 +74,6 @@ services:
     autoDeploy: true
 
   - type: redis
-    name: abogadovirtual-redis
+    name: tuasesor-redis
     plan: starter
     maxmemoryPolicy: allkeys-lru

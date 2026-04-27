@@ -8,7 +8,7 @@ export class HealthController {
   check() {
     return {
       status: 'ok',
-      service: 'abogadovirtual-api',
+      service: 'tuasesor-api',
       version: '1.0.0',
       timestamp: new Date().toISOString(),
       uptime: process.uptime(),

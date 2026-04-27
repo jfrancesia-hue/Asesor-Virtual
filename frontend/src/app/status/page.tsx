@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Estado del servicio',
-  description: 'Estado en tiempo real de los componentes de Mi Asesor.',
+  description: 'Estado en tiempo real de los componentes de TuAsesor.',
 };
 
 type Status = 'operativo' | 'degradado' | 'caido';
@@ -49,7 +49,7 @@ export default function StatusPage() {
       <header className="border-b border-ink/15 bg-paper/95">
         <div className="max-w-[1100px] mx-auto px-6 h-20 flex items-center justify-between">
           <Link href="/landing" className="font-brand text-[18px] text-ink" style={{ fontWeight: 600, letterSpacing: '-0.01em' }}>
-            Mi Asesor
+            TuAsesor
           </Link>
           <nav className="flex items-center gap-6 font-mono text-[11px] uppercase tracking-editorial text-ink-muted">
             <Link href="/legal/privacidad" className="editorial-link">Privacidad</Link>
@@ -158,7 +158,7 @@ export default function StatusPage() {
       <footer className="border-t border-ink/15 bg-paper">
         <div className="max-w-[1100px] mx-auto px-6 py-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <div className="font-mono text-[10px] uppercase tracking-editorial text-ink-muted">
-            © 2026 Mi Asesor · Buenos Aires
+            © 2026 TuAsesor · Buenos Aires
           </div>
           <Link href="/landing" className="editorial-link font-mono text-[11px] uppercase tracking-editorial text-oxblood">
             ← Volver a la portada

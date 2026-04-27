@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Términos y condiciones',
-  description: 'Términos de uso del servicio Mi Asesor.',
+  description: 'Términos de uso del servicio TuAsesor.',
 };
 
 const SECTIONS = [
@@ -10,7 +10,7 @@ const SECTIONS = [
     num: 'I',
     title: 'Objeto del servicio',
     body: [
-      'Mi Asesor brinda asesoramiento informativo generado por modelos de inteligencia artificial, especializados en cinco áreas: legal, salud, finanzas, bienestar y hogar. Las respuestas son orientativas y no reemplazan el juicio de un profesional colegiado cuando la materia lo exige.',
+      'TuAsesor brinda asesoramiento informativo generado por modelos de inteligencia artificial, especializados en cinco áreas: legal, salud, finanzas, bienestar y hogar. Las respuestas son orientativas y no reemplazan el juicio de un profesional colegiado cuando la materia lo exige.',
       'El servicio se presta a través de la plataforma web y, eventualmente, aplicaciones móviles oficiales.',
     ],
   },
@@ -42,7 +42,7 @@ const SECTIONS = [
     num: 'V',
     title: 'Limitación de responsabilidad',
     body: [
-      'Las respuestas de los asesores IA son informativas. Para decisiones con efectos jurídicos, clínicos o patrimoniales definitivos, consultá con un profesional humano. Mi Asesor no asume responsabilidad por daños derivados del uso no profesional de la información proporcionada.',
+      'Las respuestas de los asesores IA son informativas. Para decisiones con efectos jurídicos, clínicos o patrimoniales definitivos, consultá con un profesional humano. TuAsesor no asume responsabilidad por daños derivados del uso no profesional de la información proporcionada.',
       'Nuestra responsabilidad agregada, en cualquier caso, queda limitada al monto efectivamente pagado por el usuario en los 12 meses previos al hecho generador del reclamo.',
     ],
   },
@@ -50,7 +50,7 @@ const SECTIONS = [
     num: 'VI',
     title: 'Propiedad intelectual',
     body: [
-      'La plataforma, su código, diseño, marcas y modelos propietarios son titularidad de Mi Asesor SAS. El contenido generado en respuesta a tus consultas es de uso libre para vos; no reclamamos derechos sobre él.',
+      'La plataforma, su código, diseño, marcas y modelos propietarios son titularidad de TuAsesor SAS. El contenido generado en respuesta a tus consultas es de uso libre para vos; no reclamamos derechos sobre él.',
       'Los documentos que subas permanecen bajo tu titularidad. Solo los procesamos para responder tu consulta y los eliminamos al finalizar el análisis, salvo que decidas archivarlos en tu panel.',
     ],
   },
@@ -85,7 +85,7 @@ export default function TermsPage() {
           Términos y condiciones
         </h1>
         <p className="mt-6 text-[16px] leading-[1.7] text-ink-muted max-w-[60ch]">
-          Estos términos rigen tu relación con Mi Asesor SAS. Leelos antes de suscribirte. Si algo no te queda claro, escribinos.
+          Estos términos rigen tu relación con TuAsesor SAS. Leelos antes de suscribirte. Si algo no te queda claro, escribinos.
         </p>
       </div>
 
@@ -122,8 +122,8 @@ export default function TermsPage() {
         </div>
         <p className="text-[15px] leading-[1.7] text-ink">
           Escribinos a{' '}
-          <a href="mailto:legal@miasesor.app" className="editorial-link text-oxblood">
-            legal@miasesor.app
+          <a href="mailto:legal@tuasesor.app" className="editorial-link text-oxblood">
+            legal@tuasesor.app
           </a>
           .
         </p>

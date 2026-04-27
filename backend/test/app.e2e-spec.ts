@@ -1,5 +1,5 @@
 /**
- * AbogadoVirtual — E2E Tests (~55 test cases)
+ * TuAsesor — E2E Tests (~55 test cases)
  */
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
@@ -8,8 +8,8 @@ import { AppModule } from '../src/app.module';
 import { GlobalExceptionFilter } from '../src/common/filters/global-exception.filter';
 import { ResponseInterceptor } from '../src/common/interceptors/response.interceptor';
 
-const UNIQUE_EMAIL = `test+${Date.now()}@abogadovirtual.test`;
-const UNIQUE_EMAIL_2 = `test2+${Date.now()}@abogadovirtual.test`;
+const UNIQUE_EMAIL = `test+${Date.now()}@tuasesor.test`;
+const UNIQUE_EMAIL_2 = `test2+${Date.now()}@tuasesor.test`;
 let authToken: string;
 let tenantId: string;
 let userId: string;
@@ -18,7 +18,7 @@ let conversationId: string;
 let analysisId: string;
 let complianceId: string;
 
-describe('AbogadoVirtual E2E Tests', () => {
+describe('TuAsesor E2E Tests', () => {
   let app: INestApplication;
 
   beforeAll(async () => {

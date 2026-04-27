@@ -38,7 +38,7 @@ export default function RegisterPage() {
 
     try {
       await register(form);
-      toast.success('¡Cuenta creada! Bienvenido a Asesor Virtual');
+      toast.success('¡Cuenta creada! Bienvenido a TuAsesor');
       router.push('/home');
     } catch (error: any) {
       toast.error(error.message || 'Error al registrar');
