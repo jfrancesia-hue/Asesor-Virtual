@@ -107,7 +107,7 @@ export default function AnalysisDetailPage() {
                     </div>
                     {f.clause_text && (
                       <blockquote className="text-xs text-slate-500 border-l-2 border-slate-200 pl-3 mb-2 italic">
-                        "{f.clause_text}"
+                        &quot;{f.clause_text}&quot;
                       </blockquote>
                     )}
                     <p className="text-sm text-slate-700 mb-2">{f.explanation}</p>

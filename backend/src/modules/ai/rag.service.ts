@@ -13,7 +13,7 @@ export class RagService {
     @Inject(SUPABASE_ADMIN) private readonly supabase: SupabaseClient,
     private readonly config: ConfigService,
   ) {
-    this.openai = new OpenAI({ apiKey: config.get('OPENAI_API_KEY') });
+    this.openai = new OpenAI({ apiKey: config.get('OPENAI_API_KEY') || 'missing-openai-key' });
   }
 
   async searchKnowledge(query: string, country?: string): Promise<string> {

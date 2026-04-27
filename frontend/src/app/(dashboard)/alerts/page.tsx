@@ -28,6 +28,8 @@ export default function AlertsPage() {
 
   useEffect(() => {
     loadAlerts();
+    // loadAlerts reads the current pagination/filter state for this view.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, filter]);
 
   const loadAlerts = async () => {

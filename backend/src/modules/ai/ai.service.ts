@@ -55,8 +55,8 @@ export class AiService {
     private readonly config: ConfigService,
     private readonly ragService: RagService,
   ) {
-    this.openai = new OpenAI({ apiKey: config.get('OPENAI_API_KEY') });
-    this.anthropic = new Anthropic({ apiKey: config.get('ANTHROPIC_API_KEY') });
+    this.openai = new OpenAI({ apiKey: config.get('OPENAI_API_KEY') || 'missing-openai-key' });
+    this.anthropic = new Anthropic({ apiKey: config.get('ANTHROPIC_API_KEY') || 'missing-anthropic-key' });
     // Default to anthropic — Claude is the primary model
     this.primaryProvider = config.get('AI_PROVIDER', 'anthropic');
     this.promptCacheEnabled = config.get('CLAUDE_PROMPT_CACHE', 'true') === 'true';

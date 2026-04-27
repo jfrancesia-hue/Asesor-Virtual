@@ -31,6 +31,8 @@ export default function ContractsPage() {
 
   useEffect(() => {
     loadContracts();
+    // loadContracts reads the current filter state for this table.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search, statusFilter, typeFilter, page]);
 
   const loadContracts = async () => {

@@ -16,8 +16,8 @@ export class NotificationsService {
     @Inject(SUPABASE_ADMIN) private readonly supabase: SupabaseClient,
     private readonly config: ConfigService,
   ) {
-    this.resend = new Resend(config.get('RESEND_API_KEY'));
-    this.fromEmail = config.get('RESEND_FROM', 'noreply@abogadovirtual.com');
+    this.resend = new Resend(config.get('RESEND_API_KEY') || 'missing-resend-key');
+    this.fromEmail = config.get('RESEND_FROM', 'noreply@tuasesor.app');
   }
 
   async getAlerts(tenantId: string, userId: string, page = 1, limit = 20) {

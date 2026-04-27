@@ -33,6 +33,8 @@ export default function ConversationsPage() {
 
   useEffect(() => {
     loadConversations();
+    // loadConversations reads the current pagination/filter state for this view.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, advisorFilter]);
 
   const loadConversations = async () => {

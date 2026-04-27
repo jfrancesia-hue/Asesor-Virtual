@@ -16,7 +16,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         router.push('/auth/login');
       }
     });
-  }, []);
+  }, [loadProfile, router]);
 
   if (isLoading) {
     return (

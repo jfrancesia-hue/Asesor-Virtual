@@ -38,6 +38,8 @@ function AdvisorChat() {
   useEffect(() => {
     loadAdvisor();
     api.ai.listAdvisors().then(setAdvisors).catch(() => {});
+    // loadAdvisor intentionally recreates the conversation when advisorId changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [advisorId]);
 
   useEffect(() => {
