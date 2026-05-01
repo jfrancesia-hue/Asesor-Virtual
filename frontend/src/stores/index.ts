@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { api, setToken, clearToken } from '@/lib/api';
+import { api } from '@/lib/api';
 
 // ============================================================
 // AUTH STORE
@@ -13,7 +13,7 @@ interface AuthState {
   login: (email: string, password: string) => Promise<void>;
   register: (data: any) => Promise<void>;
   loadProfile: () => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
   updateProfile: (data: any) => Promise<void>;
 }
 
@@ -29,7 +29,6 @@ export const useAuthStore = create<AuthState>()(
         set({ isLoading: true });
         try {
           const data = await api.auth.login({ email, password }) as any;
-          setToken(data.token);
           set({ user: data.user, tenant: data.tenant, isAuthenticated: true });
         } finally {
           set({ isLoading: false });
@@ -40,7 +39,6 @@ export const useAuthStore = create<AuthState>()(
         set({ isLoading: true });
         try {
           const data = await api.auth.register(formData) as any;
-          setToken(data.token);
           set({ user: data.user, tenant: data.tenant, isAuthenticated: true });
         } finally {
           set({ isLoading: false });
@@ -56,8 +54,12 @@ export const useAuthStore = create<AuthState>()(
         }
       },
 
-      logout: () => {
-        clearToken();
+      logout: async () => {
+        try {
+          await api.auth.logout();
+        } catch {
+          // ignorar — limpiar estado local de todas formas
+        }
         set({ user: null, tenant: null, isAuthenticated: false });
       },
 

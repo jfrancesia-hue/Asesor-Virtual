@@ -7,9 +7,18 @@ import {
   Logger,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { SUPABASE_ADMIN } from '../../config/supabase.module';
 import { RegisterDto, LoginDto } from './auth.dto';
+import { JwtPayload } from '../../common/decorators/current-user.decorator';
+
+const REFRESH_TOKEN_TYPE = 'refresh';
+
+export interface AuthTokens {
+  accessToken: string;
+  refreshToken: string;
+}
 
 @Injectable()
 export class AuthService {
@@ -18,10 +27,10 @@ export class AuthService {
   constructor(
     @Inject(SUPABASE_ADMIN) private readonly supabase: SupabaseClient,
     private readonly jwtService: JwtService,
+    private readonly config: ConfigService,
   ) {}
 
   async register(dto: RegisterDto) {
-    // 1. Create Supabase auth user
     const { data: authData, error: authError } = await this.supabase.auth.admin.createUser({
       email: dto.email,
       password: dto.password,
@@ -38,7 +47,6 @@ export class AuthService {
     const authUserId = authData.user.id;
 
     try {
-      // 2. Create tenant
       const slug = this.generateSlug(dto.companyName || dto.fullName);
       const { data: tenant, error: tenantError } = await this.supabase
         .from('tenants')
@@ -58,7 +66,6 @@ export class AuthService {
 
       if (tenantError) throw new Error('Error al crear tenant: ' + tenantError.message);
 
-      // 3. Create user record
       const { data: user, error: userError } = await this.supabase
         .from('users')
         .insert({
@@ -74,15 +81,14 @@ export class AuthService {
 
       if (userError) throw new Error('Error al crear perfil: ' + userError.message);
 
-      const token = this.signToken(user.id, user.email, tenant.id, user.role);
+      const tokens = this.issueTokens(user.id, user.email, tenant.id, user.role);
 
       return {
-        token,
+        ...tokens,
         user: { id: user.id, email: user.email, fullName: user.full_name, role: user.role },
         tenant: { id: tenant.id, name: tenant.name, slug: tenant.slug, plan: tenant.plan },
       };
     } catch (error) {
-      // Rollback: delete auth user if tenant/user creation failed
       await this.supabase.auth.admin.deleteUser(authUserId).catch(() => {});
       this.logger.error('Register rollback executed', error.message);
       throw new InternalServerErrorException(error.message || 'Error al registrar');
@@ -113,17 +119,16 @@ export class AuthService {
       throw new UnauthorizedException('Cuenta desactivada');
     }
 
-    // Fire-and-forget last_login update
     this.supabase
       .from('users')
       .update({ last_login: new Date().toISOString() })
       .eq('id', user.id)
       .then(() => {}, () => {});
 
-    const token = this.signToken(user.id, user.email, user.tenant_id, user.role);
+    const tokens = this.issueTokens(user.id, user.email, user.tenant_id, user.role);
 
     return {
-      token,
+      ...tokens,
       user: {
         id: user.id,
         email: user.email,
@@ -139,6 +144,37 @@ export class AuthService {
         country: user.tenant.country,
       },
     };
+  }
+
+  async refresh(refreshToken: string | undefined): Promise<AuthTokens> {
+    if (!refreshToken) {
+      throw new UnauthorizedException('Refresh token ausente');
+    }
+
+    let payload: JwtPayload & { type?: string };
+    try {
+      payload = this.jwtService.verify(refreshToken, {
+        secret: this.config.getOrThrow<string>('JWT_SECRET'),
+      });
+    } catch {
+      throw new UnauthorizedException('Refresh token inválido o expirado');
+    }
+
+    if (payload.type !== REFRESH_TOKEN_TYPE) {
+      throw new UnauthorizedException('Token no es de refresh');
+    }
+
+    const { data: user } = await this.supabase
+      .from('users')
+      .select('id, email, tenant_id, role, is_active')
+      .eq('id', payload.sub)
+      .single();
+
+    if (!user || !user.is_active) {
+      throw new UnauthorizedException('Usuario inactivo o no encontrado');
+    }
+
+    return this.issueTokens(user.id, user.email, user.tenant_id, user.role);
   }
 
   async getProfile(userId: string) {
@@ -198,15 +234,21 @@ export class AuthService {
     return { id: data.id, email: data.email, fullName: data.full_name, preferences: data.preferences };
   }
 
-  private signToken(userId: string, email: string, tenantId: string, role: string): string {
-    return this.jwtService.sign({ sub: userId, email, tenantId, role });
+  private issueTokens(userId: string, email: string, tenantId: string, role: string): AuthTokens {
+    const basePayload = { sub: userId, email, tenantId, role };
+    const accessToken = this.jwtService.sign(basePayload);
+    const refreshToken = this.jwtService.sign(
+      { ...basePayload, type: REFRESH_TOKEN_TYPE },
+      { expiresIn: this.config.get<string>('JWT_REFRESH_EXPIRES_IN', '30d') },
+    );
+    return { accessToken, refreshToken };
   }
 
   private generateSlug(name: string): string {
     const base = name
       .toLowerCase()
       .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[̀-ͯ]/g, '')
       .replace(/[^a-z0-9\s-]/g, '')
       .replace(/\s+/g, '-')
       .substring(0, 50);

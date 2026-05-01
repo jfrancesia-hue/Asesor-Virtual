@@ -1,5 +1,4 @@
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
-const TOKEN_KEY = 'av_token';
 const REQUEST_TIMEOUT_MS = 30_000;
 const STREAM_TIMEOUT_MS = 120_000;
 
@@ -14,22 +13,45 @@ export class ApiError extends Error {
   }
 }
 
-function getToken(): string | null {
-  if (typeof window === 'undefined') return null;
-  return localStorage.getItem(TOKEN_KEY);
+// Single in-flight refresh promise para evitar múltiples /auth/refresh paralelos
+let refreshInFlight: Promise<boolean> | null = null;
+
+async function refreshSession(): Promise<boolean> {
+  if (refreshInFlight) return refreshInFlight;
+
+  refreshInFlight = (async () => {
+    try {
+      const res = await fetch(`${API_BASE}/auth/refresh`, {
+        method: 'POST',
+        credentials: 'include',
+      });
+      return res.ok;
+    } catch {
+      return false;
+    } finally {
+      // Liberar el lock en el próximo tick
+      setTimeout(() => {
+        refreshInFlight = null;
+      }, 0);
+    }
+  })();
+
+  return refreshInFlight;
 }
 
-export function setToken(token: string) {
+function redirectToLogin() {
   if (typeof window === 'undefined') return;
-  localStorage.setItem(TOKEN_KEY, token);
-  // Sync to cookie for Next.js middleware
-  document.cookie = `${TOKEN_KEY}=${token}; path=/; max-age=${7 * 24 * 60 * 60}; SameSite=Lax`;
+  if (window.location.pathname.startsWith('/auth/')) return;
+  const redirect = window.location.pathname + window.location.search;
+  window.location.href = `/auth/login?redirect=${encodeURIComponent(redirect)}`;
 }
 
-export function clearToken() {
-  if (typeof window === 'undefined') return;
-  localStorage.removeItem(TOKEN_KEY);
-  document.cookie = `${TOKEN_KEY}=; path=/; max-age=0`;
+async function rawFetch(endpoint: string, init: RequestInit, signal?: AbortSignal) {
+  return fetch(`${API_BASE}${endpoint}`, {
+    ...init,
+    credentials: 'include',
+    signal,
+  });
 }
 
 async function request<T>(
@@ -37,13 +59,10 @@ async function request<T>(
   options: RequestInit = {},
   retries = 2,
 ): Promise<T> {
-  const token = getToken();
-
   const config: RequestInit = {
     ...options,
     headers: {
       'Content-Type': 'application/json',
-      ...(token && { Authorization: `Bearer ${token}` }),
       ...options.headers,
     },
   };
@@ -52,15 +71,21 @@ async function request<T>(
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
     try {
-      const response = await fetch(`${API_BASE}${endpoint}`, { ...config, signal: controller.signal });
+      let response = await rawFetch(endpoint, config, controller.signal);
 
-      if (response.status === 401) {
-        clearToken();
-        window.location.href = '/auth/login';
-        throw new ApiError('No autenticado', 401);
+      // Auto-refresh en 401 (excepto en el endpoint de refresh mismo)
+      if (response.status === 401 && !endpoint.startsWith('/auth/refresh') && !endpoint.startsWith('/auth/login')) {
+        const refreshed = await refreshSession();
+        if (refreshed) {
+          response = await rawFetch(endpoint, config, controller.signal);
+        } else {
+          redirectToLogin();
+          throw new ApiError('No autenticado', 401);
+        }
       }
 
-      const data = await response.json();
+      const text = await response.text();
+      const data = text ? JSON.parse(text) : {};
 
       if (!response.ok) {
         throw new ApiError(
@@ -70,7 +95,6 @@ async function request<T>(
         );
       }
 
-      // Unwrap { success, data, timestamp } envelope
       return (data.data !== undefined ? data.data : data) as T;
     } catch (error) {
       clearTimeout(timeout);
@@ -93,22 +117,35 @@ export async function* streamSSE(
   endpoint: string,
   body: object,
 ): AsyncGenerator<{ type: string; content?: string; messageId?: string; model?: string; error?: string }> {
-  const token = getToken();
-
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), STREAM_TIMEOUT_MS);
 
-  const response = await fetch(`${API_BASE}${endpoint}`, {
+  let response = await fetch(`${API_BASE}${endpoint}`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      ...(token && { Authorization: `Bearer ${token}` }),
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
+    credentials: 'include',
     signal: controller.signal,
   });
 
+  if (response.status === 401) {
+    const refreshed = await refreshSession();
+    if (!refreshed) {
+      clearTimeout(timeout);
+      redirectToLogin();
+      throw new ApiError('No autenticado', 401);
+    }
+    response = await fetch(`${API_BASE}${endpoint}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+      credentials: 'include',
+      signal: controller.signal,
+    });
+  }
+
   if (!response.ok || !response.body) {
+    clearTimeout(timeout);
     throw new ApiError('Error al conectar con el servidor de IA', response.status);
   }
 
@@ -140,24 +177,34 @@ export async function* streamSSE(
   }
 }
 
-// Blob download (raw fetch without envelope unwrapping)
 async function requestBlob(endpoint: string): Promise<Blob> {
-  const token = getToken();
-  const response = await fetch(`${API_BASE}${endpoint}`, {
-    headers: { ...(token && { Authorization: `Bearer ${token}` }) },
-  });
+  let response = await fetch(`${API_BASE}${endpoint}`, { credentials: 'include' });
+  if (response.status === 401) {
+    const refreshed = await refreshSession();
+    if (refreshed) {
+      response = await fetch(`${API_BASE}${endpoint}`, { credentials: 'include' });
+    }
+  }
   if (!response.ok) throw new ApiError('Error al descargar', response.status);
   return response.blob();
 }
 
-// Multipart file upload
 async function uploadFile(endpoint: string, formData: FormData): Promise<any> {
-  const token = getToken();
-  const response = await fetch(`${API_BASE}${endpoint}`, {
+  let response = await fetch(`${API_BASE}${endpoint}`, {
     method: 'POST',
-    headers: { ...(token && { Authorization: `Bearer ${token}` }) },
     body: formData,
+    credentials: 'include',
   });
+  if (response.status === 401) {
+    const refreshed = await refreshSession();
+    if (refreshed) {
+      response = await fetch(`${API_BASE}${endpoint}`, {
+        method: 'POST',
+        body: formData,
+        credentials: 'include',
+      });
+    }
+  }
   const data = await response.json();
   if (!response.ok) throw new ApiError(data.message || 'Error al subir archivo', response.status);
   return data.data !== undefined ? data.data : data;
@@ -167,6 +214,8 @@ export const api = {
   auth: {
     register: (body: any) => request('/auth/register', { method: 'POST', body: JSON.stringify(body) }),
     login: (body: any) => request<any>('/auth/login', { method: 'POST', body: JSON.stringify(body) }),
+    logout: () => request<any>('/auth/logout', { method: 'POST' }),
+    refresh: () => refreshSession(),
     getProfile: () => request<any>('/auth/profile'),
     updateProfile: (body: any) => request<any>('/auth/profile', { method: 'PATCH', body: JSON.stringify(body) }),
   },

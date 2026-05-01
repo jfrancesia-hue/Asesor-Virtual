@@ -8,7 +8,9 @@ export function middleware(req: NextRequest) {
   const isPublic = PUBLIC_PATHS.some((p) => pathname.startsWith(p));
   if (isPublic) return NextResponse.next();
 
-  const token = req.cookies.get('av_token')?.value;
+  // Solo chequea presencia de la cookie httpOnly (la validez la valida el backend).
+  // Si está expirada, el primer request 401 dispara refresh automático en el cliente.
+  const token = req.cookies.get('av_access')?.value || req.cookies.get('av_refresh')?.value;
 
   if (!token) {
     const loginUrl = new URL('/auth/login', req.url);

@@ -17,6 +17,11 @@ Ejecutar **en orden** sobre tu instancia de Supabase (SQL Editor o psql):
    - Crea las 7 tablas de herramientas por asesor (health_checks, wellness_logs, budget_entries, financial_goals, mood_entries, guided_exercises, home_checklists).
    - Inserta ejercicios guiados para el asesor de bienestar y checklists para hogar.
 
+5. `backend/src/database/migrations/004_billing_idempotency.sql`
+   - Unique partial index sobre `credit_ledger(reference_id)` para tipo `purchase`: previene duplicación de créditos si Stripe reenvía un webhook.
+   - Tabla `stripe_webhook_events` para deduplicar `event.id` procesados.
+   - Índice compuesto `(tenant_id, created_at DESC)` para paginación de transacciones.
+
 O ejecutar todo de una: `./setup-db.sh` (requiere `DATABASE_URL` en `backend/.env`).
 
 > Todas las migraciones usan `IF NOT EXISTS` y `ON CONFLICT DO UPDATE` — son idempotentes y se pueden re-ejecutar.

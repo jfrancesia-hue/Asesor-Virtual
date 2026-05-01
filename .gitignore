@@ -34,5 +34,8 @@ Thumbs.db
 # Testing
 coverage/
 
+# TypeScript incremental build info
+*.tsbuildinfo
+
 # Puppeteer cache
 .cache/puppeteer/

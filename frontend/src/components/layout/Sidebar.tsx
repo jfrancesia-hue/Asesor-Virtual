@@ -24,8 +24,8 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
   const { user, tenant, logout } = useAuthStore();
   const { unreadCount } = useAlertsStore();
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     router.push('/auth/login');
   };
 
