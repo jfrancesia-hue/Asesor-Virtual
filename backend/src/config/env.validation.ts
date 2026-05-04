@@ -93,8 +93,10 @@ export class EnvironmentVariables {
   @Matches(/^sk-ant-/, { message: 'ANTHROPIC_API_KEY debe empezar con sk-ant-' })
   ANTHROPIC_API_KEY?: string;
 
-  // OpenAI es obligatorio si es el provider primario, o usado para embeddings (RAG)
-  @ValidateIf((o) => o.AI_PROVIDER === AiProvider.OpenAI)
+  // OpenAI es obligatorio si es el provider primario o en producción para embeddings/RAG
+  @ValidateIf(
+    (o) => o.AI_PROVIDER === AiProvider.OpenAI || o.NODE_ENV === Environment.Production,
+  )
   @IsString()
   @Matches(/^sk-/, { message: 'OPENAI_API_KEY debe empezar con sk-' })
   OPENAI_API_KEY?: string;

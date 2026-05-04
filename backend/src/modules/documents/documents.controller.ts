@@ -1,6 +1,6 @@
 import {
   Controller, Post, UseGuards, UseInterceptors,
-  UploadedFile, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator,
+  UploadedFile,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from '@nestjs/passport';

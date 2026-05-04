@@ -27,7 +27,7 @@ function buildService(opts: {
   const { jwtMock, configMap = {}, supabaseBuilders = {} } = opts;
 
   const jwtService = jwtMock || {
-    sign: jest.fn((payload, options) => {
+    sign: jest.fn((payload, _options) => {
       return `jwt_token_${JSON.stringify(payload)}`;
     }),
     verify: jest.fn(),

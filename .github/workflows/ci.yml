@@ -52,13 +52,13 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL || 'https://tuasesor-api.onrender.com/api' }}
+          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL || 'https://api.example.com/api' }}
 
   deploy-backend:
     name: Deploy Backend → Render
     runs-on: ubuntu-latest
     needs: [backend-ci]
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push' && secrets.RENDER_DEPLOY_HOOK_BACKEND != ''
     steps:
       - name: Trigger Render Deploy
         run: |
@@ -68,7 +68,7 @@ jobs:
     name: Deploy Frontend → Vercel
     runs-on: ubuntu-latest
     needs: [frontend-ci]
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push' && secrets.VERCEL_TOKEN != '' && secrets.VERCEL_ORG_ID != '' && secrets.VERCEL_PROJECT_ID != ''
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

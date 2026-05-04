@@ -107,7 +107,7 @@ export class BillingService {
 
     try {
       event = this.stripe.webhooks.constructEvent(payload, signature, webhookSecret);
-    } catch (error) {
+    } catch {
       throw new BadRequestException('Webhook signature inválida');
     }
 

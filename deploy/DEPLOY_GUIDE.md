@@ -35,7 +35,8 @@ O ejecutar todo de una: `./setup-db.sh` (requiere `DATABASE_URL` en `backend/.en
 ```env
 DATABASE_URL=postgresql://postgres:[password]@[host]:5432/postgres
 SUPABASE_URL=https://[project].supabase.co
-SUPABASE_SERVICE_KEY=[service_role_key]
+SUPABASE_ANON_KEY=[anon_key]
+SUPABASE_SERVICE_ROLE_KEY=[service_role_key]
 OPENAI_API_KEY=sk-...
 ANTHROPIC_API_KEY=sk-ant-...
 JWT_SECRET=[string_aleatoria_larga]
@@ -141,8 +142,8 @@ docker-compose up -d
 
 El `docker-compose.yml` levanta:
 - `api`: NestJS en puerto 3001
-- `web`: Next.js en puerto 3000
-- `postgres`: PostgreSQL 15 (solo para desarrollo local)
+- `frontend`: Next.js en puerto 3000
+- `redis`: Redis 7 para cache/colas auxiliares
 
 ---
 

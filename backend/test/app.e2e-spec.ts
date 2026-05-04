@@ -9,10 +9,8 @@ import { GlobalExceptionFilter } from '../src/common/filters/global-exception.fi
 import { ResponseInterceptor } from '../src/common/interceptors/response.interceptor';
 
 const UNIQUE_EMAIL = `test+${Date.now()}@tuasesor.test`;
-const UNIQUE_EMAIL_2 = `test2+${Date.now()}@tuasesor.test`;
 let authToken: string;
 let tenantId: string;
-let userId: string;
 let contractId: string;
 let conversationId: string;
 let analysisId: string;
@@ -60,7 +58,6 @@ describe('TuAsesor E2E Tests', () => {
       expect(body.data.tenant.plan).toBe('start');
       authToken = body.data.token;
       tenantId = body.data.tenant.id;
-      userId = body.data.user.id;
     });
 
     it('POST /api/auth/register → duplicate email → 409', async () => {

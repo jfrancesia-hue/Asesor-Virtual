@@ -48,6 +48,7 @@ describe('env.validation — validateEnv', () => {
     const config = {
       ...validTestEnv,
       NODE_ENV: 'production',
+      OPENAI_API_KEY: 'sk-prod-123456',
       RESEND_API_KEY: 're_test_123',
       // Missing STRIPE_PRICE_START, STRIPE_PRICE_PRO, etc.
     };
@@ -60,6 +61,7 @@ describe('env.validation — validateEnv', () => {
     const config = {
       ...validTestEnv,
       NODE_ENV: 'production',
+      OPENAI_API_KEY: 'sk-prod-123456',
       STRIPE_PRICE_START: 'price_start',
       STRIPE_PRICE_PRO: 'price_pro',
       STRIPE_PRICE_ENTERPRISE: 'price_enterprise',
@@ -77,6 +79,7 @@ describe('env.validation — validateEnv', () => {
     const config = {
       ...validTestEnv,
       NODE_ENV: 'production',
+      OPENAI_API_KEY: 'sk-prod-123456',
       STRIPE_PRICE_START: 'price_start_prod',
       STRIPE_PRICE_PRO: 'price_pro_prod',
       STRIPE_PRICE_ENTERPRISE: 'price_enterprise_prod',
@@ -115,7 +118,6 @@ describe('env.validation — validateEnv', () => {
     };
 
     expect(() => validateEnv(config)).toThrow();
-    const error = new Error();
     try {
       validateEnv(config);
     } catch (e: any) {
@@ -140,6 +142,7 @@ describe('env.validation — validateEnv', () => {
     const config = {
       ...validTestEnv,
       NODE_ENV: 'production',
+      OPENAI_API_KEY: 'sk-prod-123456',
       STRIPE_PRICE_START: 'price_start_abc123',
       STRIPE_PRICE_PRO: 'price_pro_abc123',
       STRIPE_PRICE_ENTERPRISE: 'price_ent_abc123',
@@ -156,6 +159,7 @@ describe('env.validation — validateEnv', () => {
     const config = {
       ...validTestEnv,
       NODE_ENV: 'production',
+      OPENAI_API_KEY: 'sk-prod-123456',
       STRIPE_PRICE_START: 'invalid_price_id', // Must start with "price_"
       STRIPE_PRICE_PRO: 'price_pro_abc123',
       STRIPE_PRICE_ENTERPRISE: 'price_ent_abc123',
@@ -173,6 +177,7 @@ describe('env.validation — validateEnv', () => {
     const config = {
       ...validTestEnv,
       NODE_ENV: 'production',
+      OPENAI_API_KEY: 'sk-prod-123456',
       STRIPE_PRICE_START: 'price_start_abc123',
       STRIPE_PRICE_PRO: 'price_pro_abc123',
       STRIPE_PRICE_ENTERPRISE: 'price_ent_abc123',
@@ -184,5 +189,21 @@ describe('env.validation — validateEnv', () => {
 
     expect(() => validateEnv(config)).toThrow();
     expect(() => validateEnv(config)).toThrow(/RESEND_API_KEY/);
+  });
+
+  it('rejects production config without OPENAI_API_KEY because RAG needs embeddings', () => {
+    const config = {
+      ...validTestEnv,
+      NODE_ENV: 'production',
+      STRIPE_PRICE_START: 'price_start_abc123',
+      STRIPE_PRICE_PRO: 'price_pro_abc123',
+      STRIPE_PRICE_ENTERPRISE: 'price_ent_abc123',
+      STRIPE_PRICE_CREDITS_10: 'price_c10_abc123',
+      STRIPE_PRICE_CREDITS_30: 'price_c30_abc123',
+      STRIPE_PRICE_CREDITS_100: 'price_c100_abc123',
+      RESEND_API_KEY: 're_test_abc123',
+    };
+
+    expect(() => validateEnv(config)).toThrow(/OPENAI_API_KEY/);
   });
 });

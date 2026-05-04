@@ -5,6 +5,11 @@
 :root {
   --sidebar-width: 240px;
   --header-height: 60px;
+  --font-fraunces: Georgia, "Times New Roman", serif;
+  --font-geist: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-geist-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  --font-dm-sans: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-inter: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 * { box-sizing: border-box; }

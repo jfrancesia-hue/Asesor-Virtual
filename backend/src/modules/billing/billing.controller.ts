@@ -1,5 +1,5 @@
 import {
-  Controller, Get, Post, Body, Param, Query, UseGuards,
+  Controller, Get, Post, Body, Query, UseGuards,
   Headers, RawBodyRequest, Req, ParseIntPipe, DefaultValuePipe,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
