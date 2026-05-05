@@ -58,25 +58,39 @@ jobs:
     name: Deploy Backend → Render
     runs-on: ubuntu-latest
     needs: [backend-ci]
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push' && secrets.RENDER_DEPLOY_HOOK_BACKEND != ''
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    env:
+      RENDER_DEPLOY_HOOK_BACKEND: ${{ secrets.RENDER_DEPLOY_HOOK_BACKEND }}
     steps:
+      - name: Skip deploy when Render hook is missing
+        if: env.RENDER_DEPLOY_HOOK_BACKEND == ''
+        run: echo "RENDER_DEPLOY_HOOK_BACKEND is not configured; skipping backend deploy."
       - name: Trigger Render Deploy
+        if: env.RENDER_DEPLOY_HOOK_BACKEND != ''
         run: |
-          curl -fsS -X POST "${{ secrets.RENDER_DEPLOY_HOOK_BACKEND }}"
+          curl -fsS -X POST "$RENDER_DEPLOY_HOOK_BACKEND"
 
   deploy-frontend:
     name: Deploy Frontend → Vercel
     runs-on: ubuntu-latest
     needs: [frontend-ci]
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push' && secrets.VERCEL_TOKEN != '' && secrets.VERCEL_ORG_ID != '' && secrets.VERCEL_PROJECT_ID != ''
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
     steps:
+      - name: Skip deploy when Vercel secrets are missing
+        if: env.VERCEL_TOKEN == '' || env.VERCEL_ORG_ID == '' || env.VERCEL_PROJECT_ID == ''
+        run: echo "VERCEL_TOKEN, VERCEL_ORG_ID, or VERCEL_PROJECT_ID is not configured; skipping frontend deploy."
       - uses: actions/checkout@v4
+        if: env.VERCEL_TOKEN != '' && env.VERCEL_ORG_ID != '' && env.VERCEL_PROJECT_ID != ''
       - uses: actions/setup-node@v4
+        if: env.VERCEL_TOKEN != '' && env.VERCEL_ORG_ID != '' && env.VERCEL_PROJECT_ID != ''
         with:
           node-version: ${{ env.NODE_VERSION }}
-      - run: npm install -g vercel@latest
-      - run: vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }}
+      - if: env.VERCEL_TOKEN != '' && env.VERCEL_ORG_ID != '' && env.VERCEL_PROJECT_ID != ''
+        run: npm install -g vercel@latest
+      - if: env.VERCEL_TOKEN != '' && env.VERCEL_ORG_ID != '' && env.VERCEL_PROJECT_ID != ''
+        run: vercel deploy --prod --token="$VERCEL_TOKEN"
         working-directory: ./frontend
-        env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}

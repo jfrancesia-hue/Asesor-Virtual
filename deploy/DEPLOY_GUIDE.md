@@ -96,6 +96,8 @@ O conectar el repo en vercel.com → Project Settings → Environment Variables.
    - `checkout.session.completed`
    - `customer.subscription.updated`
    - `customer.subscription.deleted`
+   - `invoice.payment_failed`
+   - `invoice.payment_succeeded`
 4. Copiar el `Signing secret` → `STRIPE_WEBHOOK_SECRET`
 
 ---
@@ -149,7 +151,7 @@ El `docker-compose.yml` levanta:
 
 ## Checklist post-deploy
 
-- [ ] Migraciones 001, 002 y 003 ejecutadas en orden
+- [ ] Migraciones 000, 001, 002, 003 y 004 ejecutadas en orden
 - [ ] Variables de entorno configuradas en backend y frontend
 - [ ] Stripe webhook apuntando al endpoint correcto
 - [ ] Dominio personalizado configurado en Vercel/Render
