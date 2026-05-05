@@ -39,3 +39,4 @@ coverage/
 
 # Puppeteer cache
 .cache/puppeteer/
+.vercel
