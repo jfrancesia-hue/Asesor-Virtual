@@ -190,7 +190,7 @@ export class EnvironmentVariables {
   STRIPE_PRICE_CREDITS_100?: string;
 
   // ── Resend ────────────────────────────────────────────────
-  @ValidateIf((o) => o.NODE_ENV === Environment.Production)
+  @ValidateIf((o) => o.RESEND_API_KEY !== undefined && o.RESEND_API_KEY !== '')
   @IsString()
   @Matches(/^re_/, { message: 'RESEND_API_KEY debe empezar con re_' })
   RESEND_API_KEY?: string;

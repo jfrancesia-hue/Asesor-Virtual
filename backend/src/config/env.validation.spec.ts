@@ -57,7 +57,7 @@ describe('env.validation — validateEnv', () => {
     expect(() => validateEnv(config)).toThrow(/STRIPE_PRICE_START/);
   });
 
-  it('rejects in production without RESEND_API_KEY', () => {
+  it('accepts production without RESEND_API_KEY because email can be enabled later', () => {
     const config = {
       ...validTestEnv,
       NODE_ENV: 'production',
@@ -68,14 +68,12 @@ describe('env.validation — validateEnv', () => {
       STRIPE_PRICE_CREDITS_10: 'price_10',
       STRIPE_PRICE_CREDITS_30: 'price_30',
       STRIPE_PRICE_CREDITS_100: 'price_100',
-      // Missing RESEND_API_KEY
     };
 
-    expect(() => validateEnv(config)).toThrow();
-    expect(() => validateEnv(config)).toThrow(/RESEND_API_KEY/);
+    expect(() => validateEnv(config)).not.toThrow();
   });
 
-  it('accepts valid config for production with all required price IDs and Resend key', () => {
+  it('accepts valid config for production with all required price IDs and optional Resend key', () => {
     const config = {
       ...validTestEnv,
       NODE_ENV: 'production',

@@ -9,14 +9,19 @@ import { emailTemplates } from './email-templates';
 @Injectable()
 export class NotificationsService {
   private readonly logger = new Logger(NotificationsService.name);
-  private readonly resend: Resend;
+  private readonly resend?: Resend;
   private readonly fromEmail: string;
 
   constructor(
     @Inject(SUPABASE_ADMIN) private readonly supabase: SupabaseClient,
     private readonly config: ConfigService,
   ) {
-    this.resend = new Resend(config.get('RESEND_API_KEY') || 'missing-resend-key');
+    const resendApiKey = config.get<string>('RESEND_API_KEY');
+    if (resendApiKey) {
+      this.resend = new Resend(resendApiKey);
+    } else {
+      this.logger.warn('RESEND_API_KEY no configurada; emails deshabilitados.');
+    }
     this.fromEmail = config.get('RESEND_FROM', 'noreply@tuasesor.app');
   }
 
@@ -93,12 +98,18 @@ export class NotificationsService {
   }
 
   async sendEmail(to: string, subject: string, html: string, retries = 2): Promise<boolean> {
+    if (!this.resend) {
+      this.logger.warn(`Email omitido porque Resend no está configurado — subject: "${subject}"`);
+      return false;
+    }
+
     for (let attempt = 1; attempt <= retries; attempt++) {
       try {
         await this.resend.emails.send({ from: this.fromEmail, to, subject, html });
         return true;
       } catch (error) {
-        this.logger.warn(`Email send failed (attempt ${attempt}/${retries}): ${error.message}`);
+        const message = error instanceof Error ? error.message : String(error);
+        this.logger.warn(`Email send failed (attempt ${attempt}/${retries}): ${message}`);
         if (attempt < retries) {
           await new Promise((r) => setTimeout(r, 1000 * attempt));
         }
