@@ -4,8 +4,7 @@ import { useParams, useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { ArrowLeft, MessageCircle, X } from 'lucide-react';
 import { api } from '@/lib/api';
-import { Card, Button, Badge, Spinner } from '@/components/ui';
-import { clsx } from 'clsx';
+import { Button, Badge, Spinner } from '@/components/ui';
 
 // ============================================================
 // Herramientas por asesor
@@ -77,41 +76,52 @@ const ADVISOR_TOOLS: Record<string, AdvisorTool[]> = {
 function CrisisModal({ onClose }: { onClose: () => void }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 animate-fade-in">
-        <button onClick={onClose} className="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
+      <div className="absolute inset-0 bg-[var(--text-strong)]/45 backdrop-blur-sm" onClick={onClose} />
+      <div className="relative bg-[var(--surface)] rounded-2xl shadow-strong border border-[var(--border)] max-w-md w-full p-7 animate-fade-in">
+        <button
+          onClick={onClose}
+          aria-label="Cerrar"
+          className="absolute top-4 right-4 text-[var(--text-muted)] hover:text-[var(--text-strong)] hover:bg-[var(--surface-subtle)] rounded-lg p-1.5 transition-colors"
+        >
           <X className="w-5 h-5" />
         </button>
-        <div className="text-center mb-4">
-          <span className="text-4xl">🆘</span>
-          <h2 className="text-lg font-bold text-slate-900 mt-2">Líneas de ayuda en crisis</h2>
-          <p className="text-sm text-slate-500 mt-1">Si estás en peligro, contactá de inmediato</p>
+        <div className="text-center mb-5">
+          <span className="text-4xl" aria-hidden="true">🆘</span>
+          <h2 className="font-display font-bold text-xl text-[var(--text-strong)] mt-3 tracking-tight">
+            Líneas de ayuda en crisis
+          </h2>
+          <p className="text-sm text-[var(--text-medium)] mt-1.5">Si estás en peligro, contactá de inmediato.</p>
         </div>
-        <div className="space-y-3">
+        <div className="space-y-2.5">
           {[
             { country: '🇦🇷 Argentina', line: '135', desc: 'Centro de Asistencia al Suicida — 24hs gratuito' },
             { country: '🇲🇽 México', line: '800-911-2000', desc: 'SAPTEL — Crisis y orientación 24hs' },
             { country: '🇨🇴 Colombia', line: '106', desc: 'Línea 106 — Salud mental y crisis' },
             { country: '🆘 Emergencias', line: '911', desc: 'Emergencias generales (AR, MX) o 123 (CO)' },
           ].map((item) => (
-            <div key={item.country} className="flex items-center justify-between p-3 bg-purple-50 rounded-xl">
-              <div>
-                <p className="text-sm font-semibold text-slate-800">{item.country}</p>
-                <p className="text-xs text-slate-500">{item.desc}</p>
+            <a
+              key={item.country}
+              href={`tel:${item.line.replace(/-/g, '')}`}
+              className="flex items-center justify-between gap-4 p-3.5 bg-[var(--brand-lavender-bg)] hover:bg-[var(--brand-lavender-bg)]/70 border border-transparent hover:border-[var(--brand-lavender)]/40 rounded-xl transition-colors"
+            >
+              <div className="min-w-0">
+                <p className="font-display text-[14px] font-bold text-[var(--text-strong)]">{item.country}</p>
+                <p className="text-[12px] text-[var(--text-medium)] mt-0.5">{item.desc}</p>
               </div>
-              <a
-                href={`tel:${item.line.replace(/-/g, '')}`}
-                className="text-lg font-bold text-purple-700 hover:text-purple-900"
-              >
+              <span className="text-[17px] font-display font-bold text-[var(--brand-lavender)] flex-shrink-0">
                 {item.line}
-              </a>
-            </div>
+              </span>
+            </a>
           ))}
         </div>
-        <p className="text-xs text-slate-400 text-center mt-4">
-          También podés hablar con Alma, tu asesora de bienestar, en este momento.
+        <p className="text-[12px] text-[var(--text-muted)] text-center mt-5">
+          También podés hablar con Alma, tu acompañante de bienestar.
         </p>
-        <Button fullWidth className="mt-3 bg-purple-600 hover:bg-purple-700" onClick={onClose}>
+        <Button
+          fullWidth
+          className="mt-3 !bg-[var(--brand-lavender)] hover:!bg-[#854D9E]"
+          onClick={onClose}
+        >
           Hablar con Alma ahora
         </Button>
       </div>
@@ -179,52 +189,62 @@ export default function AdvisorDetailPage() {
 
   if (!advisor) {
     return (
-      <div className="p-6 text-center">
-        <p className="text-slate-500">Asesor no encontrado.</p>
-        <Button variant="ghost" className="mt-3" onClick={() => router.push('/home')}>Volver</Button>
+      <div className="p-10 text-center">
+        <p className="text-[var(--text-medium)]">Asesor no encontrado.</p>
+        <Button variant="ghost" className="mt-4" onClick={() => router.push('/home')}>Volver</Button>
       </div>
     );
   }
 
   const tools = ADVISOR_TOOLS[id] || [];
-  const advisorColor = advisor.color || '#3b82f6';
+  const advisorColor = advisor.color || 'var(--primary)';
 
   return (
-    <div className="p-6 max-w-5xl mx-auto">
+    <div className="px-6 md:px-8 py-10 max-w-6xl mx-auto">
       {showCrisis && <CrisisModal onClose={() => setShowCrisis(false)} />}
 
-      <Button
-        variant="ghost"
-        size="sm"
-        className="mb-6 gap-1.5"
+      <button
         onClick={() => router.push('/home')}
+        className="inline-flex items-center gap-1.5 text-[13px] font-medium text-[var(--text-medium)] hover:text-[var(--text-strong)] mb-6 transition-colors"
       >
-        <ArrowLeft className="w-4 h-4" /> Asesores
-      </Button>
+        <ArrowLeft className="w-3.5 h-3.5" strokeWidth={2.4} /> Asesores
+      </button>
 
       {/* Header del asesor */}
-      <div className="flex items-start gap-5 mb-8">
+      <div className="flex flex-col md:flex-row md:items-start gap-5 md:gap-6 mb-10">
         <div
-          className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl flex-shrink-0 shadow-sm"
-          style={{ backgroundColor: advisorColor + '20', border: `2px solid ${advisorColor}30` }}
+          className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl flex-shrink-0 shadow-soft"
+          style={{
+            background: `color-mix(in srgb, ${advisorColor} 14%, var(--surface))`,
+            border: `1.5px solid color-mix(in srgb, ${advisorColor} 30%, transparent)`,
+          }}
+          aria-hidden="true"
         >
           {advisor.icon}
         </div>
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-3 flex-wrap mb-2">
-            <h1 className="text-2xl font-bold text-slate-900">{advisor.title}</h1>
-            {!advisor.available && <Badge color="yellow">Plan Pro</Badge>}
+          <p className="font-display text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--cta-dark)]">
+            {advisor.name}
+          </p>
+          <div className="flex items-center gap-3 flex-wrap mt-1.5">
+            <h1 className="font-display text-[clamp(24px,3.5vw,32px)] font-bold leading-tight tracking-[-0.025em] text-[var(--text-strong)]">
+              {advisor.title}
+            </h1>
+            {!advisor.available && <Badge color="orange">Plan Pro</Badge>}
           </div>
-          <p className="text-slate-500 mb-3">{advisor.description}</p>
+          <p className="text-[15px] text-[var(--text-medium)] mt-2.5 leading-relaxed max-w-2xl">{advisor.description}</p>
 
           {/* Capabilities */}
           {advisor.capabilities && advisor.capabilities.length > 0 && (
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 mt-4">
               {advisor.capabilities.map((cap: string) => (
                 <span
                   key={cap}
-                  className="text-xs px-2.5 py-1 rounded-full font-medium"
-                  style={{ backgroundColor: advisorColor + '15', color: advisorColor }}
+                  className="text-[12px] px-3 py-1 rounded-full font-semibold"
+                  style={{
+                    backgroundColor: `color-mix(in srgb, ${advisorColor} 12%, transparent)`,
+                    color: advisorColor,
+                  }}
                 >
                   {cap}
                 </span>
@@ -234,53 +254,52 @@ export default function AdvisorDetailPage() {
         </div>
         <Button
           onClick={() => router.push(`/advisor?advisor=${id}`)}
-          className="flex-shrink-0 gap-2"
-          style={{ backgroundColor: advisorColor }}
+          size="lg"
+          className="flex-shrink-0 gap-2 !bg-[var(--cta)] hover:!bg-[var(--cta-dark)]"
         >
-          <MessageCircle className="w-4 h-4" />
+          <MessageCircle className="w-4 h-4" strokeWidth={2.4} />
           Chatear ahora
         </Button>
       </div>
 
       {/* Herramientas */}
-      <div className="mb-8">
-        <h2 className="text-base font-semibold text-slate-700 mb-4">¿Qué necesitás?</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+      <section className="mb-10" aria-labelledby="tools-heading">
+        <h2 id="tools-heading" className="font-display font-bold text-lg text-[var(--text-strong)] tracking-tight mb-5">
+          ¿Qué necesitás?
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {tools.map((tool) => (
             <button
               key={tool.label}
               onClick={() => handleTool(tool)}
-              className={clsx(
-                'text-left p-4 rounded-xl border-2 border-slate-100 bg-white',
-                'hover:shadow-md transition-all duration-150 group',
-                'hover:border-opacity-50',
-              )}
-              style={{ '--tool-color': advisorColor } as any}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.borderColor = advisorColor + '50';
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.borderColor = '';
-              }}
+              className="bento-card text-left p-5 rounded-2xl border border-[var(--border)] bg-[var(--surface)]"
             >
               <div className="flex items-start gap-3">
-                <span className="text-2xl flex-shrink-0">{tool.icon}</span>
+                <div
+                  className="w-10 h-10 rounded-xl flex items-center justify-center text-xl flex-shrink-0"
+                  style={{ background: `color-mix(in srgb, ${advisorColor} 12%, var(--surface-subtle))` }}
+                  aria-hidden="true"
+                >
+                  {tool.icon}
+                </div>
                 <div className="min-w-0">
-                  <p className="font-semibold text-slate-800 text-sm group-hover:text-slate-900 mb-0.5">
+                  <p className="font-display font-semibold text-[14.5px] text-[var(--text-strong)] tracking-tight mb-1">
                     {tool.label}
                   </p>
-                  <p className="text-xs text-slate-500 leading-relaxed">{tool.description}</p>
+                  <p className="text-[12.5px] text-[var(--text-medium)] leading-relaxed">{tool.description}</p>
                 </div>
               </div>
             </button>
           ))}
         </div>
-      </div>
+      </section>
 
       {/* Consultas frecuentes */}
       {advisor.quick_actions && advisor.quick_actions.length > 0 && (
-        <div>
-          <h2 className="text-base font-semibold text-slate-700 mb-3">Consultas frecuentes</h2>
+        <section aria-labelledby="quick-heading">
+          <h2 id="quick-heading" className="font-display font-bold text-lg text-[var(--text-strong)] tracking-tight mb-4">
+            Consultas frecuentes
+          </h2>
           <div className="flex flex-wrap gap-2">
             {advisor.quick_actions.map((action: any) => (
               <button
@@ -288,22 +307,13 @@ export default function AdvisorDetailPage() {
                 onClick={() =>
                   router.push(`/advisor?advisor=${id}&prompt=${encodeURIComponent(action.prompt)}`)
                 }
-                className="text-sm px-4 py-2 bg-white border border-slate-200 rounded-full hover:shadow-sm transition-all"
-                style={{ borderColor: 'transparent' }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.borderColor = advisorColor + '60';
-                  (e.currentTarget as HTMLElement).style.color = advisorColor;
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.borderColor = '';
-                  (e.currentTarget as HTMLElement).style.color = '';
-                }}
+                className="text-[13px] px-4 py-2 bg-[var(--surface)] border border-[var(--border)] rounded-full font-medium text-[var(--text-medium)] hover:text-[var(--text-strong)] hover:border-[var(--border-strong)] hover:shadow-soft transition-all"
               >
                 {action.label}
               </button>
             ))}
           </div>
-        </div>
+        </section>
       )}
 
       {/* Disclaimer */}

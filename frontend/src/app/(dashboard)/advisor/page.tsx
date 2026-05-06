@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 import { Send, Save, ChevronDown, ArrowLeft } from 'lucide-react';
 import { api } from '@/lib/api';
 import { useAuthStore } from '@/stores';
-import { Button, Spinner, Card } from '@/components/ui';
+import { Button, Spinner } from '@/components/ui';
 import { clsx } from 'clsx';
 
 interface Message {
@@ -191,9 +191,9 @@ function AdvisorChat() {
           />
         )}
         {contractHtml && (
-          <div className="mt-3 border border-blue-200 rounded-lg overflow-hidden">
-            <div className="bg-blue-50 px-4 py-2 flex items-center justify-between">
-              <span className="text-xs font-semibold text-blue-700">📄 Contrato generado</span>
+          <div className="mt-4 border border-[var(--primary)]/30 rounded-xl overflow-hidden bg-[var(--surface)]">
+            <div className="bg-[var(--primary-bg)] px-4 py-2.5 flex items-center justify-between gap-3">
+              <span className="text-xs font-bold text-[var(--primary-dark)] tracking-wide">📄 CONTRATO GENERADO</span>
               <Button
                 size="sm"
                 onClick={() => handleSaveContract(content, contractType || 'servicios')}
@@ -201,13 +201,16 @@ function AdvisorChat() {
                 className="gap-1.5"
               >
                 <Save className="w-3.5 h-3.5" />
-                Guardar contrato
+                Guardar
               </Button>
             </div>
             <div
-              className="p-4 bg-white text-sm max-h-64 overflow-auto"
+              className="p-4 text-sm max-h-64 overflow-auto"
               dangerouslySetInnerHTML={{ __html: contractHtml }}
             />
+            <div className="px-4 py-2 bg-amber-50 border-t border-amber-200 text-[11.5px] text-amber-900 leading-relaxed">
+              <strong>⚠️ Documento generado por IA.</strong> Antes de firmar, revisalo con un abogado matriculado.
+            </div>
           </div>
         )}
       </div>
@@ -232,39 +235,40 @@ function AdvisorChat() {
   const advisorColor = advisor?.color || '#3b82f6';
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-screen bg-[var(--surface-subtle)]">
       {/* Header */}
-      <div className="flex items-center gap-3 px-4 py-3 bg-white border-b border-slate-200 flex-shrink-0">
+      <div className="flex items-center gap-3 px-4 py-3 bg-[var(--surface)]/95 backdrop-blur-xl border-b border-[var(--border)] flex-shrink-0">
         <button
           onClick={() => router.push(`/advisor/${advisorId}`)}
-          className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors flex-shrink-0"
-          title="Volver al asesor"
+          aria-label="Volver al asesor"
+          className="p-2 text-[var(--text-muted)] hover:text-[var(--text-strong)] hover:bg-[var(--surface-subtle)] rounded-lg transition-colors flex-shrink-0"
         >
-          <ArrowLeft className="w-4 h-4" />
+          <ArrowLeft className="w-4 h-4" strokeWidth={2.4} />
         </button>
         <div
-          className="w-8 h-8 rounded-lg flex items-center justify-center text-lg flex-shrink-0"
-          style={{ backgroundColor: advisorColor + '20' }}
+          className="w-9 h-9 rounded-xl flex items-center justify-center text-lg flex-shrink-0"
+          style={{ background: `color-mix(in srgb, ${advisorColor} 14%, var(--surface))` }}
+          aria-hidden="true"
         >
           {advisor?.icon || '⚖️'}
         </div>
         <div className="flex-1 min-w-0">
-          <h1 className="font-semibold text-slate-900 text-sm truncate">{advisor?.title || 'Asesor'}</h1>
-          <p className="text-xs text-slate-400 truncate">{advisor?.name}</p>
+          <h1 className="font-display font-bold text-[var(--text-strong)] text-[14px] truncate tracking-tight">{advisor?.title || 'Asesor'}</h1>
+          <p className="text-[11.5px] text-[var(--text-muted)] truncate">{advisor?.name}</p>
         </div>
 
         {/* Advisor switcher */}
         <div className="relative">
           <Button
-            variant="outline"
+            variant="subtle"
             size="sm"
             onClick={() => setShowAdvisorPicker(!showAdvisorPicker)}
-            className="gap-1"
+            className="gap-1.5"
           >
-            Cambiar asesor <ChevronDown className="w-3 h-3" />
+            Cambiar <ChevronDown className="w-3.5 h-3.5" strokeWidth={2.4} />
           </Button>
           {showAdvisorPicker && (
-            <div className="absolute right-0 top-full mt-1 bg-white border border-slate-200 rounded-xl shadow-lg z-20 w-56 py-1">
+            <div className="absolute right-0 top-full mt-2 bg-[var(--surface)] border border-[var(--border)] rounded-xl shadow-medium z-20 w-60 py-1.5">
               {advisors.map((a) => (
                 <button
                   key={a.id}
@@ -272,12 +276,16 @@ function AdvisorChat() {
                     setShowAdvisorPicker(false);
                     router.push(`/advisor?advisor=${a.id}`);
                   }}
-                  className="flex items-center gap-3 w-full px-4 py-2.5 text-sm hover:bg-slate-50 transition-colors"
+                  className="flex items-center gap-3 w-full px-4 py-2.5 text-sm hover:bg-[var(--surface-subtle)] transition-colors disabled:opacity-50"
                   disabled={!a.available}
                 >
-                  <span>{a.icon}</span>
-                  <span className={a.available ? 'text-slate-700' : 'text-slate-400'}>{a.name}</span>
-                  {!a.available && <span className="ml-auto text-xs text-yellow-600">Pro</span>}
+                  <span aria-hidden="true">{a.icon}</span>
+                  <span className={a.available ? 'text-[var(--text-strong)]' : 'text-[var(--text-muted)]'}>{a.name}</span>
+                  {!a.available && (
+                    <span className="ml-auto text-[10px] font-bold uppercase tracking-wider text-[var(--cta-dark)] bg-[var(--cta-bg)] px-1.5 py-0.5 rounded">
+                      Pro
+                    </span>
+                  )}
                 </button>
               ))}
             </div>
@@ -286,7 +294,7 @@ function AdvisorChat() {
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-6 space-y-4">
+      <div className="flex-1 overflow-y-auto px-4 md:px-6 py-6 space-y-4">
         {messages.map((msg) => (
           <div
             key={msg.id}
@@ -294,22 +302,23 @@ function AdvisorChat() {
           >
             {msg.role === 'assistant' && (
               <div
-                className="w-7 h-7 rounded-lg flex items-center justify-center text-sm flex-shrink-0 mr-2 mt-0.5"
-                style={{ backgroundColor: advisorColor + '20' }}
+                className="w-8 h-8 rounded-xl flex items-center justify-center text-sm flex-shrink-0 mr-2 mt-0.5 shadow-soft"
+                style={{ background: `color-mix(in srgb, ${advisorColor} 14%, var(--surface))` }}
+                aria-hidden="true"
               >
                 {advisor?.icon || '⚖️'}
               </div>
             )}
             <div
               className={clsx(
-                'max-w-[75%] rounded-2xl px-4 py-3',
+                'max-w-[78%] rounded-2xl px-4 py-3 shadow-soft',
                 msg.role === 'user'
-                  ? 'bg-blue-600 text-white rounded-tr-sm'
-                  : 'bg-white border border-slate-200 text-slate-800 rounded-tl-sm',
+                  ? 'bg-[var(--primary)] text-white rounded-tr-md'
+                  : 'bg-[var(--surface)] border border-[var(--border)] text-[var(--text-strong)] rounded-tl-md',
               )}
             >
               {msg.role === 'assistant' ? renderMessageContent(msg.content) : (
-                <p className="text-sm">{msg.content}</p>
+                <p className="text-sm leading-relaxed">{msg.content}</p>
               )}
             </div>
           </div>
@@ -317,16 +326,21 @@ function AdvisorChat() {
 
         {sending && (
           <div className="flex justify-start">
-            <div className="w-7 h-7 rounded-lg flex items-center justify-center text-sm flex-shrink-0 mr-2" style={{ backgroundColor: advisorColor + '20' }}>
+            <div
+              className="w-8 h-8 rounded-xl flex items-center justify-center text-sm flex-shrink-0 mr-2 shadow-soft"
+              style={{ background: `color-mix(in srgb, ${advisorColor} 14%, var(--surface))` }}
+              aria-hidden="true"
+            >
               {advisor?.icon || '⚖️'}
             </div>
-            <div className="bg-white border border-slate-200 rounded-2xl rounded-tl-sm px-4 py-3">
-              <div className="flex items-center gap-1">
+            <div className="bg-[var(--surface)] border border-[var(--border)] rounded-2xl rounded-tl-md px-4 py-3 shadow-soft">
+              <div className="flex items-center gap-1.5">
                 {[0, 1, 2].map((i) => (
                   <div
                     key={i}
                     className="w-2 h-2 rounded-full animate-bounce"
                     style={{ backgroundColor: advisorColor, animationDelay: `${i * 0.15}s` }}
+                    aria-hidden="true"
                   />
                 ))}
               </div>
@@ -338,12 +352,12 @@ function AdvisorChat() {
 
       {/* Quick actions */}
       {advisor?.quick_actions?.length > 0 && messages.length <= 1 && (
-        <div className="px-6 pb-2 flex flex-wrap gap-2">
+        <div className="px-4 md:px-6 pb-2 flex flex-wrap gap-2">
           {advisor.quick_actions.slice(0, 3).map((action: any, i: number) => (
             <button
               key={i}
               onClick={() => sendMessage(conversation?.id, action.prompt)}
-              className="text-xs px-3 py-1.5 bg-white border border-slate-200 rounded-full hover:border-blue-300 hover:text-blue-700 transition-colors truncate max-w-[200px]"
+              className="text-[12.5px] px-3 py-1.5 bg-[var(--surface)] border border-[var(--border)] rounded-full font-medium text-[var(--text-medium)] hover:text-[var(--text-strong)] hover:border-[var(--border-strong)] transition-all truncate max-w-[220px]"
             >
               {action.label}
             </button>
@@ -352,7 +366,7 @@ function AdvisorChat() {
       )}
 
       {/* Input */}
-      <div className="p-4 bg-white border-t border-slate-200 flex-shrink-0">
+      <div className="px-4 md:px-6 py-4 bg-[var(--surface)] border-t border-[var(--border)] flex-shrink-0">
         <div className="flex gap-3 items-end max-w-4xl mx-auto">
           <textarea
             ref={inputRef}
@@ -361,26 +375,26 @@ function AdvisorChat() {
             onKeyDown={handleKeyDown}
             placeholder={`Escribí tu consulta a ${advisor?.name || 'tu asesor'}...`}
             rows={1}
-            className="flex-1 px-4 py-3 text-sm border border-slate-300 rounded-xl resize-none outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 max-h-32 overflow-auto"
-            style={{ minHeight: '44px' }}
+            className="flex-1 field-textarea max-h-32 overflow-auto"
+            style={{ minHeight: '46px' }}
             onInput={(e) => {
               const t = e.target as HTMLTextAreaElement;
               t.style.height = 'auto';
               t.style.height = Math.min(t.scrollHeight, 128) + 'px';
             }}
           />
-          <Button
+          <button
             onClick={() => sendMessage()}
-            loading={sending}
             disabled={!input.trim() || sending}
-            className="flex-shrink-0 h-11 w-11 p-0 rounded-xl"
-            style={{ backgroundColor: advisorColor }}
+            aria-label="Enviar mensaje"
+            className="magnetic-btn flex-shrink-0 h-11 w-11 rounded-xl text-white shadow-[0_8px_24px_rgba(230,126,34,0.35)] disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center"
+            style={{ backgroundColor: 'var(--cta)' }}
           >
-            <Send className="w-4 h-4" />
-          </Button>
+            <Send className="w-4 h-4" strokeWidth={2.4} />
+          </button>
         </div>
-        <p className="text-center text-xs text-slate-600 mt-2">
-          <span className="font-semibold">Orientación IA — </span>
+        <p className="text-center text-[12px] text-[var(--text-medium)] mt-2.5 max-w-3xl mx-auto leading-relaxed">
+          <span className="font-semibold text-[var(--text-strong)]">Orientación IA — </span>
           {advisorId === 'legal' && '⚖️ no somos abogados ni reemplazamos asesoramiento legal matriculado.'}
           {advisorId === 'health' && '🏥 no somos médicos ni reemplazamos la consulta con un profesional de la salud.'}
           {advisorId === 'finance' && '💰 no somos contadores ni asesores financieros matriculados.'}
