@@ -307,19 +307,28 @@ export default function AdvisorDetailPage() {
       )}
 
       {/* Disclaimer */}
-      <p className="text-xs text-slate-400 text-center mt-8 pb-2">
-        {id === 'legal' && 'El asesor legal orienta pero no reemplaza a un abogado matriculado.'}
-        {id === 'health' && 'Este asesor no reemplaza la consulta con un profesional de la salud.'}
-        {id === 'finance' && 'No reemplaza el asesoramiento de un contador o asesor financiero certificado.'}
+      <div className="mt-8 mb-2 mx-auto max-w-3xl px-4 py-3 rounded-lg border border-amber-300 bg-amber-50 text-amber-900 text-sm leading-relaxed">
+        <span className="font-semibold mr-1">⚠️ Aviso:</span>
+        {id === 'legal' && (
+          <>Las respuestas son <strong>orientación informativa generada por IA</strong>. No somos un estudio jurídico ni reemplazamos a un abogado matriculado. Verificá con un profesional antes de firmar o presentar cualquier documento.</>
+        )}
+        {id === 'health' && (
+          <>Las respuestas son <strong>orientación informativa generada por IA</strong>. No somos médicos ni reemplazamos la consulta con un profesional de la salud. Ante una emergencia, llamá al <strong>107</strong> (AR) / <strong>911</strong> (MX/AR) / <strong>123</strong> (CO).</>
+        )}
+        {id === 'finance' && (
+          <>Las respuestas son <strong>orientación informativa generada por IA</strong>. No somos contadores ni asesores financieros matriculados. Toda inversión tiene riesgo: consultá con un profesional antes de decisiones patrimoniales o tributarias.</>
+        )}
         {id === 'psychology' && (
-          <>No reemplaza la terapia profesional. En crisis llamá al{' '}
-            <button onClick={() => setShowCrisis(true)} className="text-purple-600 underline">
+          <>Las respuestas son <strong>orientación informativa generada por IA</strong>. No reemplaza la terapia con un profesional licenciado. En crisis llamá al{' '}
+            <button onClick={() => setShowCrisis(true)} className="font-semibold underline">
               135 (AR) · 800-911-2000 (MX) · 106 (CO)
-            </button>
+            </button>.
           </>
         )}
-        {id === 'home' && 'Para trabajos de gas o alta tensión consultá un profesional matriculado.'}
-      </p>
+        {id === 'home' && (
+          <>Las respuestas son <strong>orientación informativa generada por IA</strong>. Para trabajos de <strong>gas, alta tensión o estructuras</strong>, contratá siempre un profesional matriculado.</>
+        )}
+      </div>
     </div>
   );
 }

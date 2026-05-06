@@ -379,12 +379,13 @@ function AdvisorChat() {
             <Send className="w-4 h-4" />
           </Button>
         </div>
-        <p className="text-center text-xs text-slate-400 mt-2">
-          {advisorId === 'legal' && '⚖️ No reemplaza el asesoramiento de un abogado matriculado.'}
-          {advisorId === 'health' && '🏥 No reemplaza la consulta con un profesional de la salud.'}
-          {advisorId === 'finance' && '💰 No reemplaza a un asesor financiero certificado.'}
-          {advisorId === 'psychology' && '💜 No reemplaza la terapia profesional. En emergencias llamá al 135 (AR) · 800-911-2000 (MX) · 106 (CO).'}
-          {advisorId === 'home' && '🔧 Para trabajos de gas o alta tensión consultá un profesional matriculado.'}
+        <p className="text-center text-xs text-slate-600 mt-2">
+          <span className="font-semibold">Orientación IA — </span>
+          {advisorId === 'legal' && '⚖️ no somos abogados ni reemplazamos asesoramiento legal matriculado.'}
+          {advisorId === 'health' && '🏥 no somos médicos ni reemplazamos la consulta con un profesional de la salud.'}
+          {advisorId === 'finance' && '💰 no somos contadores ni asesores financieros matriculados.'}
+          {advisorId === 'psychology' && '💜 no reemplaza la terapia profesional. En emergencias llamá al 135 (AR) · 800-911-2000 (MX) · 106 (CO).'}
+          {advisorId === 'home' && '🔧 para trabajos de gas o alta tensión consultá un profesional matriculado.'}
         </p>
       </div>
     </div>

@@ -29,15 +29,20 @@ export class PdfService {
       const pdf = await page.pdf({
         format: 'A4',
         printBackground: true,
-        margin: { top: '25mm', right: '20mm', bottom: '25mm', left: '20mm' },
+        margin: { top: '25mm', right: '20mm', bottom: '32mm', left: '20mm' },
         displayHeaderFooter: true,
         headerTemplate: `
           <div style="font-size:9px; color:#666; width:100%; text-align:center; padding-top:5px;">
-            ${title}
+            ${this.escapeHtml(title)}
           </div>`,
         footerTemplate: `
-          <div style="font-size:9px; color:#666; width:100%; text-align:center; padding-bottom:5px;">
-            Generado por TuAsesor — <span class="pageNumber"></span> / <span class="totalPages"></span>
+          <div style="font-size:8px; color:#666; width:100%; padding: 0 20mm 4mm 20mm; line-height:1.4;">
+            <div style="border-top:1px solid #ccc; padding-top:4px; display:flex; justify-content:space-between;">
+              <span><strong>Documento generado por inteligencia artificial.</strong> No constituye asesoramiento legal. Antes de firmar, recomendamos revisión por un abogado matriculado en su jurisdicción.</span>
+            </div>
+            <div style="text-align:center; margin-top:2px; color:#999;">
+              TuAsesor — Página <span class="pageNumber"></span> / <span class="totalPages"></span>
+            </div>
           </div>`,
       });
 
@@ -50,12 +55,21 @@ export class PdfService {
     }
   }
 
+  private escapeHtml(input: string): string {
+    return input
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
   private wrapContractHtml(content: string, title: string): string {
     return `<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>${title}</title>
+  <title>${this.escapeHtml(title)}</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -109,11 +123,27 @@ export class PdfService {
       font-size: 8pt;
       color: #ccc;
     }
+    .ai-disclaimer {
+      margin-top: 40px;
+      padding: 14px 18px;
+      border: 1px solid #c1121f;
+      border-left: 4px solid #c1121f;
+      background: #fdf4f5;
+      font-size: 10pt;
+      line-height: 1.5;
+      color: #1a1a1a;
+      page-break-inside: avoid;
+    }
+    .ai-disclaimer strong { color: #c1121f; }
   </style>
 </head>
 <body>
   <div class="contract-wrapper">
     ${content}
+    <div class="ai-disclaimer">
+      <strong>AVISO IMPORTANTE — DOCUMENTO GENERADO POR INTELIGENCIA ARTIFICIAL</strong><br>
+      Este documento fue producido por un modelo de IA generativa de TuAsesor. No constituye asesoramiento legal ni opinión profesional. Antes de firmar, presentar ante una autoridad o utilizarlo en cualquier acto con efectos jurídicos, debe ser revisado por un abogado matriculado en su jurisdicción. TuAsesor no se responsabiliza por daños derivados del uso del documento sin verificación profesional.
+    </div>
   </div>
   <div class="watermark">TuAsesor — Generado con IA</div>
 </body>

@@ -27,6 +27,15 @@ export class RegisterDto {
   @IsOptional()
   @IsString()
   country?: string;
+
+  @ApiPropertyOptional({
+    example: '2026-04',
+    description: 'Versión de los Términos y Condiciones que el usuario aceptó al registrarse.',
+  })
+  @IsOptional()
+  @IsString()
+  @MaxLength(20)
+  acceptedTermsVersion?: string;
 }
 
 export class LoginDto {

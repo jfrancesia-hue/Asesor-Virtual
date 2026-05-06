@@ -75,6 +75,8 @@ export class AuthService {
           full_name: dto.fullName,
           role: 'owner',
           is_active: true,
+          accepted_terms_version: dto.acceptedTermsVersion ?? null,
+          accepted_terms_at: dto.acceptedTermsVersion ? new Date().toISOString() : null,
         })
         .select()
         .single();

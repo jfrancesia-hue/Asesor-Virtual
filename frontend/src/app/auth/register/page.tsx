@@ -15,6 +15,9 @@ const COUNTRIES = [
   { value: 'PE', label: 'Perú' },
 ];
 
+// Subir cuando se publique una nueva versión de /legal/terminos.
+const TERMS_VERSION = '2026-04';
+
 export default function RegisterPage() {
   const router = useRouter();
   const { register, isLoading } = useAuthStore();
@@ -39,7 +42,7 @@ export default function RegisterPage() {
     if (!validate()) return;
 
     try {
-      await register(form);
+      await register({ ...form, acceptedTermsVersion: TERMS_VERSION });
       toast.success('¡Cuenta creada! Bienvenido a TuAsesor');
       router.push('/home');
     } catch (error: any) {
