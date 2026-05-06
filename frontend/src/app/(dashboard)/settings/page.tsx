@@ -108,18 +108,25 @@ function SettingsContent() {
   };
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
-      <h1 className="text-xl font-bold text-slate-900 mb-6">Configuración</h1>
+    <div className="px-6 md:px-8 py-10 max-w-4xl mx-auto">
+      <header className="mb-8">
+        <p className="font-display text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--cta-dark)]">
+          Tu cuenta
+        </p>
+        <h1 className="mt-2 font-display text-[clamp(24px,3.5vw,32px)] font-bold tracking-[-0.025em] text-[var(--text-strong)]">
+          Configuración
+        </h1>
+      </header>
 
       {/* Tabs */}
-      <div className="flex gap-1 bg-slate-100 p-1 rounded-xl w-fit mb-6">
+      <div className="flex gap-1 bg-[var(--surface-subtle)] border border-[var(--border)] p-1 rounded-xl w-fit mb-6">
         {TABS.map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
             className={clsx(
               'px-4 py-2 rounded-lg text-sm font-medium transition-colors capitalize',
-              activeTab === tab ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700',
+              activeTab === tab ? 'bg-[var(--surface)] text-[var(--text-strong)] shadow-soft' : 'text-[var(--text-muted)] hover:text-[var(--text-medium)]',
             )}
           >
             {tab}
@@ -130,7 +137,7 @@ function SettingsContent() {
       {/* Perfil Tab */}
       {activeTab === 'perfil' && (
         <Card className="p-6">
-          <h2 className="font-semibold text-slate-800 mb-4">Perfil personal</h2>
+          <h2 className="font-semibold text-[var(--text-strong)] mb-4">Perfil personal</h2>
           <div className="space-y-4 max-w-sm">
             <Input
               label="Nombre completo"
@@ -138,16 +145,16 @@ function SettingsContent() {
               onChange={(e) => setProfileForm({ ...profileForm, fullName: e.target.value })}
             />
             <div>
-              <p className="text-sm text-slate-500 font-medium mb-1">Email</p>
-              <p className="text-sm text-slate-700">{user?.email}</p>
+              <p className="text-sm text-[var(--text-medium)] font-medium mb-1">Email</p>
+              <p className="text-sm text-[var(--text-medium)]">{user?.email}</p>
             </div>
             <div>
-              <p className="text-sm text-slate-500 font-medium mb-1">Rol</p>
+              <p className="text-sm text-[var(--text-medium)] font-medium mb-1">Rol</p>
               <Badge color="blue" className="capitalize">{user?.role}</Badge>
             </div>
             <div>
-              <p className="text-sm text-slate-500 font-medium mb-1">Organización</p>
-              <p className="text-sm text-slate-700">{tenant?.name}</p>
+              <p className="text-sm text-[var(--text-medium)] font-medium mb-1">Organización</p>
+              <p className="text-sm text-[var(--text-medium)]">{tenant?.name}</p>
             </div>
             <Button onClick={handleSaveProfile} loading={saving}>Guardar cambios</Button>
           </div>
@@ -165,8 +172,8 @@ function SettingsContent() {
               <Card className="p-5">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h2 className="font-semibold text-slate-800 mb-1">Créditos de análisis</h2>
-                    <p className="text-3xl font-bold text-blue-600">{wallet?.balance || 0} <span className="text-base text-slate-400 font-normal">créditos</span></p>
+                    <h2 className="font-semibold text-[var(--text-strong)] mb-1">Créditos de análisis</h2>
+                    <p className="text-3xl font-bold text-[var(--primary)]">{wallet?.balance || 0} <span className="text-base text-[var(--text-muted)] font-normal">créditos</span></p>
                   </div>
                   <span className="text-4xl">⚡</span>
                 </div>
@@ -174,13 +181,13 @@ function SettingsContent() {
 
               {/* Credit Packs */}
               <div>
-                <h3 className="font-semibold text-slate-700 mb-3">Comprar créditos</h3>
+                <h3 className="font-semibold text-[var(--text-medium)] mb-3">Comprar créditos</h3>
                 <div className="grid grid-cols-3 gap-3">
                   {CREDIT_PACKS.map((pack) => (
-                    <Card key={pack.id} className="p-4 text-center hover:border-blue-300 transition-colors">
+                    <Card key={pack.id} className="p-4 text-center hover:border-[var(--primary)]/40 transition-colors">
                       <p className="text-2xl mb-2">{pack.icon}</p>
-                      <p className="font-semibold text-slate-800">{pack.label}</p>
-                      <p className="text-sm text-blue-600 font-medium my-1">{pack.price}</p>
+                      <p className="font-semibold text-[var(--text-strong)]">{pack.label}</p>
+                      <p className="text-sm text-[var(--primary)] font-medium my-1">{pack.price}</p>
                       <Button
                         size="sm"
                         fullWidth
@@ -197,8 +204,8 @@ function SettingsContent() {
 
               {/* Plans */}
               <div>
-                <h3 className="font-semibold text-slate-700 mb-3">
-                  Plan actual: <span className="text-blue-600 capitalize">{tenant?.plan}</span>
+                <h3 className="font-semibold text-[var(--text-medium)] mb-3">
+                  Plan actual: <span className="text-[var(--primary)] capitalize">{tenant?.plan}</span>
                 </h3>
                 <div className="grid grid-cols-3 gap-3">
                   {PLANS.map((plan) => (
@@ -206,18 +213,18 @@ function SettingsContent() {
                       key={plan.id}
                       className={clsx(
                         'p-4 relative',
-                        plan.popular && 'border-blue-400',
-                        tenant?.plan === plan.id && 'bg-blue-50 border-blue-300',
+                        plan.popular && 'border-[var(--primary)]',
+                        tenant?.plan === plan.id && 'bg-[var(--primary-bg)] border-[var(--primary)]/40',
                       )}
                     >
                       {plan.popular && (
-                        <span className="absolute -top-2 left-1/2 -translate-x-1/2 bg-blue-600 text-white text-xs px-2 py-0.5 rounded-full">
+                        <span className="absolute -top-2 left-1/2 -translate-x-1/2 bg-[var(--primary)] text-white text-xs px-2 py-0.5 rounded-full">
                           Popular
                         </span>
                       )}
-                      <h4 className="font-bold text-slate-800">{plan.label}</h4>
-                      <p className="text-blue-600 font-semibold text-sm my-1">{plan.price}</p>
-                      <ul className="text-xs text-slate-500 space-y-1 my-3">
+                      <h4 className="font-bold text-[var(--text-strong)]">{plan.label}</h4>
+                      <p className="text-[var(--primary)] font-semibold text-sm my-1">{plan.price}</p>
+                      <ul className="text-xs text-[var(--text-medium)] space-y-1 my-3">
                         <li>👤 {plan.users}</li>
                         <li>📄 {plan.contracts}/mes</li>
                         <li>💬 {plan.queries}/mes</li>
@@ -243,15 +250,15 @@ function SettingsContent() {
               {/* Transactions */}
               {transactions.length > 0 && (
                 <Card className="p-5">
-                  <h3 className="font-semibold text-slate-800 mb-3">Historial de créditos</h3>
+                  <h3 className="font-semibold text-[var(--text-strong)] mb-3">Historial de créditos</h3>
                   <div className="space-y-2">
                     {transactions.slice(0, 10).map((tx) => (
-                      <div key={tx.id} className="flex items-center justify-between py-2 border-b border-slate-100 last:border-0">
+                      <div key={tx.id} className="flex items-center justify-between py-2 border-b border-[var(--border)] last:border-0">
                         <div>
-                          <p className="text-sm text-slate-700">{tx.description}</p>
-                          <p className="text-xs text-slate-400">{new Date(tx.created_at).toLocaleDateString('es-AR')}</p>
+                          <p className="text-sm text-[var(--text-medium)]">{tx.description}</p>
+                          <p className="text-xs text-[var(--text-muted)]">{new Date(tx.created_at).toLocaleDateString('es-AR')}</p>
                         </div>
-                        <span className={clsx('text-sm font-semibold', tx.amount > 0 ? 'text-green-600' : 'text-red-500')}>
+                        <span className={clsx('text-sm font-semibold', tx.amount > 0 ? 'text-[var(--accent-dark)]' : 'text-red-500')}>
                           {tx.amount > 0 ? '+' : ''}{tx.amount}
                         </span>
                       </div>
@@ -268,17 +275,17 @@ function SettingsContent() {
       {activeTab === 'equipo' && (
         <Card className="p-5">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="font-semibold text-slate-800">Equipo ({users.length})</h2>
+            <h2 className="font-semibold text-[var(--text-strong)]">Equipo ({users.length})</h2>
           </div>
           <div className="space-y-2">
             {users.map((u) => (
-              <div key={u.id} className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg">
-                <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 text-sm font-bold">
+              <div key={u.id} className="flex items-center gap-3 p-3 bg-[var(--surface-subtle)] rounded-lg">
+                <div className="w-8 h-8 bg-[var(--primary-bg)] rounded-full flex items-center justify-center text-[var(--primary)] text-sm font-bold">
                   {u.full_name?.[0]?.toUpperCase() || 'U'}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-slate-800 truncate">{u.full_name}</p>
-                  <p className="text-xs text-slate-400 truncate">{u.email}</p>
+                  <p className="text-sm font-medium text-[var(--text-strong)] truncate">{u.full_name}</p>
+                  <p className="text-xs text-[var(--text-muted)] truncate">{u.email}</p>
                 </div>
                 <Badge color={u.role === 'owner' ? 'blue' : 'slate'} className="capitalize">{u.role}</Badge>
                 <Badge color={u.is_active ? 'green' : 'red'}>{u.is_active ? 'Activo' : 'Inactivo'}</Badge>
@@ -286,7 +293,7 @@ function SettingsContent() {
             ))}
           </div>
           {tenant?.plan === 'start' && (
-            <p className="text-xs text-slate-400 mt-4 text-center">
+            <p className="text-xs text-[var(--text-muted)] mt-4 text-center">
               Plan Start permite 1 usuario. Actualizá a Pro para agregar más.
             </p>
           )}

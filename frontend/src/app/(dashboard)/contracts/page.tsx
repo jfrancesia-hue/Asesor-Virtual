@@ -2,9 +2,9 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
-import { Plus, Search, Filter, Download } from 'lucide-react';
+import { Plus, Download } from 'lucide-react';
 import { api } from '@/lib/api';
-import { Button, Card, Badge, Input, Select, EmptyState, Spinner } from '@/components/ui';
+import { Button, Badge, Input, Select, EmptyState, Spinner } from '@/components/ui';
 
 const TYPE_LABELS: Record<string, string> = {
   alquiler: 'Alquiler', servicios: 'Servicios', laboral: 'Laboral',
@@ -70,19 +70,24 @@ export default function ContractsPage() {
   };
 
   return (
-    <div className="p-6 max-w-6xl mx-auto">
-      <div className="flex items-center justify-between mb-6">
+    <div className="px-6 md:px-8 py-10 max-w-6xl mx-auto">
+      <header className="flex items-end justify-between mb-8 gap-4 flex-wrap">
         <div>
-          <h1 className="text-xl font-bold text-slate-900">Contratos</h1>
-          <p className="text-sm text-slate-500 mt-0.5">{total} contratos en total</p>
+          <p className="font-display text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--cta-dark)]">
+            Documentos
+          </p>
+          <h1 className="mt-2 font-display text-[clamp(24px,3.5vw,32px)] font-bold tracking-[-0.025em] text-[var(--text-strong)]">
+            Contratos
+          </h1>
+          <p className="text-sm text-[var(--text-medium)] mt-1.5">{total} contratos en total</p>
         </div>
-        <Button onClick={() => router.push('/advisor?advisor=legal&mode=create')}>
-          <Plus className="w-4 h-4" /> Nuevo contrato
+        <Button onClick={() => router.push('/advisor?advisor=legal&mode=create')} size="lg" className="gap-2">
+          <Plus className="w-4 h-4" strokeWidth={2.4} /> Nuevo contrato
         </Button>
-      </div>
+      </header>
 
       {/* Filters */}
-      <Card className="p-4 mb-4">
+      <div className="bg-[var(--surface)] border border-[var(--border)] rounded-2xl p-4 mb-5 shadow-soft">
         <div className="flex gap-3 flex-wrap">
           <div className="flex-1 min-w-[200px]">
             <Input
@@ -102,7 +107,7 @@ export default function ContractsPage() {
               { value: 'expired', label: 'Vencido' },
               { value: 'terminated', label: 'Terminado' },
             ]}
-            className="w-40"
+            className="!w-44"
           />
           <Select
             value={typeFilter}
@@ -111,69 +116,73 @@ export default function ContractsPage() {
               { value: '', label: 'Todos los tipos' },
               ...Object.entries(TYPE_LABELS).map(([v, l]) => ({ value: v, label: l })),
             ]}
-            className="w-44"
+            className="!w-48"
           />
         </div>
-      </Card>
+      </div>
 
       {/* List */}
       {loading ? (
-        <div className="flex justify-center py-12"><Spinner size="lg" /></div>
+        <div className="flex justify-center py-16"><Spinner size="lg" /></div>
       ) : contracts.length === 0 ? (
-        <EmptyState
-          icon="📄"
-          title="Sin contratos"
-          description="Todavía no tenés contratos. Generá uno con el asesor legal."
-          action={
-            <Button onClick={() => router.push('/advisor?advisor=legal')}>
-              Generar contrato con IA
-            </Button>
-          }
-        />
+        <div className="bg-[var(--surface)] rounded-2xl border border-[var(--border)]">
+          <EmptyState
+            icon="📄"
+            title="Sin contratos todavía"
+            description="Generá uno en menos de un minuto con el asesor legal."
+            action={
+              <Button onClick={() => router.push('/advisor?advisor=legal')}>
+                Generar contrato con IA
+              </Button>
+            }
+          />
+        </div>
       ) : (
-        <div className="space-y-2">
+        <div className="space-y-2.5">
           {contracts.map((c) => (
-            <Card
+            <button
               key={c.id}
-              className="p-4 hover:shadow-md transition-shadow cursor-pointer"
+              className="bento-card w-full text-left p-5 bg-[var(--surface)] rounded-2xl border border-[var(--border)] cursor-pointer"
               onClick={() => router.push(`/contracts/${c.id}`)}
             >
               <div className="flex items-center gap-4">
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <h3 className="font-medium text-slate-800 text-sm truncate">{c.title}</h3>
+                  <div className="flex items-center gap-2 mb-1.5 flex-wrap">
+                    <h3 className="font-display font-semibold text-[var(--text-strong)] text-[15px] tracking-tight truncate">{c.title}</h3>
                     <Badge color={STATUS_COLORS[c.status] || 'slate'}>{STATUS_LABELS[c.status]}</Badge>
                     <Badge color="slate">{TYPE_LABELS[c.type]}</Badge>
                   </div>
-                  <p className="text-xs text-slate-400">
+                  <p className="text-[12.5px] text-[var(--text-muted)]">
                     {c.jurisdiction} · v{c.version} ·{' '}
                     {new Date(c.updated_at).toLocaleDateString('es-AR')}
                     {c.expires_at && ` · Vence: ${new Date(c.expires_at).toLocaleDateString('es-AR')}`}
                   </p>
                 </div>
-                <button
+                <span
                   onClick={(e) => { e.stopPropagation(); downloadPdf(c.id, c.title); }}
-                  className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                  title="Descargar PDF"
+                  role="button"
+                  tabIndex={0}
+                  aria-label="Descargar PDF"
+                  className="p-2 text-[var(--text-muted)] hover:text-[var(--primary)] hover:bg-[var(--primary-bg)] rounded-lg transition-colors"
                 >
-                  <Download className="w-4 h-4" />
-                </button>
+                  <Download className="w-4 h-4" strokeWidth={2.2} />
+                </span>
               </div>
-            </Card>
+            </button>
           ))}
         </div>
       )}
 
       {/* Pagination */}
       {total > 20 && (
-        <div className="flex justify-center gap-2 mt-6">
-          <Button variant="outline" size="sm" disabled={page === 1} onClick={() => setPage(page - 1)}>
+        <div className="flex justify-center items-center gap-3 mt-10">
+          <Button variant="subtle" size="sm" disabled={page === 1} onClick={() => setPage(page - 1)}>
             Anterior
           </Button>
-          <span className="flex items-center px-3 text-sm text-slate-600">
+          <span className="text-sm text-[var(--text-medium)] font-medium">
             Pág. {page} de {Math.ceil(total / 20)}
           </span>
-          <Button variant="outline" size="sm" disabled={page >= Math.ceil(total / 20)} onClick={() => setPage(page + 1)}>
+          <Button variant="subtle" size="sm" disabled={page >= Math.ceil(total / 20)} onClick={() => setPage(page + 1)}>
             Siguiente
           </Button>
         </div>

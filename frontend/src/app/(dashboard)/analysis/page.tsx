@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { Upload, FileText, AlertTriangle } from 'lucide-react';
 import { api } from '@/lib/api';
-import { Button, Card, Input, TextArea, EmptyState, Spinner, RiskBadge, Badge } from '@/components/ui';
+import { Button, Input, TextArea, EmptyState, Spinner, RiskBadge } from '@/components/ui';
 
 export default function AnalysisPage() {
   const router = useRouter();
@@ -72,27 +72,35 @@ export default function AnalysisPage() {
   };
 
   const riskColors: Record<string, string> = {
-    low: '#10b981', medium: '#f59e0b', high: '#f97316', critical: '#ef4444',
+    low: 'var(--accent)',
+    medium: 'var(--brand-yellow)',
+    high: 'var(--cta)',
+    critical: '#dc2626',
   };
 
   return (
-    <div className="p-6 max-w-5xl mx-auto">
-      <div className="flex items-center justify-between mb-6">
+    <div className="px-6 md:px-8 py-10 max-w-5xl mx-auto">
+      <header className="flex items-end justify-between mb-8 gap-4 flex-wrap">
         <div>
-          <h1 className="text-xl font-bold text-slate-900">Análisis de Documentos</h1>
-          <p className="text-sm text-slate-500 mt-0.5">Analizá contratos con semáforo de riesgo IA</p>
+          <p className="font-display text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--cta-dark)]">
+            Análisis IA
+          </p>
+          <h1 className="mt-2 font-display text-[clamp(24px,3.5vw,32px)] font-bold tracking-[-0.025em] text-[var(--text-strong)]">
+            Análisis de documentos
+          </h1>
+          <p className="text-sm text-[var(--text-medium)] mt-1.5">Detectá cláusulas abusivas y riesgos con semáforo IA.</p>
         </div>
-        <Button onClick={() => setShowForm(!showForm)}>
-          <AlertTriangle className="w-4 h-4" />
+        <Button onClick={() => setShowForm(!showForm)} size="lg" className="gap-2">
+          <AlertTriangle className="w-4 h-4" strokeWidth={2.4} />
           Nuevo análisis
         </Button>
-      </div>
+      </header>
 
       {/* Form */}
       {showForm && (
-        <Card className="p-5 mb-6 border-blue-200">
-          <h2 className="font-semibold text-slate-800 mb-4">Analizar documento</h2>
-          <div className="space-y-3">
+        <div className="bento-card bg-[var(--surface)] border border-[var(--primary)]/30 rounded-2xl p-6 mb-6">
+          <h2 className="font-display font-bold text-[var(--text-strong)] tracking-tight text-lg mb-5">Analizar documento</h2>
+          <div className="space-y-4">
             <Input
               label="Título del documento"
               placeholder="Contrato de Locación — Calle X 123"
@@ -101,14 +109,18 @@ export default function AnalysisPage() {
             />
 
             <div className="flex items-center gap-3">
-              <div className="flex-1 border-2 border-dashed border-slate-200 rounded-lg p-4 text-center hover:border-blue-300 transition-colors cursor-pointer" onClick={() => fileInputRef.current?.click()}>
-                <Upload className="w-6 h-6 text-slate-400 mx-auto mb-1" />
-                <p className="text-sm text-slate-500">Subir PDF o TXT</p>
-                <p className="text-xs text-slate-400">Máx. 10MB</p>
-              </div>
-              <span className="text-slate-400 text-sm">o</span>
+              <button
+                type="button"
+                className="flex-1 border-2 border-dashed border-[var(--border)] rounded-xl p-5 text-center hover:border-[var(--primary)]/50 hover:bg-[var(--primary-bg)]/30 transition-all cursor-pointer"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                <Upload className="w-6 h-6 text-[var(--text-muted)] mx-auto mb-1.5" strokeWidth={2.2} />
+                <p className="text-sm font-semibold text-[var(--text-medium)]">Subir PDF o TXT</p>
+                <p className="text-xs text-[var(--text-muted)] mt-0.5">Máx. 10MB</p>
+              </button>
+              <span className="text-[var(--text-muted)] text-sm font-medium">o</span>
               <div className="flex-1 text-center">
-                <p className="text-sm text-slate-500 mb-1">Pegá el texto directamente</p>
+                <p className="text-sm text-[var(--text-medium)]">Pegá el texto directamente</p>
               </div>
             </div>
 
@@ -132,53 +144,56 @@ export default function AnalysisPage() {
               <Button onClick={handleAnalyze} loading={analyzing} disabled={!form.title || !form.content}>
                 {analyzing ? 'Analizando...' : 'Analizar documento (1 crédito)'}
               </Button>
-              <Button variant="outline" onClick={() => setShowForm(false)}>Cancelar</Button>
+              <Button variant="subtle" onClick={() => setShowForm(false)}>Cancelar</Button>
             </div>
           </div>
-        </Card>
+        </div>
       )}
 
       {/* List */}
       {loading ? (
-        <div className="flex justify-center py-12"><Spinner size="lg" /></div>
+        <div className="flex justify-center py-16"><Spinner size="lg" /></div>
       ) : analyses.length === 0 ? (
-        <EmptyState
-          icon="🔍"
-          title="Sin análisis"
-          description="Analizá un contrato para identificar riesgos y cláusulas problemáticas."
-          action={<Button onClick={() => setShowForm(true)}>Analizar primer documento</Button>}
-        />
+        <div className="bg-[var(--surface)] rounded-2xl border border-[var(--border)]">
+          <EmptyState
+            icon="🔍"
+            title="Sin análisis todavía"
+            description="Analizá un contrato para identificar riesgos y cláusulas abusivas en segundos."
+            action={<Button onClick={() => setShowForm(true)}>Analizar primer documento</Button>}
+          />
+        </div>
       ) : (
         <div className="space-y-3">
           {analyses.map((a) => (
-            <Card
+            <button
               key={a.id}
-              className="p-4 hover:shadow-md transition-shadow cursor-pointer"
+              className="bento-card w-full text-left p-5 bg-[var(--surface)] rounded-2xl border border-[var(--border)] cursor-pointer"
               onClick={() => router.push(`/analysis/${a.id}`)}
             >
               <div className="flex items-center gap-4">
                 <div
-                  className="w-10 h-10 rounded-lg flex items-center justify-center text-white text-lg flex-shrink-0"
-                  style={{ backgroundColor: riskColors[a.overall_risk] + '20' }}
+                  className="w-11 h-11 rounded-xl flex items-center justify-center text-lg flex-shrink-0"
+                  style={{ background: `color-mix(in srgb, ${riskColors[a.overall_risk]} 14%, var(--surface))` }}
+                  aria-hidden="true"
                 >
                   <span style={{ color: riskColors[a.overall_risk] }}>
                     {a.overall_risk === 'low' ? '✓' : a.overall_risk === 'critical' ? '🚨' : '⚠️'}
                   </span>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <h3 className="font-medium text-slate-800 text-sm truncate">{a.document_title}</h3>
+                  <div className="flex items-center gap-2 mb-1.5 flex-wrap">
+                    <h3 className="font-display font-semibold text-[var(--text-strong)] text-[15px] tracking-tight truncate">{a.document_title}</h3>
                     <RiskBadge risk={a.overall_risk} />
                   </div>
-                  <p className="text-xs text-slate-400">
-                    Score: {a.risk_score}/100 · {new Date(a.created_at).toLocaleDateString('es-AR')}
+                  <p className="text-[12.5px] text-[var(--text-muted)]">
+                    Score: <strong className="text-[var(--text-medium)]">{a.risk_score}/100</strong> · {new Date(a.created_at).toLocaleDateString('es-AR')}
                   </p>
                   {a.summary && (
-                    <p className="text-xs text-slate-500 mt-1 line-clamp-1">{a.summary}</p>
+                    <p className="text-[12.5px] text-[var(--text-medium)] mt-1 line-clamp-1">{a.summary}</p>
                   )}
                 </div>
               </div>
-            </Card>
+            </button>
           ))}
         </div>
       )}
