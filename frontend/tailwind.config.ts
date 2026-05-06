@@ -5,27 +5,68 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['var(--font-dm-sans)', 'system-ui', 'sans-serif'],
-        display: ['var(--font-fraunces)', 'Georgia', 'serif'],
-        body: ['var(--font-geist)', 'system-ui', 'sans-serif'],
-        mono: ['var(--font-geist-mono)', 'ui-monospace', 'monospace'],
-        brand: ['var(--font-inter)', 'system-ui', 'sans-serif'],
-        // legacy aliases used by dashboard
-        headline: ['var(--font-fraunces)', 'Georgia', 'serif'],
-        label: ['var(--font-geist)', 'system-ui', 'sans-serif'],
+        // Sistema "Warm Premium" — display + body de marca
+        sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
+        body: ['var(--font-inter)', 'system-ui', 'sans-serif'],
+        display: ['var(--font-jakarta)', 'system-ui', 'sans-serif'],
+        // Aliases legacy (no romper componentes que los referencian)
+        brand: ['var(--font-jakarta)', 'system-ui', 'sans-serif'],
+        headline: ['var(--font-jakarta)', 'system-ui', 'sans-serif'],
+        label: ['var(--font-inter)', 'system-ui', 'sans-serif'],
+        mono: ['ui-monospace', 'SFMono-Regular', 'Consolas', 'Liberation Mono', 'monospace'],
+        // Para drop-cap / pull-quote del editorial — único uso serif legítimo
+        editorial: ['Georgia', '"Times New Roman"', 'serif'],
       },
       colors: {
-        // Editorial palette — landing
+        // ── Brand canónica del usuario (sistema Warm Premium) ──
+        primary: {
+          DEFAULT: 'var(--primary)',
+          light: 'var(--primary-light)',
+          bg: 'var(--primary-bg)',
+          dark: 'var(--primary-dark)',
+        },
+        accent: {
+          DEFAULT: 'var(--accent)',
+          light: 'var(--accent-light)',
+          bg: 'var(--accent-bg)',
+          dark: 'var(--accent-dark)',
+        },
+        cta: {
+          DEFAULT: 'var(--cta)',
+          light: 'var(--cta-light)',
+          bg: 'var(--cta-bg)',
+          dark: 'var(--cta-dark)',
+        },
+        'brand-yellow': {
+          DEFAULT: 'var(--brand-yellow)',
+          bg: 'var(--brand-yellow-bg)',
+        },
+        'brand-lavender': {
+          DEFAULT: 'var(--brand-lavender)',
+          bg: 'var(--brand-lavender-bg)',
+        },
+
+        // ── Tokens semánticos ──
+        ink: {
+          strong: 'var(--text-strong)',
+          medium: 'var(--text-medium)',
+          muted: 'var(--text-muted)',
+          // legacy
+          DEFAULT: '#18120D',
+          rule: '#D9CFBF',
+          subtle: '#A89B8B',
+        },
+        surface: {
+          DEFAULT: 'var(--surface)',
+          elevated: 'var(--surface-elevated)',
+          subtle: 'var(--surface-subtle)',
+        },
+
+        // ── Editorial palette (legacy — landing) ──
         paper: {
           DEFAULT: '#F4EEE3',
           soft: '#FAF6EC',
           sink: '#EBE2D1',
-        },
-        ink: {
-          DEFAULT: '#18120D',
-          muted: '#6B5D4F',
-          subtle: '#A89B8B',
-          rule: '#D9CFBF',
         },
         oxblood: {
           DEFAULT: '#8B2E2A',
@@ -44,87 +85,59 @@ const config: Config = {
         saffron: '#D97A2A',
         gold: '#B8914C',
 
-        // Brand system — "ma." logo tokens (TuAsesor)
+        // ── Brand "ma." legacy ──
         brand: {
           ink: '#0f1011',
           paper: '#f5f2ec',
           mute: '#8a8680',
-          dot: '#00a86b',
-          dotAlt: '#0b6cf5',
-          dotAmber: '#f59e0b',
+          dot: 'var(--accent)',
+          dotAlt: 'var(--primary)',
+          dotAmber: 'var(--cta)',
         },
 
-        // Advisor colors (dashboard — preserved)
-        legal: '#3b82f6',
-        health: '#10b981',
-        finance: '#f59e0b',
-        psychology: '#8b5cf6',
-        home: '#f97316',
-
-        // Dark theme (dashboard — preserved)
-        'background': '#0e1320',
-        'surface': '#0e1320',
-        'surface-dim': '#0e1320',
-        'surface-bright': '#343948',
-        'surface-container-lowest': '#090e1b',
-        'surface-container-low': '#161b29',
-        'surface-container': '#1a1f2d',
-        'surface-container-high': '#252a38',
-        'surface-container-highest': '#303443',
-        'surface-variant': '#303443',
-        'on-surface': '#dee2f5',
-        'on-surface-variant': '#c2c6d6',
-        'on-background': '#dee2f5',
-        'outline': '#8c909f',
-        'outline-variant': '#424754',
-        'primary': '#adc6ff',
-        'primary-fixed': '#d8e2ff',
-        'primary-fixed-dim': '#adc6ff',
-        'primary-container': '#4d8eff',
-        'on-primary': '#002e6a',
-        'on-primary-fixed': '#001a42',
-        'on-primary-container': '#00285d',
-        'on-primary-fixed-variant': '#004395',
-        'inverse-primary': '#005ac2',
-        'surface-tint': '#adc6ff',
-        'secondary': '#4edea3',
-        'secondary-fixed': '#6ffbbe',
-        'secondary-fixed-dim': '#4edea3',
-        'secondary-container': '#00a572',
-        'on-secondary': '#003824',
-        'on-secondary-fixed': '#002113',
-        'on-secondary-container': '#00311f',
-        'on-secondary-fixed-variant': '#005236',
-        'tertiary': '#d0bcff',
-        'tertiary-fixed': '#e9ddff',
-        'tertiary-fixed-dim': '#d0bcff',
-        'tertiary-container': '#a078ff',
-        'on-tertiary': '#3c0091',
-        'on-tertiary-fixed': '#23005c',
-        'on-tertiary-container': '#340080',
-        'on-tertiary-fixed-variant': '#5516be',
-        'error': '#ffb4ab',
-        'error-container': '#93000a',
-        'on-error': '#690005',
-        'on-error-container': '#ffdad6',
-        'inverse-surface': '#dee2f5',
-        'inverse-on-surface': '#2b303e',
+        // ── Advisor colors — alineados a la paleta de marca ──
+        legal: 'var(--primary)',
+        health: 'var(--accent)',
+        finance: 'var(--cta)',
+        psychology: 'var(--brand-lavender)',
+        home: 'var(--cta-light)',
       },
       letterSpacing: {
-        'editorial': '0.22em',
-        'display': '-0.03em',
+        tightest: '-0.035em',
+        tight: '-0.02em',
+        editorial: '0.22em',
+        eyebrow: '0.07em',
+        display: '-0.03em',
+      },
+      borderRadius: {
+        sm: 'var(--radius-sm)',
+        md: 'var(--radius-md)',
+        lg: 'var(--radius-lg)',
+        xl: 'var(--radius-xl)',
+        '2xl': 'var(--radius-2xl)',
+      },
+      boxShadow: {
+        soft: 'var(--shadow-soft)',
+        medium: 'var(--shadow-medium)',
+        strong: 'var(--shadow-strong)',
+      },
+      transitionTimingFunction: {
+        warm: 'cubic-bezier(0.22, 1, 0.36, 1)',
       },
       animation: {
-        'fade-in': 'fadeIn 0.2s ease-in-out',
-        'slide-in': 'slideIn 0.3s ease-out',
+        'fade-in': 'warm-fade-in 0.2s cubic-bezier(0.22, 1, 0.36, 1)',
+        'slide-in': 'slideIn 0.3s cubic-bezier(0.22, 1, 0.36, 1)',
         'edit-rise': 'editRise 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both',
         'edit-fade': 'editFade 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) both',
         'rule-draw': 'ruleDraw 1.1s cubic-bezier(0.65, 0, 0.35, 1) both',
         'marquee': 'marquee 42s linear infinite',
+        'glow-pulse': 'glow-pulse 2.4s ease-in-out infinite',
       },
       keyframes: {
-        fadeIn: { from: { opacity: '0' }, to: { opacity: '1' } },
-        slideIn: { from: { transform: 'translateY(10px)', opacity: '0' }, to: { transform: 'translateY(0)', opacity: '1' } },
+        slideIn: {
+          from: { transform: 'translateY(10px)', opacity: '0' },
+          to: { transform: 'translateY(0)', opacity: '1' },
+        },
         editRise: {
           from: { opacity: '0', transform: 'translateY(14px)' },
           to: { opacity: '1', transform: 'translateY(0)' },
