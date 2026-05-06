@@ -30,27 +30,36 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
   };
 
   return (
-    <aside className="flex flex-col h-full w-full bg-white border-r border-slate-200">
+    <aside className="flex flex-col h-full w-full bg-[var(--surface)]/95 backdrop-blur-xl border-r border-[var(--border)]">
       {/* Logo */}
-      <div className="p-5 border-b border-slate-100 flex items-center justify-between">
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-            <Scale className="w-4 h-4 text-white" />
+      <div className="px-5 py-5 border-b border-[var(--border)] flex items-center justify-between">
+        <Link href="/home" onClick={onClose} className="flex items-center gap-3 group">
+          <div
+            className="w-9 h-9 rounded-xl flex items-center justify-center text-white shadow-soft transition-transform group-hover:scale-105"
+            style={{ background: 'linear-gradient(135deg, var(--primary), var(--primary-dark))' }}
+          >
+            <Scale className="w-4.5 h-4.5" strokeWidth={2.4} />
           </div>
-          <div>
-            <p className="font-bold text-slate-900 text-sm leading-none">TuAsesor</p>
-            <p className="text-xs text-slate-400 mt-0.5 capitalize">{tenant?.plan || 'start'}</p>
+          <div className="min-w-0">
+            <p className="font-display font-bold text-[var(--text-strong)] text-[15px] leading-none tracking-tight">TuAsesor</p>
+            <p className="text-[11px] font-medium text-[var(--cta-dark)] mt-1 capitalize tracking-wide">
+              Plan {tenant?.plan || 'start'}
+            </p>
           </div>
-        </div>
+        </Link>
         {onClose && (
-          <button onClick={onClose} className="p-1 text-slate-400 hover:text-slate-700 rounded-lg md:hidden">
+          <button
+            onClick={onClose}
+            aria-label="Cerrar menú"
+            className="p-1.5 text-[var(--text-muted)] hover:text-[var(--text-strong)] hover:bg-[var(--surface-subtle)] rounded-lg md:hidden transition-colors"
+          >
             <X className="w-5 h-5" />
           </button>
         )}
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 p-3 space-y-0.5 overflow-y-auto">
+      <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
         {navItems.map(({ href, icon: Icon, label, showBadge }) => {
           const active = pathname === href || (href !== '/home' && pathname.startsWith(href));
           return (
@@ -59,16 +68,16 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
               href={href}
               onClick={onClose}
               className={clsx(
-                'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
+                'flex items-center gap-3 px-3 py-2.5 rounded-xl text-[14px] font-medium transition-all',
                 active
-                  ? 'bg-blue-50 text-blue-700'
-                  : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900',
+                  ? 'bg-[var(--primary-bg)] text-[var(--primary-dark)] shadow-soft'
+                  : 'text-[var(--text-medium)] hover:bg-[var(--surface-subtle)] hover:text-[var(--text-strong)]',
               )}
             >
-              <Icon className="w-4 h-4 flex-shrink-0" />
-              {label}
+              <Icon className={clsx('w-[18px] h-[18px] flex-shrink-0', active && 'text-[var(--primary)]')} strokeWidth={2.2} />
+              <span>{label}</span>
               {showBadge && unreadCount > 0 && (
-                <span className="ml-auto bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                <span className="ml-auto bg-[var(--cta)] text-white text-[10px] font-bold rounded-full min-w-[20px] h-5 px-1.5 flex items-center justify-center">
                   {unreadCount > 9 ? '9+' : unreadCount}
                 </span>
               )}
@@ -78,19 +87,21 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
       </nav>
 
       {/* Bottom */}
-      <div className="p-3 border-t border-slate-100 space-y-0.5">
+      <div className="px-3 py-3 border-t border-[var(--border)] space-y-1">
         <Link
           href="/alerts"
           onClick={onClose}
           className={clsx(
-            'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
-            pathname === '/alerts' ? 'bg-blue-50 text-blue-700' : 'text-slate-600 hover:bg-slate-50',
+            'flex items-center gap-3 px-3 py-2.5 rounded-xl text-[14px] font-medium transition-all',
+            pathname === '/alerts'
+              ? 'bg-[var(--primary-bg)] text-[var(--primary-dark)]'
+              : 'text-[var(--text-medium)] hover:bg-[var(--surface-subtle)]',
           )}
         >
-          <Bell className="w-4 h-4" />
+          <Bell className="w-[18px] h-[18px]" strokeWidth={2.2} />
           Alertas
           {unreadCount > 0 && (
-            <span className="ml-auto bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+            <span className="ml-auto bg-[var(--cta)] text-white text-[10px] font-bold rounded-full min-w-[20px] h-5 px-1.5 flex items-center justify-center">
               {unreadCount > 9 ? '9+' : unreadCount}
             </span>
           )}
@@ -99,25 +110,35 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
           href="/settings"
           onClick={onClose}
           className={clsx(
-            'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
-            pathname === '/settings' ? 'bg-blue-50 text-blue-700' : 'text-slate-600 hover:bg-slate-50',
+            'flex items-center gap-3 px-3 py-2.5 rounded-xl text-[14px] font-medium transition-all',
+            pathname === '/settings'
+              ? 'bg-[var(--primary-bg)] text-[var(--primary-dark)]'
+              : 'text-[var(--text-medium)] hover:bg-[var(--surface-subtle)]',
           )}
         >
-          <Settings className="w-4 h-4" />
+          <Settings className="w-[18px] h-[18px]" strokeWidth={2.2} />
           Configuración
         </Link>
 
-        {/* User */}
-        <div className="flex items-center gap-3 px-3 py-2.5 mt-1">
-          <div className="w-7 h-7 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 text-xs font-bold flex-shrink-0">
+        {/* User card */}
+        <div className="flex items-center gap-3 px-3 py-3 mt-2 rounded-xl bg-[var(--surface-subtle)] border border-[var(--border)]">
+          <div
+            className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0 shadow-soft"
+            style={{ background: 'linear-gradient(135deg, var(--accent), var(--primary))' }}
+            aria-hidden="true"
+          >
             {user?.fullName?.[0]?.toUpperCase() || 'U'}
           </div>
           <div className="min-w-0 flex-1">
-            <p className="text-xs font-medium text-slate-800 truncate">{user?.fullName || 'Usuario'}</p>
-            <p className="text-xs text-slate-400 truncate">{user?.role}</p>
+            <p className="text-[12.5px] font-semibold text-[var(--text-strong)] truncate leading-tight">{user?.fullName || 'Usuario'}</p>
+            <p className="text-[11px] text-[var(--text-muted)] truncate capitalize mt-0.5">{user?.role}</p>
           </div>
-          <button onClick={handleLogout} className="text-slate-400 hover:text-red-500 transition-colors">
-            <LogOut className="w-4 h-4" />
+          <button
+            onClick={handleLogout}
+            aria-label="Cerrar sesión"
+            className="text-[var(--text-muted)] hover:text-red-600 hover:bg-red-50 rounded-lg p-1.5 transition-colors"
+          >
+            <LogOut className="w-[16px] h-[16px]" />
           </button>
         </div>
       </div>
@@ -149,31 +170,34 @@ export function Sidebar() {
       </div>
 
       {/* Mobile top bar */}
-      <div className="md:hidden fixed top-0 left-0 right-0 z-30 h-14 bg-white border-b border-slate-200 flex items-center px-4 gap-3">
+      <div className="md:hidden fixed top-0 left-0 right-0 z-30 h-14 bg-[var(--surface)]/90 backdrop-blur-xl border-b border-[var(--border)] flex items-center px-4 gap-3">
         <button
           onClick={() => setMobileOpen(true)}
-          className="p-2 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors"
+          aria-label="Abrir menú"
+          className="p-2 text-[var(--text-medium)] hover:text-[var(--text-strong)] hover:bg-[var(--surface-subtle)] rounded-lg transition-colors"
         >
           <Menu className="w-5 h-5" />
         </button>
         <div className="flex items-center gap-2">
-          <div className="w-6 h-6 bg-blue-600 rounded flex items-center justify-center">
-            <Scale className="w-3.5 h-3.5 text-white" />
+          <div
+            className="w-7 h-7 rounded-lg flex items-center justify-center text-white"
+            style={{ background: 'linear-gradient(135deg, var(--primary), var(--primary-dark))' }}
+            aria-hidden="true"
+          >
+            <Scale className="w-4 h-4" strokeWidth={2.4} />
           </div>
-          <span className="font-bold text-slate-900 text-sm">TuAsesor</span>
+          <span className="font-display font-bold text-[var(--text-strong)] text-[14.5px] tracking-tight">TuAsesor</span>
         </div>
       </div>
 
       {/* Mobile drawer overlay */}
       {mobileOpen && (
         <div className="md:hidden fixed inset-0 z-40 flex">
-          {/* Backdrop */}
           <div
-            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+            className="absolute inset-0 bg-[var(--text-strong)]/40 backdrop-blur-sm"
             onClick={() => setMobileOpen(false)}
           />
-          {/* Drawer */}
-          <div className="relative w-[280px] h-full shadow-2xl">
+          <div className="relative w-[280px] h-full shadow-strong">
             <SidebarContent onClose={() => setMobileOpen(false)} />
           </div>
         </div>

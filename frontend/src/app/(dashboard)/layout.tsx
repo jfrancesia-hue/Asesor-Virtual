@@ -27,7 +27,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }
 
   return (
-    <div className="flex min-h-screen bg-slate-50">
+    <div className="dashboard-bg flex min-h-screen">
       <Sidebar />
       {/* Desktop: margin for fixed sidebar. Mobile: padding-top for top bar */}
       <main className="flex-1 md:ml-[240px] pt-14 md:pt-0 min-h-screen overflow-auto">
