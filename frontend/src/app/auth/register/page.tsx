@@ -3,9 +3,8 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
-import { Scale } from 'lucide-react';
 import { useAuthStore } from '@/stores';
-import { Button, Input, Select, Card } from '@/components/ui';
+import { Button, Input, Select } from '@/components/ui';
 
 const COUNTRIES = [
   { value: 'AR', label: 'Argentina' },
@@ -51,22 +50,27 @@ export default function RegisterPage() {
   };
 
   return (
-    <Card className="w-full max-w-sm p-8">
-      <div className="text-center mb-6">
-        <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center mx-auto mb-3">
-          <Scale className="w-6 h-6 text-white" />
-        </div>
-        <h1 className="text-xl font-bold text-slate-900">Crear cuenta gratis</h1>
-        <p className="text-xs text-slate-500 mt-1">5 asesores IA — Plan Start gratuito</p>
+    <div className="bg-[var(--surface)] rounded-2xl shadow-medium border border-[var(--border)] p-8 md:p-10">
+      <div className="mb-7">
+        <p className="font-display text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--cta-dark)]">
+          Plan Start · Gratis
+        </p>
+        <h1 className="mt-2 font-display text-[28px] font-bold tracking-tight text-[var(--text-strong)]">
+          Crear cuenta
+        </h1>
+        <p className="mt-1.5 text-sm text-[var(--text-medium)]">
+          Cinco asesores IA — sin tarjeta de crédito.
+        </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-3">
+      <form onSubmit={handleSubmit} className="space-y-4">
         <Input
           label="Tu nombre"
           placeholder="Juan Pérez"
           value={form.fullName}
           onChange={(e) => setForm({ ...form, fullName: e.target.value })}
           error={errors.fullName}
+          autoComplete="name"
         />
         <Input
           label="Email"
@@ -75,6 +79,7 @@ export default function RegisterPage() {
           value={form.email}
           onChange={(e) => setForm({ ...form, email: e.target.value })}
           error={errors.email}
+          autoComplete="email"
         />
         <Input
           label="Contraseña"
@@ -83,12 +88,14 @@ export default function RegisterPage() {
           value={form.password}
           onChange={(e) => setForm({ ...form, password: e.target.value })}
           error={errors.password}
+          autoComplete="new-password"
         />
         <Input
           label="Empresa (opcional)"
           placeholder="Mi Empresa S.A."
           value={form.companyName}
           onChange={(e) => setForm({ ...form, companyName: e.target.value })}
+          autoComplete="organization"
         />
         <Select
           label="País"
@@ -97,32 +104,35 @@ export default function RegisterPage() {
           options={COUNTRIES}
         />
 
-        <label className="flex items-start gap-2 mt-3 cursor-pointer">
+        <label className="flex items-start gap-3 mt-5 cursor-pointer rounded-xl border border-[var(--border)] bg-[var(--surface-subtle)] p-3.5 hover:border-[var(--border-strong)] transition-colors">
           <input
             type="checkbox"
             checked={acceptedTerms}
             onChange={(e) => setAcceptedTerms(e.target.checked)}
-            className="mt-0.5 w-4 h-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500"
+            className="mt-0.5 w-4 h-4 accent-[var(--primary)] flex-shrink-0"
           />
-          <span className="text-xs text-slate-600 leading-relaxed">
-            Entiendo que TuAsesor brinda <strong>orientación informativa generada por IA</strong>, que no reemplaza a un profesional matriculado, y acepto los{' '}
-            <Link href="/legal/terminos" target="_blank" className="text-blue-600 hover:underline">términos de uso</Link>
+          <span className="text-[13px] leading-relaxed text-[var(--text-medium)]">
+            Entiendo que TuAsesor brinda <strong className="text-[var(--text-strong)]">orientación informativa generada por IA</strong>, que no reemplaza a un profesional matriculado, y acepto los{' '}
+            <Link href="/legal/terminos" target="_blank" className="text-[var(--primary)] font-semibold hover:underline">términos de uso</Link>
             {' '}y la{' '}
-            <Link href="/legal/privacidad" target="_blank" className="text-blue-600 hover:underline">política de privacidad</Link>.
+            <Link href="/legal/privacidad" target="_blank" className="text-[var(--primary)] font-semibold hover:underline">política de privacidad</Link>.
           </span>
         </label>
         {errors.acceptedTerms && (
           <p className="text-xs text-red-600 mt-1">{errors.acceptedTerms}</p>
         )}
 
-        <Button type="submit" fullWidth loading={isLoading} className="mt-2">
+        <Button type="submit" size="lg" fullWidth loading={isLoading} className="mt-2">
           Crear cuenta gratis
         </Button>
       </form>
-      <p className="text-center text-sm text-slate-500 mt-3">
+
+      <p className="text-center text-sm text-[var(--text-medium)] mt-7">
         ¿Ya tenés cuenta?{' '}
-        <Link href="/auth/login" className="text-blue-600 hover:underline font-medium">Ingresá</Link>
+        <Link href="/auth/login" className="font-semibold text-[var(--primary)] hover:text-[var(--primary-dark)] underline-offset-4 hover:underline">
+          Ingresá
+        </Link>
       </p>
-    </Card>
+    </div>
   );
 }

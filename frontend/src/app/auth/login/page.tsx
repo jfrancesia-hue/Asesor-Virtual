@@ -3,9 +3,8 @@ import { useState, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import toast from 'react-hot-toast';
-import { Scale } from 'lucide-react';
 import { useAuthStore } from '@/stores';
-import { Button, Input, Card, Spinner } from '@/components/ui';
+import { Button, Input, Spinner } from '@/components/ui';
 
 function LoginForm() {
   const router = useRouter();
@@ -35,7 +34,7 @@ function LoginForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-5">
       <Input
         label="Email"
         type="email"
@@ -54,7 +53,7 @@ function LoginForm() {
         error={errors.password}
         autoComplete="current-password"
       />
-      <Button type="submit" fullWidth loading={isLoading} className="mt-2">
+      <Button type="submit" size="lg" fullWidth loading={isLoading} className="mt-6">
         Ingresar
       </Button>
     </form>
@@ -63,25 +62,29 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <Card className="w-full max-w-sm p-8">
-      <div className="text-center mb-8">
-        <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center mx-auto mb-3">
-          <Scale className="w-6 h-6 text-white" />
-        </div>
-        <h1 className="text-xl font-bold text-slate-900">TuAsesor</h1>
-        <p className="text-sm text-slate-500 mt-1">Ingresá a tu cuenta</p>
+    <div className="bg-[var(--surface)] rounded-2xl shadow-medium border border-[var(--border)] p-8 md:p-10">
+      <div className="mb-8">
+        <p className="font-display text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--cta-dark)]">
+          Bienvenido devuelta
+        </p>
+        <h1 className="mt-2 font-display text-[28px] font-bold tracking-tight text-[var(--text-strong)]">
+          Ingresá a tu cuenta
+        </h1>
+        <p className="mt-1.5 text-sm text-[var(--text-medium)]">
+          Y volvé a charlar con tus 5 asesores.
+        </p>
       </div>
 
-      <Suspense fallback={<div className="flex justify-center py-4"><Spinner /></div>}>
+      <Suspense fallback={<div className="flex justify-center py-8"><Spinner /></div>}>
         <LoginForm />
       </Suspense>
 
-      <p className="text-center text-sm text-slate-500 mt-6">
+      <p className="text-center text-sm text-[var(--text-medium)] mt-7">
         ¿No tenés cuenta?{' '}
-        <Link href="/auth/register" className="text-blue-600 hover:underline font-medium">
+        <Link href="/auth/register" className="font-semibold text-[var(--primary)] hover:text-[var(--primary-dark)] underline-offset-4 hover:underline">
           Registrate gratis
         </Link>
       </p>
-    </Card>
+    </div>
   );
 }
