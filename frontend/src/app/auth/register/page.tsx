@@ -21,6 +21,7 @@ export default function RegisterPage() {
   const [form, setForm] = useState({
     fullName: '', email: '', password: '', companyName: '', country: 'AR',
   });
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [errors, setErrors] = useState<any>({});
 
   const validate = () => {
@@ -28,6 +29,7 @@ export default function RegisterPage() {
     if (!form.fullName || form.fullName.length < 2) e.fullName = 'Nombre requerido (mínimo 2 caracteres)';
     if (!form.email) e.email = 'Email requerido';
     if (!form.password || form.password.length < 8) e.password = 'Mínimo 8 caracteres';
+    if (!acceptedTerms) e.acceptedTerms = 'Debés aceptar los términos y la política de privacidad';
     setErrors(e);
     return Object.keys(e).length === 0;
   };
@@ -92,14 +94,28 @@ export default function RegisterPage() {
           options={COUNTRIES}
         />
 
+        <label className="flex items-start gap-2 mt-3 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={acceptedTerms}
+            onChange={(e) => setAcceptedTerms(e.target.checked)}
+            className="mt-0.5 w-4 h-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500"
+          />
+          <span className="text-xs text-slate-600 leading-relaxed">
+            Entiendo que TuAsesor brinda <strong>orientación informativa generada por IA</strong>, que no reemplaza a un profesional matriculado, y acepto los{' '}
+            <Link href="/legal/terminos" target="_blank" className="text-blue-600 hover:underline">términos de uso</Link>
+            {' '}y la{' '}
+            <Link href="/legal/privacidad" target="_blank" className="text-blue-600 hover:underline">política de privacidad</Link>.
+          </span>
+        </label>
+        {errors.acceptedTerms && (
+          <p className="text-xs text-red-600 mt-1">{errors.acceptedTerms}</p>
+        )}
+
         <Button type="submit" fullWidth loading={isLoading} className="mt-2">
           Crear cuenta gratis
         </Button>
       </form>
-
-      <p className="text-center text-xs text-slate-400 mt-4">
-        Al registrarte aceptás los términos de uso y política de privacidad.
-      </p>
       <p className="text-center text-sm text-slate-500 mt-3">
         ¿Ya tenés cuenta?{' '}
         <Link href="/auth/login" className="text-blue-600 hover:underline font-medium">Ingresá</Link>

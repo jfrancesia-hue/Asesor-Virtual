@@ -69,6 +69,16 @@ const SECTIONS = [
       'Podemos actualizar estos términos para adecuarlos a cambios normativos o de producto. Te avisaremos por correo con 30 días de antelación; el uso del servicio tras esa fecha implica aceptación.',
     ],
   },
+  {
+    num: 'IX',
+    title: 'Naturaleza de la inteligencia artificial',
+    body: [
+      'Las respuestas, contratos, análisis y recomendaciones del servicio son producidos por modelos de inteligencia artificial generativa. Estos modelos pueden contener errores, información desactualizada, omisiones o producir contenido que parece correcto pero no lo es ("alucinaciones").',
+      'TuAsesor NO es un estudio jurídico, consultorio médico, casa de bolsa, gabinete psicológico ni empresa constructora. Ninguno de nuestros asesores IA es abogado, médico, contador, psicólogo ni profesional matriculado de ninguna disciplina. La información que recibís es de carácter general y orientativo.',
+      'Antes de tomar decisiones con efectos jurídicos, clínicos, patrimoniales, tributarios o de seguridad personal, es tu responsabilidad verificar la información con un profesional humano matriculado en tu jurisdicción. El uso de las respuestas como sustituto de asesoramiento profesional queda exclusivamente bajo tu cuenta y riesgo.',
+      'Para situaciones de emergencia médica, psicológica o de seguridad, no utilices el servicio: contactá inmediatamente a los servicios oficiales (107/911 emergencias médicas, 135 línea suicidio AR, 911 emergencias generales).',
+    ],
+  },
 ];
 
 export default function TermsPage() {
