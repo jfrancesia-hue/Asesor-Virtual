@@ -11,6 +11,12 @@ const nextConfig = {
       { protocol: 'https', hostname: 'plus.unsplash.com' },
     ],
   },
+  async rewrites() {
+    const backend = process.env.BACKEND_URL || 'https://tuasesor-api.onrender.com';
+    return [
+      { source: '/api/:path*', destination: `${backend}/api/:path*` },
+    ];
+  },
 };
 
 export default withSentryConfig(nextConfig, {
