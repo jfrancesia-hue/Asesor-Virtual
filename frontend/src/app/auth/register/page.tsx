@@ -42,7 +42,7 @@ export default function RegisterPage() {
 
     try {
       await register({ ...form, acceptedTermsVersion: TERMS_VERSION });
-      toast.success('¡Cuenta creada! Bienvenido a TuAsesor');
+      toast.success('¡Cuenta creada! Bienvenido a MiAsesor');
       router.push('/home');
     } catch (error: any) {
       toast.error(error.message || 'Error al registrar');
@@ -112,7 +112,7 @@ export default function RegisterPage() {
             className="mt-0.5 w-4 h-4 accent-[var(--primary)] flex-shrink-0"
           />
           <span className="text-[13px] leading-relaxed text-[var(--text-medium)]">
-            Entiendo que TuAsesor brinda <strong className="text-[var(--text-strong)]">orientación informativa generada por IA</strong>, que no reemplaza a un profesional matriculado, y acepto los{' '}
+            Entiendo que MiAsesor brinda <strong className="text-[var(--text-strong)]">orientación informativa generada por IA</strong>, que no reemplaza a un profesional matriculado, y acepto los{' '}
             <Link href="/legal/terminos" target="_blank" className="text-[var(--primary)] font-semibold hover:underline">términos de uso</Link>
             {' '}y la{' '}
             <Link href="/legal/privacidad" target="_blank" className="text-[var(--primary)] font-semibold hover:underline">política de privacidad</Link>.

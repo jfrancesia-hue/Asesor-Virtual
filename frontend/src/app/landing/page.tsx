@@ -158,7 +158,7 @@ function Navbar() {
       }`}
     >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <Link href="/landing" className="flex items-center gap-2.5" aria-label="TuAsesor">
+        <Link href="/landing" className="flex items-center gap-2.5" aria-label="MiAsesor">
           <span
             className="flex h-9 w-9 items-center justify-center rounded-xl text-white shadow-soft"
             style={{ background: 'linear-gradient(135deg, var(--primary), var(--primary-dark))' }}
@@ -167,7 +167,7 @@ function Navbar() {
             <Scale className="h-4.5 w-4.5" strokeWidth={2.4} />
           </span>
           <span className="font-display text-[15px] font-bold tracking-tight text-[var(--text-strong)]">
-            TuAsesor
+            MiAsesor
           </span>
         </Link>
 
@@ -511,7 +511,7 @@ function FaqSection() {
         <SectionIntro
           eyebrow="Preguntas frecuentes"
           title="Lo que la gente nos pregunta antes de empezar."
-          copy="Si tu duda no está acá, escribinos a hola@tuasesor.app y te respondemos en menos de 24 horas."
+          copy="Si tu duda no está acá, escribinos a hola@miasesor.com.ar y te respondemos en menos de 24 horas."
           centered
         />
         <div className="mt-12 divide-y divide-[var(--border)] rounded-2xl border border-[var(--border)] bg-[var(--surface)] overflow-hidden">

@@ -41,7 +41,7 @@ export class PdfService {
               <span><strong>Documento generado por inteligencia artificial.</strong> No constituye asesoramiento legal. Antes de firmar, recomendamos revisión por un abogado matriculado en su jurisdicción.</span>
             </div>
             <div style="text-align:center; margin-top:2px; color:#999;">
-              TuAsesor — Página <span class="pageNumber"></span> / <span class="totalPages"></span>
+              MiAsesor — Página <span class="pageNumber"></span> / <span class="totalPages"></span>
             </div>
           </div>`,
       });
@@ -142,10 +142,10 @@ export class PdfService {
     ${content}
     <div class="ai-disclaimer">
       <strong>AVISO IMPORTANTE — DOCUMENTO GENERADO POR INTELIGENCIA ARTIFICIAL</strong><br>
-      Este documento fue producido por un modelo de IA generativa de TuAsesor. No constituye asesoramiento legal ni opinión profesional. Antes de firmar, presentar ante una autoridad o utilizarlo en cualquier acto con efectos jurídicos, debe ser revisado por un abogado matriculado en su jurisdicción. TuAsesor no se responsabiliza por daños derivados del uso del documento sin verificación profesional.
+      Este documento fue producido por un modelo de IA generativa de MiAsesor. No constituye asesoramiento legal ni opinión profesional. Antes de firmar, presentar ante una autoridad o utilizarlo en cualquier acto con efectos jurídicos, debe ser revisado por un abogado matriculado en su jurisdicción. MiAsesor no se responsabiliza por daños derivados del uso del documento sin verificación profesional.
     </div>
   </div>
-  <div class="watermark">TuAsesor — Generado con IA</div>
+  <div class="watermark">MiAsesor — Generado con IA</div>
 </body>
 </html>`;
   }

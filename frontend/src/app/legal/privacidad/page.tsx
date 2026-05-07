@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Política de privacidad',
-  description: 'Cómo TuAsesor recolecta, usa y protege tus datos personales.',
+  description: 'Cómo MiAsesor recolecta, usa y protege tus datos personales.',
 };
 
 const SECTIONS = [
@@ -58,7 +58,7 @@ const SECTIONS = [
     num: 'VII',
     title: 'Derechos del titular',
     body: [
-      'Acceso, rectificación, supresión, oposición, limitación y portabilidad de tus datos. Ejercelo desde tu panel o escribiendo a privacidad@tuasesor.app. Respondemos en 10 días hábiles.',
+      'Acceso, rectificación, supresión, oposición, limitación y portabilidad de tus datos. Ejercelo desde tu panel o escribiendo a privacidad@miasesor.com.ar. Respondemos en 10 días hábiles.',
       'Podés reclamar ante la Agencia de Acceso a la Información Pública (Argentina), INAI (México), SIC (Colombia), o tu autoridad local.',
     ],
   },
@@ -73,7 +73,7 @@ const SECTIONS = [
     num: 'IX',
     title: 'Menores de edad',
     body: [
-      'TuAsesor no está dirigido a menores de 16 años. No recolectamos datos de menores conscientemente. Si detectás el registro de un menor, escribinos para eliminarlo.',
+      'MiAsesor no está dirigido a menores de 16 años. No recolectamos datos de menores conscientemente. Si detectás el registro de un menor, escribinos para eliminarlo.',
     ],
   },
   {
@@ -135,9 +135,9 @@ export default function PrivacyPage() {
           Contacto
         </div>
         <p className="text-[15px] leading-[1.7] text-ink">
-          Responsable del tratamiento: TuAsesor SAS · CUIT 30-12345678-9 · Av. Corrientes 1234, CABA, Argentina. Consultas de privacidad:{' '}
-          <a href="mailto:privacidad@tuasesor.app" className="editorial-link text-oxblood">
-            privacidad@tuasesor.app
+          Responsable del tratamiento: MiAsesor SAS · CUIT 30-12345678-9 · Av. Corrientes 1234, CABA, Argentina. Consultas de privacidad:{' '}
+          <a href="mailto:privacidad@miasesor.com.ar" className="editorial-link text-oxblood">
+            privacidad@miasesor.com.ar
           </a>
           .
         </p>

@@ -94,7 +94,7 @@ async function bootstrap() {
   // Swagger
   if (process.env.NODE_ENV !== 'production') {
     const config = new DocumentBuilder()
-      .setTitle('TuAsesor API')
+      .setTitle('MiAsesor API')
       .setDescription('SaaS Multi-Asesor con IA — Legal, Salud, Finanzas, Bienestar y Hogar')
       .setVersion('2.0')
       .addBearerAuth()
@@ -106,7 +106,7 @@ async function bootstrap() {
   const port = process.env.PORT || 3001;
   await app.listen(port);
 
-  logger.info(`TuAsesor API running on port ${port}`);
+  logger.info(`MiAsesor API running on port ${port}`);
   logger.info(`Environment: ${process.env.NODE_ENV || 'development'}`);
 }
 

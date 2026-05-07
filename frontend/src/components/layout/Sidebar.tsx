@@ -41,7 +41,7 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
             <Scale className="w-4.5 h-4.5" strokeWidth={2.4} />
           </div>
           <div className="min-w-0">
-            <p className="font-display font-bold text-[var(--text-strong)] text-[15px] leading-none tracking-tight">TuAsesor</p>
+            <p className="font-display font-bold text-[var(--text-strong)] text-[15px] leading-none tracking-tight">MiAsesor</p>
             <p className="text-[11px] font-medium text-[var(--cta-dark)] mt-1 capitalize tracking-wide">
               Plan {tenant?.plan || 'start'}
             </p>
@@ -186,7 +186,7 @@ export function Sidebar() {
           >
             <Scale className="w-4 h-4" strokeWidth={2.4} />
           </div>
-          <span className="font-display font-bold text-[var(--text-strong)] text-[14.5px] tracking-tight">TuAsesor</span>
+          <span className="font-display font-bold text-[var(--text-strong)] text-[14.5px] tracking-tight">MiAsesor</span>
         </div>
       </div>
 

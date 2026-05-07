@@ -38,7 +38,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
 
           <div className="relative z-10 max-w-md">
             <p className="font-display text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--cta-dark)]">
-              TuAsesor · Cinco especialistas IA
+              MiAsesor · Cinco especialistas IA
             </p>
             <h2 className="mt-4 font-display text-[clamp(28px,4vw,40px)] font-bold leading-[1.1] tracking-[-0.025em] text-[var(--text-strong)]">
               Asesoría que entiende{' '}
