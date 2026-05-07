@@ -19,7 +19,7 @@ const CREDIT_PACKS = [
 const PLANS = [
   { id: 'start', label: 'Start', price: '$7.900/mes', users: '1 usuario', contracts: '5 contratos', queries: '20 consultas', credits: '2 créditos' },
   { id: 'pro', label: 'Pro', price: '$19.900/mes', users: '5 usuarios', contracts: '25 contratos', queries: '100 consultas', credits: '10 créditos', popular: true },
-  { id: 'enterprise', label: 'Enterprise', price: '$59.900/mes', users: 'Ilimitados', contracts: 'Ilimitados', queries: 'Ilimitadas', credits: '30 créditos' },
+  { id: 'enterprise', label: 'Enterprise', price: '$59.900/mes', users: 'Ilimitados', contracts: 'Ilimitados', queries: '1.000 consultas', credits: '30 créditos' },
 ];
 
 function SettingsContent() {

@@ -104,7 +104,7 @@ const plans = [
     price: '59.900',
     pricePost: 'ARS/mes',
     copy: 'Operación completa con soporte y escalabilidad.',
-    features: ['Usuarios ilimitados', 'Consultas ilimitadas', 'API y SSO', '30 créditos incluidos'],
+    features: ['Usuarios ilimitados', '1.000 consultas IA / mes', 'API y SSO', '30 créditos incluidos'],
   },
 ];
 

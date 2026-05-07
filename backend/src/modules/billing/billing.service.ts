@@ -18,7 +18,7 @@ const PLAN_PRICES_ARS = {
 const PLAN_LIMITS = {
   start: { max_users: 1, max_contracts_per_month: 5, max_ai_queries_per_month: 20, max_analysis_credits: 2 },
   pro: { max_users: 5, max_contracts_per_month: 25, max_ai_queries_per_month: 100, max_analysis_credits: 10 },
-  enterprise: { max_users: 99999, max_contracts_per_month: 99999, max_ai_queries_per_month: 99999, max_analysis_credits: 30 },
+  enterprise: { max_users: 99999, max_contracts_per_month: 99999, max_ai_queries_per_month: 1000, max_analysis_credits: 30 },
 };
 
 const CREDIT_PACKS = {
