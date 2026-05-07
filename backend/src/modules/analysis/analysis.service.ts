@@ -54,16 +54,26 @@ export class AnalysisService {
       .order('created_at', { ascending: false })
       .limit(100);
 
-    const riskDistribution = { low: 0, medium: 0, high: 0, critical: 0 };
+    const riskDistribution: Record<'low' | 'medium' | 'high' | 'critical', number> = {
+      low: 0, medium: 0, high: 0, critical: 0,
+    };
     let totalScore = 0;
+    let scoreCount = 0;
 
     for (const a of assessments || []) {
-      riskDistribution[a.overall_risk]++;
-      totalScore += a.risk_score;
+      const risk = a.overall_risk as keyof typeof riskDistribution;
+      if (risk in riskDistribution) {
+        riskDistribution[risk]++;
+      }
+      const score = Number(a.risk_score);
+      if (Number.isFinite(score)) {
+        totalScore += score;
+        scoreCount++;
+      }
     }
 
     const total = (assessments || []).length;
-    const avgScore = total > 0 ? Math.round(totalScore / total) : 0;
+    const avgScore = scoreCount > 0 ? Math.round(totalScore / scoreCount) : 0;
 
     return { total, avgScore, riskDistribution };
   }

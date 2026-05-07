@@ -76,61 +76,24 @@ export const useAuthStore = create<AuthState>()(
 );
 
 // ============================================================
-// CONTRACTS STORE
-// ============================================================
-interface ContractsState {
-  contracts: any[];
-  total: number;
-  isLoading: boolean;
-  currentFilter: any;
-  loadContracts: (filters?: any) => Promise<void>;
-  setFilter: (filter: any) => void;
-}
-
-export const useContractsStore = create<ContractsState>()((set, get) => ({
-  contracts: [],
-  total: 0,
-  isLoading: false,
-  currentFilter: {},
-
-  loadContracts: async (filters = {}) => {
-    set({ isLoading: true });
-    try {
-      const params = new URLSearchParams(filters).toString();
-      const data = await api.contracts.list(params) as any;
-      set({ contracts: data.contracts || [], total: data.total || 0 });
-    } finally {
-      set({ isLoading: false });
-    }
-  },
-
-  setFilter: (filter) => set({ currentFilter: filter }),
-}));
-
-// ============================================================
-// ALERTS STORE
+// ALERTS STORE — solo unreadCount es consumido (Sidebar + AlertsPage).
+// El array `alerts` y los helpers decrement/reset estaban definidos pero
+// nunca se llamaban en ningún componente — los removimos.
 // ============================================================
 interface AlertsState {
   unreadCount: number;
-  alerts: any[];
   loadUnreadCount: () => Promise<void>;
-  decrementUnread: () => void;
-  resetUnread: () => void;
 }
 
 export const useAlertsStore = create<AlertsState>()((set) => ({
   unreadCount: 0,
-  alerts: [],
 
   loadUnreadCount: async () => {
     try {
       const count = await api.alerts.unreadCount() as any;
       set({ unreadCount: typeof count === 'number' ? count : 0 });
     } catch {
-      // ignore
+      // El sidebar no debe romper si falla el contador — lo dejamos en 0.
     }
   },
-
-  decrementUnread: () => set((state) => ({ unreadCount: Math.max(0, state.unreadCount - 1) })),
-  resetUnread: () => set({ unreadCount: 0 }),
 }));

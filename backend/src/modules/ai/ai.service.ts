@@ -109,7 +109,7 @@ export class AiService {
   // ─── Conversations ────────────────────────────────────────────────────────
 
   async createConversation(dto: CreateConversationDto, userId: string, tenantId: string) {
-    const advisorId = dto.advisorId || dto.advisor_id || 'legal';
+    const advisorId = dto.advisorId || 'legal';
 
     const { data: advisor, error: advisorError } = await this.supabase
       .from('advisors')
@@ -460,17 +460,26 @@ Siempre usás la herramienta save_risk_analysis para entregar el resultado estru
   }
 
   private async checkMonthlyLimit(tenantId: string, maxQueries?: number) {
-    if (!maxQueries || maxQueries === 99999) return;
+    // El cap es POR TENANT (compartido entre todos los users del equipo).
+    // Si en el futuro se quiere cap por usuario, sumar el filtro user_id
+    // y exponer max_per_user en la tabla tenants.
+    if (!maxQueries || maxQueries >= 99999) return;
+
+    const startOfMonth = new Date();
+    startOfMonth.setDate(1);
+    startOfMonth.setHours(0, 0, 0, 0);
 
     const { count } = await this.supabase
       .from('conversation_messages')
       .select('id', { count: 'exact', head: true })
       .eq('tenant_id', tenantId)
       .eq('role', 'user')
-      .gte('created_at', new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString());
+      .gte('created_at', startOfMonth.toISOString());
 
     if ((count || 0) >= maxQueries) {
-      throw new ForbiddenException('Alcanzaste el límite de consultas del mes. Actualizá tu plan.');
+      throw new ForbiddenException(
+        'Alcanzaste el límite mensual de consultas IA del plan. Actualizá tu plan o esperá al próximo mes.',
+      );
     }
   }
 

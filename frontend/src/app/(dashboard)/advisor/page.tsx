@@ -51,7 +51,7 @@ function AdvisorChat() {
       const [advisorData, convData] = await Promise.all([
         api.ai.getAdvisor(advisorId),
         api.ai.createConversation({
-          advisor_id: advisorId,
+          advisorId,
           type: mode === 'create' ? 'contract' : 'chat',
         }),
       ]);
@@ -217,14 +217,24 @@ function AdvisorChat() {
     );
   };
 
+  // Markdown -> HTML mínimo, con escape previo de los caracteres peligrosos.
+  // Sin escape, la respuesta del modelo podría incluir HTML crafteado y
+  // ejecutar JS al inyectarse vía dangerouslySetInnerHTML. Esto neutraliza
+  // <, >, " y ' antes de aplicar las sustituciones de markdown.
   const renderMarkdown = (text: string): string => {
-    return text
+    const escaped = text
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+    return escaped
       .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
       .replace(/\*(.*?)\*/g, '<em>$1</em>')
       .replace(/^### (.*$)/gm, '<h3>$1</h3>')
       .replace(/^## (.*$)/gm, '<h2>$1</h2>')
       .replace(/^# (.*$)/gm, '<h1>$1</h1>')
-      .replace(/^> (.*$)/gm, '<blockquote>$1</blockquote>')
+      .replace(/^&gt; (.*$)/gm, '<blockquote>$1</blockquote>')
       .replace(/^- (.*$)/gm, '<li>$1</li>')
       .replace(/(<li>[\s\S]*?<\/li>)/gm, '<ul>$1</ul>')
       .replace(/\n\n/g, '</p><p>')

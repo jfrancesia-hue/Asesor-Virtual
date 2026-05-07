@@ -13,12 +13,6 @@ export class CreateConversationDto {
   @IsString()
   advisorId?: string;
 
-  // Alias snake_case para compatibilidad con el frontend
-  @ApiPropertyOptional({ example: 'legal' })
-  @IsOptional()
-  @IsString()
-  advisor_id?: string;
-
   @ApiPropertyOptional({ enum: ConversationType })
   @IsOptional()
   @IsEnum(ConversationType)
@@ -29,17 +23,6 @@ export class CreateConversationDto {
   @IsString()
   @MaxLength(500)
   title?: string;
-
-  @ApiPropertyOptional({ example: 'Tengo una consulta sobre mi contrato de alquiler' })
-  @IsOptional()
-  @IsString()
-  @MaxLength(10000)
-  initial_message?: string;
-
-  @ApiPropertyOptional({ example: 'alquiler' })
-  @IsOptional()
-  @IsString()
-  contract_type?: string;
 }
 
 export class SendMessageDto {

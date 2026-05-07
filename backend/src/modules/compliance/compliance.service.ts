@@ -1,5 +1,5 @@
 import {
-  Injectable, Inject, NotFoundException, BadRequestException,
+  Injectable, Inject, Logger, NotFoundException, BadRequestException,
 } from '@nestjs/common';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { Cron, CronExpression } from '@nestjs/schedule';
@@ -25,6 +25,8 @@ export class UpdateComplianceDto {
 
 @Injectable()
 export class ComplianceService {
+  private readonly logger = new Logger(ComplianceService.name);
+
   constructor(@Inject(SUPABASE_ADMIN) private readonly supabase: SupabaseClient) {}
 
   async create(dto: CreateComplianceDto, userId: string, tenantId: string) {
@@ -119,25 +121,28 @@ export class ComplianceService {
     return data || [];
   }
 
-  // Run daily at 8am: mark overdue items
+  // Run daily at 8am: mark overdue items.
+  // Hace UN solo update sobre todas las pending pasadas de fecha. Antes había
+  // un loop que combinaba .update().select().range() — `.range()` en un update
+  // restringe el SELECT de retorno pero NO la cláusula UPDATE: el primer
+  // pase ya marcaba TODAS las filas, luego cada iteración devolvía 0 nuevas
+  // y nunca terminaba (o terminaba por accidente).
   @Cron(CronExpression.EVERY_DAY_AT_8AM)
   async markOverdueItems() {
-    const pageSize = 100;
-    let page = 0;
-    let hasMore = true;
+    const { data, error } = await this.supabase
+      .from('compliance_items')
+      .update({ status: 'overdue' })
+      .eq('status', 'pending')
+      .lt('due_date', new Date().toISOString())
+      .select('id');
 
-    while (hasMore) {
-      const { data, error } = await this.supabase
-        .from('compliance_items')
-        .update({ status: 'overdue' })
-        .eq('status', 'pending')
-        .lt('due_date', new Date().toISOString())
-        .select('id')
-        .range(page * pageSize, (page + 1) * pageSize - 1);
+    if (error) {
+      this.logger.error(`markOverdueItems falló: ${error.message}`);
+      return;
+    }
 
-      if (error || !data) break;
-      if (data.length < pageSize) hasMore = false;
-      page++;
+    if (data && data.length > 0) {
+      this.logger.log(`markOverdueItems: ${data.length} ítems marcados como overdue`);
     }
   }
 }

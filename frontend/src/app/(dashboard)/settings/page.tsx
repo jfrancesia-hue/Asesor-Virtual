@@ -4,7 +4,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { api } from '@/lib/api';
 import { useAuthStore } from '@/stores';
-import { Button, Card, Input, Badge, Spinner, StatCard } from '@/components/ui';
+import { Button, Card, Input, Badge, Spinner } from '@/components/ui';
 import { clsx } from 'clsx';
 
 const TABS = ['perfil', 'billing', 'equipo'] as const;
@@ -34,15 +34,22 @@ function SettingsContent() {
   const [loadingBilling, setLoadingBilling] = useState(false);
   const [purchasingCredits, setPurchasingCredits] = useState<string | null>(null);
 
-  // Handle Mercado Pago return URLs
+  // Mercado Pago vuelve con ?success=true | ?failure=true | ?pending=true
+  // (configurado en createPreference en el backend).
   useEffect(() => {
-    if (searchParams.get('success') === 'true') {
+    const success = searchParams.get('success');
+    const failure = searchParams.get('failure');
+    const pending = searchParams.get('pending');
+    if (success === 'true') {
       toast.success('¡Pago procesado correctamente!');
       setActiveTab('billing');
       loadBilling();
       loadProfile();
-    } else if (searchParams.get('canceled') === 'true') {
-      toast.error('Pago cancelado');
+    } else if (failure === 'true') {
+      toast.error('El pago no se completó. Intentá nuevamente.');
+      setActiveTab('billing');
+    } else if (pending === 'true') {
+      toast('Pago pendiente — te avisamos cuando se acredite.');
       setActiveTab('billing');
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps

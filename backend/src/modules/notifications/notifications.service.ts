@@ -126,10 +126,18 @@ export class NotificationsService {
     const pageSize = 100;
 
     for (const days of thresholds) {
-      const futureDate = new Date();
-      futureDate.setDate(futureDate.getDate() + days);
-      const pastDate = new Date(futureDate);
-      pastDate.setDate(pastDate.getDate() - 1);
+      // Ventana: contratos cuyo expires_at cae en el día exacto que será
+      // dentro de `days` días desde ahora (00:00:00 a 23:59:59 de ese día).
+      // Antes la ventana era [futureDate - 1d, futureDate], lo que tenía
+      // dos bugs: (a) duplicaba el alcance entre días si había overlap
+      // y (b) si el cron fallaba un día, contratos que cayeron en esa
+      // ventana de 24h nunca recibían alerta.
+      const startOfDay = new Date();
+      startOfDay.setDate(startOfDay.getDate() + days);
+      startOfDay.setHours(0, 0, 0, 0);
+
+      const endOfDay = new Date(startOfDay);
+      endOfDay.setHours(23, 59, 59, 999);
 
       let page = 0;
       let hasMore = true;
@@ -139,8 +147,8 @@ export class NotificationsService {
           .from('contracts')
           .select('id, title, tenant_id, user_id, expires_at, users!inner(email, full_name)')
           .eq('status', 'active')
-          .gte('expires_at', pastDate.toISOString())
-          .lte('expires_at', futureDate.toISOString())
+          .gte('expires_at', startOfDay.toISOString())
+          .lte('expires_at', endOfDay.toISOString())
           .range(page * pageSize, (page + 1) * pageSize - 1);
 
         if (error || !contracts || contracts.length === 0) {
