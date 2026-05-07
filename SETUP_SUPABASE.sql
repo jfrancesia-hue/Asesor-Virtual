@@ -15,6 +15,7 @@
 --   migrations/003_advisor_tools.sql
 --   migrations/004_billing_idempotency.sql
 --   migrations/005_terms_acceptance.sql
+--   migrations/006_drop_stripe_columns.sql
 --   seeds/001_contract_templates.sql
 --   seeds/002_legal_knowledge_ar.sql
 -- ============================================================

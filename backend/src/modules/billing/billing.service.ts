@@ -193,10 +193,12 @@ export class BillingService {
       throw new BadRequestException('Webhook no autenticado');
     }
 
-    // Idempotencia (reusamos la tabla stripe_webhook_events ya creada)
+    // Idempotencia (la tabla se renombró a payment_webhook_events
+    // en migration 006; mientras la migración no se aplique podemos
+    // mantener compat-fallback al nombre viejo con un alias en SQL).
     const eventId = `mp_payment_${dataId}`;
     const { error: dedupError } = await this.supabase
-      .from('stripe_webhook_events')
+      .from('payment_webhook_events')
       .insert({ event_id: eventId, event_type: eventType });
 
     if (dedupError) {

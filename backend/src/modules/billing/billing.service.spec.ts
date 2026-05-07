@@ -106,7 +106,7 @@ describe('BillingService — webhook idempotency & flow', () => {
     });
     const rpc = jest.fn();
     const { service } = buildService({
-      buildersByTable: { stripe_webhook_events: dedupBuilder },
+      buildersByTable: { payment_webhook_events: dedupBuilder },
       rpc,
     });
 

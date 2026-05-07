@@ -65,7 +65,7 @@ export default function LoginPage() {
     <div className="bg-[var(--surface)] rounded-2xl shadow-medium border border-[var(--border)] p-8 md:p-10">
       <div className="mb-8">
         <p className="font-display text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--cta-dark)]">
-          Bienvenido devuelta
+          Bienvenido de vuelta
         </p>
         <h1 className="mt-2 font-display text-[28px] font-bold tracking-tight text-[var(--text-strong)]">
           Ingresá a tu cuenta

@@ -39,11 +39,17 @@ export class UsersService {
       throw new ForbiddenException('Alcanzaste el límite de usuarios de tu plan. Actualizá para agregar más.');
     }
 
-    // Create auth user
+    // Generamos un password temporal cryptográficamente seguro y lo
+    // devolvemos al invitador en el response. El invitador es responsable
+    // de hacérselo llegar al invitado (WhatsApp, mail manual, etc.).
+    // El invitado debería cambiarla en su primer login.
+    // Nota: NO logueamos el password.
+    const tempPassword = this.generateTempPassword();
+
     const { data: authData, error: authError } = await this.supabase.auth.admin.createUser({
       email,
       email_confirm: true,
-      password: Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2).toUpperCase() + '!',
+      password: tempPassword,
     });
 
     if (authError) throw new BadRequestException('Error al crear usuario: ' + authError.message);
@@ -66,7 +72,24 @@ export class UsersService {
       throw new BadRequestException('Error al crear perfil de usuario');
     }
 
-    return { id: user.id, email: user.email, fullName: user.full_name, role: user.role };
+    this.logger.log(`Usuario invitado a tenant ${tenantId} por ${inviterId}: ${email}`);
+
+    return {
+      id: user.id,
+      email: user.email,
+      fullName: user.full_name,
+      role: user.role,
+      tempPassword, // pasársela al invitado por canal seguro
+    };
+  }
+
+  private generateTempPassword(): string {
+    // 16 caracteres aleatorios con al menos un dígito y un símbolo.
+    // Usa crypto.randomBytes para entropía real.
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const crypto = require('crypto') as typeof import('crypto');
+    const base = crypto.randomBytes(12).toString('base64').replace(/[+/=]/g, '');
+    return `${base}A1!`;
   }
 
   async updateUser(userId: string, tenantId: string, updates: { role?: string; isActive?: boolean }) {

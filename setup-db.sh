@@ -40,6 +40,8 @@ echo "  → 004_billing_idempotency.sql"
 $PSQL_CMD -f ./backend/src/database/migrations/004_billing_idempotency.sql
 echo "  → 005_terms_acceptance.sql"
 $PSQL_CMD -f ./backend/src/database/migrations/005_terms_acceptance.sql
+echo "  → 006_drop_stripe_columns.sql"
+$PSQL_CMD -f ./backend/src/database/migrations/006_drop_stripe_columns.sql
 echo "✅ Migrations completed"
 
 echo ""
