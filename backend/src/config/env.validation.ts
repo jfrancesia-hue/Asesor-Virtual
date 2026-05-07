@@ -147,8 +147,18 @@ export class EnvironmentVariables {
   })
   MP_ACCESS_TOKEN?: string;
 
-  @IsString()
-  @IsOptional()
+  // En producción + con MP activo, el secret es obligatorio:
+  // sin él, cualquiera podría POSTear webhooks falsos al endpoint
+  // /api/billing/webhook y forzar la activación de planes.
+  @ValidateIf(
+    (o) =>
+      (o.NODE_ENV === Environment.Production && o.MP_ACCESS_TOKEN) ||
+      (o.MP_WEBHOOK_SECRET !== undefined && o.MP_WEBHOOK_SECRET !== ''),
+  )
+  @IsString({
+    message:
+      'MP_WEBHOOK_SECRET es obligatorio en producción cuando MP_ACCESS_TOKEN está configurado',
+  })
   MP_WEBHOOK_SECRET?: string;
 
   // URL pública del backend (para notification_url de MP).

@@ -38,6 +38,8 @@ echo "  → 003_advisor_tools.sql"
 $PSQL_CMD -f ./backend/src/database/migrations/003_advisor_tools.sql
 echo "  → 004_billing_idempotency.sql"
 $PSQL_CMD -f ./backend/src/database/migrations/004_billing_idempotency.sql
+echo "  → 005_terms_acceptance.sql"
+$PSQL_CMD -f ./backend/src/database/migrations/005_terms_acceptance.sql
 echo "✅ Migrations completed"
 
 echo ""

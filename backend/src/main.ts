@@ -17,7 +17,6 @@ async function bootstrap() {
   const logger = pino({ level: process.env.LOG_LEVEL || 'info' });
 
   const app = await NestFactory.create(AppModule, {
-    rawBody: true, // Required for Stripe webhook signature verification
     logger: process.env.NODE_ENV === 'production'
       ? ['error', 'warn', 'log']
       : ['error', 'warn', 'log', 'debug', 'verbose'],
@@ -32,7 +31,12 @@ async function bootstrap() {
           scriptSrc: ["'self'"],
           styleSrc: ["'self'", "'unsafe-inline'"],
           imgSrc: ["'self'", 'data:', 'https:'],
-          connectSrc: ["'self'", 'https://api.stripe.com', 'https://sentry.io'],
+          connectSrc: [
+            "'self'",
+            'https://api.mercadopago.com',
+            'https://www.mercadopago.com.ar',
+            'https://sentry.io',
+          ],
           fontSrc: ["'self'", 'data:'],
           objectSrc: ["'none'"],
           mediaSrc: ["'self'"],

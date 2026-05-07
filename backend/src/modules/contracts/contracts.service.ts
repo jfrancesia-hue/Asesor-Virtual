@@ -10,6 +10,7 @@ import { SupabaseClient } from '@supabase/supabase-js';
 import { SUPABASE_ADMIN } from '../../config/supabase.module';
 import { PdfService } from './pdf.service';
 import { CreateContractDto, UpdateContractDto, ContractFilterDto } from './contracts.dto';
+import { sanitizeContractHtml } from './contract-sanitizer';
 
 const ALLOWED_SORT_COLUMNS = ['title', 'type', 'status', 'created_at', 'updated_at', 'expires_at', 'risk_score'];
 
@@ -42,10 +43,8 @@ export class ContractsService {
       }
     }
 
-    // Sanitize HTML (strip script tags)
-    const sanitizedHtml = dto.contentHtml
-      ? dto.contentHtml.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
-      : null;
+    // Sanitize HTML against XSS/SSRF (allow-list approach, no <iframe>/<script>/<img>/etc.)
+    const sanitizedHtml = dto.contentHtml ? sanitizeContractHtml(dto.contentHtml) : null;
 
     const { data, error } = await this.supabase
       .from('contracts')
@@ -125,10 +124,8 @@ export class ContractsService {
     // Verify ownership
     await this.findOne(id, tenantId);
 
-    // Sanitize HTML
-    const sanitizedHtml = dto.contentHtml
-      ? dto.contentHtml.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
-      : undefined;
+    // Sanitize HTML against XSS/SSRF (same allow-list as create)
+    const sanitizedHtml = dto.contentHtml ? sanitizeContractHtml(dto.contentHtml) : undefined;
 
     const updateData: any = {
       ...(dto.title && { title: dto.title }),

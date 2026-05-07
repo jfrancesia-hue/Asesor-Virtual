@@ -179,12 +179,18 @@ export class BillingService {
       return { received: true, ignored: true };
     }
 
-    // Validación de firma (opcional — solo si hay secret configurado)
+    // Validación de firma. En producción es obligatoria — sin firma
+    // verificada, un atacante puede POSTear payments falsos y activar
+    // planes a tenants arbitrarios.
     const webhookSecret = this.config.get<string>('MP_WEBHOOK_SECRET');
+    const nodeEnv = this.config.get<string>('NODE_ENV');
     if (webhookSecret) {
       if (!signature || !this.verifyMpSignature(signature, requestId, dataId, webhookSecret)) {
         throw new BadRequestException('MP webhook signature inválida');
       }
+    } else if (nodeEnv === 'production') {
+      this.logger.error('MP_WEBHOOK_SECRET no configurado en producción — rechazando webhook');
+      throw new BadRequestException('Webhook no autenticado');
     }
 
     // Idempotencia (reusamos la tabla stripe_webhook_events ya creada)

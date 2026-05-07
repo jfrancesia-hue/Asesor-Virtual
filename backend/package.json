@@ -51,6 +51,7 @@
     "resend": "^4.0.1",
     "rxjs": "^7.8.1",
     "mercadopago": "^2.0.15",
+    "sanitize-html": "^2.13.1",
     "uuid": "^10.0.0"
   },
   "devDependencies": {
@@ -64,6 +65,7 @@
     "@types/node": "^22.7.5",
     "@types/passport-jwt": "^4.0.1",
     "@types/pdf-parse": "^1.1.4",
+    "@types/sanitize-html": "^2.13.0",
     "@types/supertest": "^6.0.2",
     "@types/uuid": "^10.0.0",
     "@typescript-eslint/eslint-plugin": "^8.9.0",

@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import puppeteer, { Browser } from 'puppeteer';
+import { sanitizeContractHtml } from './contract-sanitizer';
 
 @Injectable()
 export class PdfService {
@@ -23,7 +24,23 @@ export class PdfService {
       });
 
       const page = await browser.newPage();
-      const fullHtml = this.wrapContractHtml(htmlContent, title);
+      // Bloquear cualquier request externa que el HTML intente hacer (SSRF防御).
+      // Solo permitimos data: URIs y about:blank — el contrato no debería cargar nada.
+      await page.setRequestInterception(true);
+      page.on('request', (req) => {
+        const url = req.url();
+        if (url.startsWith('data:') || url === 'about:blank' || url.startsWith('chrome-extension:')) {
+          return req.continue();
+        }
+        if (req.resourceType() === 'document') {
+          // El primer setContent llega como navegación a about:blank.
+          return req.continue();
+        }
+        req.abort();
+      });
+
+      const safeHtml = sanitizeContractHtml(htmlContent);
+      const fullHtml = this.wrapContractHtml(safeHtml, title);
       await page.setContent(fullHtml, { waitUntil: 'networkidle0' });
 
       const pdf = await page.pdf({
