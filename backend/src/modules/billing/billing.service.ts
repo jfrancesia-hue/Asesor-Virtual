@@ -10,9 +10,9 @@ import { NotificationsService } from '../notifications/notifications.service';
 
 // Precios en ARS (pesos argentinos). MP solo cobra en pesos.
 const PLAN_PRICES_ARS = {
-  start: 44900,
-  pro: 119900,
-  enterprise: 299000,
+  start: 7900,
+  pro: 19900,
+  enterprise: 59900,
 };
 
 const PLAN_LIMITS = {
@@ -22,9 +22,9 @@ const PLAN_LIMITS = {
 };
 
 const CREDIT_PACKS = {
-  credits_10:  { amount: 10,  ars: 22900 },
-  credits_30:  { amount: 30,  ars: 52900 },
-  credits_100: { amount: 100, ars: 149900 },
+  credits_10:  { amount: 10,  ars: 4900 },
+  credits_30:  { amount: 30,  ars: 9900 },
+  credits_100: { amount: 100, ars: 24900 },
 };
 
 type CreditPackKey = keyof typeof CREDIT_PACKS;

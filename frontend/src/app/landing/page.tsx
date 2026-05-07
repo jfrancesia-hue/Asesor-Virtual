@@ -86,14 +86,14 @@ const flow = [
 const plans = [
   {
     name: 'Start',
-    price: '44.900',
+    price: '7.900',
     pricePost: 'ARS/mes',
     copy: 'Para uso personal o primeras consultas.',
     features: ['1 usuario', '20 consultas IA / mes', '5 contratos / mes', '2 créditos de análisis'],
   },
   {
     name: 'Pro',
-    price: '119.900',
+    price: '19.900',
     pricePost: 'ARS/mes',
     copy: 'El plan ideal para profesionales y equipos chicos.',
     features: ['5 usuarios', '100 consultas IA / mes', '25 contratos / mes', '10 créditos de análisis'],
@@ -101,7 +101,7 @@ const plans = [
   },
   {
     name: 'Enterprise',
-    price: '299.000',
+    price: '59.900',
     pricePost: 'ARS/mes',
     copy: 'Operación completa con soporte y escalabilidad.',
     features: ['Usuarios ilimitados', 'Consultas ilimitadas', 'API y SSO', '30 créditos incluidos'],
