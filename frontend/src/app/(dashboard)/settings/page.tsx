@@ -11,15 +11,15 @@ const TABS = ['perfil', 'billing', 'equipo'] as const;
 type Tab = typeof TABS[number];
 
 const CREDIT_PACKS = [
-  { id: 'credits_10', label: '10 créditos', price: 'USD 15', icon: '⚡' },
-  { id: 'credits_30', label: '30 créditos', price: 'USD 35', icon: '⚡⚡' },
-  { id: 'credits_100', label: '100 créditos', price: 'USD 99', icon: '⚡⚡⚡' },
+  { id: 'credits_10', label: '10 créditos', price: '$22.900', icon: '⚡' },
+  { id: 'credits_30', label: '30 créditos', price: '$52.900', icon: '⚡⚡' },
+  { id: 'credits_100', label: '100 créditos', price: '$149.900', icon: '⚡⚡⚡' },
 ];
 
 const PLANS = [
-  { id: 'start', label: 'Start', price: 'USD 29/mes', users: '1 usuario', contracts: '5 contratos', queries: '20 consultas', credits: '2 créditos' },
-  { id: 'pro', label: 'Pro', price: 'USD 79/mes', users: '5 usuarios', contracts: '25 contratos', queries: '100 consultas', credits: '10 créditos', popular: true },
-  { id: 'enterprise', label: 'Enterprise', price: 'USD 199/mes', users: 'Ilimitados', contracts: 'Ilimitados', queries: 'Ilimitadas', credits: '30 créditos' },
+  { id: 'start', label: 'Start', price: '$44.900/mes', users: '1 usuario', contracts: '5 contratos', queries: '20 consultas', credits: '2 créditos' },
+  { id: 'pro', label: 'Pro', price: '$119.900/mes', users: '5 usuarios', contracts: '25 contratos', queries: '100 consultas', credits: '10 créditos', popular: true },
+  { id: 'enterprise', label: 'Enterprise', price: '$299.000/mes', users: 'Ilimitados', contracts: 'Ilimitados', queries: 'Ilimitadas', credits: '30 créditos' },
 ];
 
 function SettingsContent() {
@@ -34,7 +34,7 @@ function SettingsContent() {
   const [loadingBilling, setLoadingBilling] = useState(false);
   const [purchasingCredits, setPurchasingCredits] = useState<string | null>(null);
 
-  // Handle Stripe callback
+  // Handle Mercado Pago return URLs
   useEffect(() => {
     if (searchParams.get('success') === 'true') {
       toast.success('¡Pago procesado correctamente!');

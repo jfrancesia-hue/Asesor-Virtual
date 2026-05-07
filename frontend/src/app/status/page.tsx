@@ -14,7 +14,7 @@ const COMPONENTS: Array<{ name: string; status: Status; description: string; upt
   { name: 'Asesor IA · Anthropic', status: 'operativo', description: 'Fallback Claude Sonnet 4.6', uptime: '99,96%' },
   { name: 'Base de datos · Supabase', status: 'operativo', description: 'Postgres + pgvector', uptime: '99,99%' },
   { name: 'Autenticación', status: 'operativo', description: 'Login, registro, sesiones JWT', uptime: '99,97%' },
-  { name: 'Pagos · Stripe', status: 'operativo', description: 'Suscripciones y checkouts', uptime: '99,99%' },
+  { name: 'Pagos · Mercado Pago', status: 'operativo', description: 'Cobros mensuales y créditos', uptime: '99,98%' },
   { name: 'Correo · Resend', status: 'operativo', description: 'Notificaciones transaccionales', uptime: '99,95%' },
   { name: 'Panel web', status: 'operativo', description: 'Dashboard Next.js', uptime: '99,98%' },
 ];

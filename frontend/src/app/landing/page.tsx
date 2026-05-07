@@ -86,23 +86,23 @@ const flow = [
 const plans = [
   {
     name: 'Start',
-    price: '0',
-    pricePost: '/gratis',
-    copy: 'Para probar y arrancar con consultas personales.',
+    price: '44.900',
+    pricePost: 'ARS/mes',
+    copy: 'Para uso personal o primeras consultas.',
     features: ['1 usuario', '20 consultas IA / mes', '5 contratos / mes', '2 créditos de análisis'],
   },
   {
     name: 'Pro',
-    price: '29',
-    pricePost: 'USD/mes',
+    price: '119.900',
+    pricePost: 'ARS/mes',
     copy: 'El plan ideal para profesionales y equipos chicos.',
     features: ['5 usuarios', '100 consultas IA / mes', '25 contratos / mes', '10 créditos de análisis'],
     featured: true,
   },
   {
     name: 'Enterprise',
-    price: '79',
-    pricePost: 'USD/mes',
+    price: '299.000',
+    pricePost: 'ARS/mes',
     copy: 'Operación completa con soporte y escalabilidad.',
     features: ['Usuarios ilimitados', 'Consultas ilimitadas', 'API y SSO', '30 créditos incluidos'],
   },
@@ -189,7 +189,7 @@ function Navbar() {
             href="/auth/register"
             className="magnetic-btn inline-flex items-center gap-2 rounded-xl bg-[var(--cta)] px-4 py-2 text-[14px] font-bold text-white shadow-[0_8px_24px_rgba(230,126,34,0.35)] hover:bg-[var(--cta-dark)] transition-all"
           >
-            Probar gratis <ArrowRight className="h-4 w-4" strokeWidth={2.4} />
+            Empezar <ArrowRight className="h-4 w-4" strokeWidth={2.4} />
           </Link>
         </div>
       </div>
@@ -226,7 +226,7 @@ function Hero() {
               href="/auth/register"
               className="magnetic-btn inline-flex items-center justify-center gap-2 rounded-2xl bg-[var(--cta)] px-7 py-4 text-[15px] font-bold text-white shadow-[0_12px_32px_rgba(230,126,34,0.4)] hover:bg-[var(--cta-dark)] transition-all"
             >
-              Crear cuenta gratis <ArrowRight className="h-4 w-4" strokeWidth={2.4} />
+              Crear cuenta <ArrowRight className="h-4 w-4" strokeWidth={2.4} />
             </Link>
             <a
               href="#asesores"
@@ -237,7 +237,7 @@ function Hero() {
           </div>
 
           <p className="mt-5 text-[13px] text-[var(--text-muted)]">
-            Sin tarjeta de crédito. Plan Start gratis para siempre.
+            Pagás con Mercado Pago — todos los métodos aceptados, cuotas con bancos AR.
           </p>
 
           <dl className="mt-12 grid max-w-2xl grid-cols-2 sm:grid-cols-4 gap-3">
@@ -408,8 +408,8 @@ function PlansSection() {
       <div className="mx-auto max-w-7xl">
         <SectionIntro
           eyebrow="Planes simples"
-          title="Empezá gratis. Crecé cuando lo necesites."
-          copy="Sin letra chica. Cancelás cuando quieras. Pagás solo si te alcanza el plan gratis y querés más."
+          title="Planes simples, en pesos."
+          copy="Sin letra chica. Cancelás cuando quieras. Pagás con Mercado Pago — tarjeta, débito, efectivo o saldo en cuenta."
         />
         <div className="mt-12 grid gap-5 lg:grid-cols-3">
           {plans.map((plan, i) => (
@@ -432,7 +432,7 @@ function PlansSection() {
 
                 <div className="mt-7 flex items-baseline gap-1.5">
                   <span className="font-display text-[44px] font-extrabold tracking-[-0.03em] text-[var(--text-strong)]">
-                    {plan.price === '0' ? '' : '$'}{plan.price}
+                    ${plan.price}
                   </span>
                   <span className="text-[13px] text-[var(--text-muted)] font-medium">{plan.pricePost}</span>
                 </div>
@@ -565,7 +565,7 @@ function FinalCta() {
           Crear cuenta gratis <ArrowRight className="h-4 w-4" strokeWidth={2.4} />
         </Link>
         <p className="text-[12.5px] text-[var(--text-muted)]">
-          Sin tarjeta. Plan Start gratis para siempre.
+          Pagás con Mercado Pago. Cancelás cuando quieras.
         </p>
       </div>
     </section>

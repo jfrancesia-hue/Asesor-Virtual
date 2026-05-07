@@ -10,7 +10,7 @@ const SECTIONS = [
     num: 'I',
     title: 'Datos que recolectamos',
     body: [
-      'Al registrarte: nombre, correo electrónico, país de residencia y, si contratás un plan pago, datos de facturación procesados por Stripe (no almacenamos números completos de tarjeta).',
+      'Al registrarte: nombre, correo electrónico, país de residencia y, si contratás un plan pago, datos de facturación procesados por Mercado Pago (no almacenamos números completos de tarjeta ni información sensible de medios de pago).',
       'Durante el uso: contenido de tus consultas, documentos que subas para análisis, historial de conversación, metadatos técnicos (IP, user-agent, tipo de dispositivo) y logs de acceso.',
     ],
   },
@@ -36,7 +36,7 @@ const SECTIONS = [
     num: 'IV',
     title: 'Encargados de tratamiento',
     body: [
-      'Supabase (base de datos, hosting LATAM-US). OpenAI y Anthropic (procesamiento de consultas IA, políticas zero-retention activadas). Stripe (pagos). Resend (correo transaccional). Sentry (monitoreo de errores, datos anonimizados).',
+      'Supabase (base de datos, hosting LATAM-US). OpenAI y Anthropic (procesamiento de consultas IA, políticas zero-retention activadas). Mercado Pago (procesamiento de pagos). Resend (correo transaccional). Sentry (monitoreo de errores, datos anonimizados).',
       'Todos firmaron DPAs y cumplen con GDPR y estándares equivalentes.',
     ],
   },

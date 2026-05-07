@@ -11,8 +11,6 @@ describe('env.validation — validateEnv', () => {
     SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9',
     SUPABASE_SERVICE_ROLE_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9',
     DATABASE_URL: 'postgres://user:pass@localhost:5432/db',
-    STRIPE_SECRET_KEY: 'sk_test_123456',
-    STRIPE_WEBHOOK_SECRET: 'whsec_123456',
     AI_PROVIDER: 'anthropic',
     ANTHROPIC_API_KEY: 'sk-ant-test',
   };
@@ -44,59 +42,49 @@ describe('env.validation — validateEnv', () => {
     expect(() => validateEnv(config)).not.toThrow();
   });
 
-  it('accepts production without Stripe price IDs because billing is optional', () => {
+  it('accepts production without MP_ACCESS_TOKEN because billing is opt-in', () => {
     const config = {
       ...validTestEnv,
       NODE_ENV: 'production',
       OPENAI_API_KEY: 'sk-prod-123456',
-      RESEND_API_KEY: 're_test_123',
-      // STRIPE_PRICE_* not set — Stripe billing is opt-in.
     };
 
     expect(() => validateEnv(config)).not.toThrow();
   });
 
-  it('accepts production without RESEND_API_KEY because email can be enabled later', () => {
-    const config = {
-      ...validTestEnv,
-      NODE_ENV: 'production',
-      OPENAI_API_KEY: 'sk-prod-123456',
-      STRIPE_PRICE_START: 'price_start',
-      STRIPE_PRICE_PRO: 'price_pro',
-      STRIPE_PRICE_ENTERPRISE: 'price_enterprise',
-      STRIPE_PRICE_CREDITS_10: 'price_10',
-      STRIPE_PRICE_CREDITS_30: 'price_30',
-      STRIPE_PRICE_CREDITS_100: 'price_100',
-    };
-
-    expect(() => validateEnv(config)).not.toThrow();
-  });
-
-  it('accepts valid config for production with all required price IDs and optional Resend key', () => {
-    const config = {
-      ...validTestEnv,
-      NODE_ENV: 'production',
-      OPENAI_API_KEY: 'sk-prod-123456',
-      STRIPE_PRICE_START: 'price_start_prod',
-      STRIPE_PRICE_PRO: 'price_pro_prod',
-      STRIPE_PRICE_ENTERPRISE: 'price_enterprise_prod',
-      STRIPE_PRICE_CREDITS_10: 'price_credits_10_prod',
-      STRIPE_PRICE_CREDITS_30: 'price_credits_30_prod',
-      STRIPE_PRICE_CREDITS_100: 'price_credits_100_prod',
-      RESEND_API_KEY: 're_prod_123456',
-    };
-
-    expect(() => validateEnv(config)).not.toThrow();
-  });
-
-  it('accepts development environment without price IDs (optional in dev)', () => {
+  it('accepts development without MP_ACCESS_TOKEN', () => {
     const config = {
       ...validTestEnv,
       NODE_ENV: 'development',
-      // No STRIPE_PRICE_* and no RESEND_API_KEY — should be OK in dev
     };
 
     expect(() => validateEnv(config)).not.toThrow();
+  });
+
+  it('accepts MP_ACCESS_TOKEN with APP_USR- prefix (production)', () => {
+    const config = {
+      ...validTestEnv,
+      MP_ACCESS_TOKEN: 'APP_USR-1234567890-050711-abcdef-987654321',
+    };
+    expect(() => validateEnv(config)).not.toThrow();
+  });
+
+  it('accepts MP_ACCESS_TOKEN with TEST- prefix (sandbox)', () => {
+    const config = {
+      ...validTestEnv,
+      MP_ACCESS_TOKEN: 'TEST-1234567890-050711-abcdef-987654321',
+    };
+    expect(() => validateEnv(config)).not.toThrow();
+  });
+
+  it('rejects MP_ACCESS_TOKEN with invalid prefix', () => {
+    const config = {
+      ...validTestEnv,
+      MP_ACCESS_TOKEN: 'invalid_token_12345',
+    };
+
+    expect(() => validateEnv(config)).toThrow();
+    expect(() => validateEnv(config)).toThrow(/MP_ACCESS_TOKEN/);
   });
 
   it('error message includes property names for all validation failures', () => {
@@ -109,9 +97,6 @@ describe('env.validation — validateEnv', () => {
       SUPABASE_ANON_KEY: 'invalid',
       SUPABASE_SERVICE_ROLE_KEY: 'invalid',
       DATABASE_URL: 'invalid-db-url',
-      STRIPE_SECRET_KEY: 'invalid_stripe',
-      STRIPE_WEBHOOK_SECRET: 'invalid_webhook',
-      // Missing AI_PROVIDER, ANTHROPIC_API_KEY, price IDs, etc.
     };
 
     expect(() => validateEnv(config)).toThrow();
@@ -119,8 +104,7 @@ describe('env.validation — validateEnv', () => {
       validateEnv(config);
     } catch (e: any) {
       const message = e.message;
-      // Check that property names appear in error
-      expect(message).toMatch(/JWT_SECRET|SUPABASE|STRIPE|ANTHROPIC/);
+      expect(message).toMatch(/JWT_SECRET|SUPABASE|ANTHROPIC|OPENAI/);
     }
   });
 
@@ -135,53 +119,12 @@ describe('env.validation — validateEnv', () => {
     expect(() => validateEnv(config)).not.toThrow();
   });
 
-  it('accepts STRIPE price IDs with price_ prefix', () => {
-    const config = {
-      ...validTestEnv,
-      NODE_ENV: 'production',
-      OPENAI_API_KEY: 'sk-prod-123456',
-      STRIPE_PRICE_START: 'price_start_abc123',
-      STRIPE_PRICE_PRO: 'price_pro_abc123',
-      STRIPE_PRICE_ENTERPRISE: 'price_ent_abc123',
-      STRIPE_PRICE_CREDITS_10: 'price_c10_abc123',
-      STRIPE_PRICE_CREDITS_30: 'price_c30_abc123',
-      STRIPE_PRICE_CREDITS_100: 'price_c100_abc123',
-      RESEND_API_KEY: 're_test_abc123',
-    };
-
-    expect(() => validateEnv(config)).not.toThrow();
-  });
-
-  it('rejects STRIPE_PRICE_* with invalid prefix (not starting with price_)', () => {
-    const config = {
-      ...validTestEnv,
-      NODE_ENV: 'production',
-      OPENAI_API_KEY: 'sk-prod-123456',
-      STRIPE_PRICE_START: 'invalid_price_id', // Must start with "price_"
-      STRIPE_PRICE_PRO: 'price_pro_abc123',
-      STRIPE_PRICE_ENTERPRISE: 'price_ent_abc123',
-      STRIPE_PRICE_CREDITS_10: 'price_c10_abc123',
-      STRIPE_PRICE_CREDITS_30: 'price_c30_abc123',
-      STRIPE_PRICE_CREDITS_100: 'price_c100_abc123',
-      RESEND_API_KEY: 're_test_abc123',
-    };
-
-    expect(() => validateEnv(config)).toThrow();
-    expect(() => validateEnv(config)).toThrow(/STRIPE_PRICE_START/);
-  });
-
   it('rejects RESEND_API_KEY with invalid prefix (not starting with re_)', () => {
     const config = {
       ...validTestEnv,
       NODE_ENV: 'production',
       OPENAI_API_KEY: 'sk-prod-123456',
-      STRIPE_PRICE_START: 'price_start_abc123',
-      STRIPE_PRICE_PRO: 'price_pro_abc123',
-      STRIPE_PRICE_ENTERPRISE: 'price_ent_abc123',
-      STRIPE_PRICE_CREDITS_10: 'price_c10_abc123',
-      STRIPE_PRICE_CREDITS_30: 'price_c30_abc123',
-      STRIPE_PRICE_CREDITS_100: 'price_c100_abc123',
-      RESEND_API_KEY: 'invalid_resend_key', // Must start with "re_"
+      RESEND_API_KEY: 'invalid_resend_key',
     };
 
     expect(() => validateEnv(config)).toThrow();
@@ -192,13 +135,6 @@ describe('env.validation — validateEnv', () => {
     const config = {
       ...validTestEnv,
       NODE_ENV: 'production',
-      STRIPE_PRICE_START: 'price_start_abc123',
-      STRIPE_PRICE_PRO: 'price_pro_abc123',
-      STRIPE_PRICE_ENTERPRISE: 'price_ent_abc123',
-      STRIPE_PRICE_CREDITS_10: 'price_c10_abc123',
-      STRIPE_PRICE_CREDITS_30: 'price_c30_abc123',
-      STRIPE_PRICE_CREDITS_100: 'price_c100_abc123',
-      RESEND_API_KEY: 're_test_abc123',
     };
 
     expect(() => validateEnv(config)).toThrow(/OPENAI_API_KEY/);

@@ -26,7 +26,7 @@ const SECTIONS = [
     num: 'III',
     title: 'Planes y cobros',
     body: [
-      'El servicio se comercializa mediante suscripción mensual recurrente en dólares estadounidenses, procesada por Stripe. El cargo se renueva automáticamente al cierre de cada período hasta que canceles.',
+      'El servicio se comercializa mediante pagos mensuales en pesos argentinos procesados por Mercado Pago. El plan se activa por treinta días desde la confirmación del pago; al vencimiento, el usuario debe abonar nuevamente para continuar accediendo a las prestaciones del plan.',
       'La cancelación es inmediata desde tu panel y surte efecto al final del período ya facturado. No se emiten reembolsos prorrateados salvo en casos de indisponibilidad prolongada del servicio atribuible a la plataforma.',
     ],
   },
