@@ -2,6 +2,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
+import * as Sentry from '@sentry/nextjs';
 
 export default function DashboardError({
   error,
@@ -11,35 +12,46 @@ export default function DashboardError({
   reset: () => void;
 }) {
   useEffect(() => {
-    console.error('[Dashboard Error]', error);
+    Sentry.captureException(error, { tags: { boundary: 'dashboard' } });
   }, [error]);
 
   const router = useRouter();
 
+  const isNetwork = error.message?.includes('fetch') || error.message?.includes('network');
+
   return (
-    <div className="flex flex-col items-center justify-center min-h-[60vh] p-6 text-center">
-      <div className="w-14 h-14 bg-red-100 rounded-2xl flex items-center justify-center mb-4">
-        <AlertTriangle className="w-7 h-7 text-red-500" />
+    <div className="flex flex-col items-center justify-center min-h-[60vh] px-6 py-10 text-center">
+      <div
+        className="w-14 h-14 rounded-2xl flex items-center justify-center mb-5"
+        style={{ background: 'color-mix(in srgb, #dc2626 14%, var(--surface))' }}
+        aria-hidden="true"
+      >
+        <AlertTriangle className="w-7 h-7 text-red-600" strokeWidth={2.2} />
       </div>
-      <h2 className="text-lg font-bold text-slate-900 mb-2">Algo salió mal</h2>
-      <p className="text-sm text-slate-500 max-w-sm mb-6 leading-relaxed">
-        {error.message?.includes('fetch') || error.message?.includes('network')
-          ? 'No se pudo conectar con el servidor. Verificá tu conexión.'
-          : 'Ocurrió un error inesperado. Podés intentar nuevamente.'}
+      <p className="font-display text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--cta-dark)]">
+        {isNetwork ? 'Sin conexión' : 'Error inesperado'}
       </p>
-      <div className="flex gap-3">
+      <h2 className="mt-2 font-display text-[clamp(22px,3vw,28px)] font-bold tracking-[-0.025em] text-[var(--text-strong)]">
+        Algo salió mal
+      </h2>
+      <p className="mt-3 text-sm text-[var(--text-medium)] max-w-md leading-relaxed">
+        {isNetwork
+          ? 'No pudimos conectar con el servidor. Verificá tu conexión a internet y volvé a intentar.'
+          : 'Ocurrió un error inesperado al cargar esta sección. Podés reintentar o volver al inicio.'}
+      </p>
+      <div className="flex flex-wrap gap-3 mt-7">
         <button
           onClick={() => reset()}
-          className="flex items-center gap-2 px-4 py-2.5 bg-blue-600 text-white text-sm font-semibold rounded-xl hover:bg-blue-700 transition-colors"
+          className="magnetic-btn inline-flex items-center gap-2 px-5 py-2.5 bg-[var(--cta)] text-white text-sm font-bold rounded-xl shadow-[0_8px_24px_rgba(230,126,34,0.35)] hover:bg-[var(--cta-dark)] transition-all"
         >
-          <RefreshCw className="w-4 h-4" />
+          <RefreshCw className="w-4 h-4" strokeWidth={2.4} />
           Reintentar
         </button>
         <button
           onClick={() => router.push('/home')}
-          className="flex items-center gap-2 px-4 py-2.5 border border-slate-200 text-slate-700 text-sm font-semibold rounded-xl hover:bg-slate-50 transition-colors"
+          className="inline-flex items-center gap-2 px-5 py-2.5 border border-[var(--border)] bg-[var(--surface)] text-[var(--text-strong)] text-sm font-semibold rounded-xl hover:bg-[var(--surface-subtle)] transition-colors"
         >
-          <Home className="w-4 h-4" />
+          <Home className="w-4 h-4" strokeWidth={2.2} />
           Ir al inicio
         </button>
       </div>

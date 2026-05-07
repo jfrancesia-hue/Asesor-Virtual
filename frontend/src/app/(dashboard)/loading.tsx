@@ -1,29 +1,39 @@
 export default function DashboardLoading() {
   return (
-    <div className="p-6 max-w-5xl mx-auto animate-pulse">
+    <div className="px-6 md:px-8 py-10 max-w-6xl mx-auto">
       {/* Header skeleton */}
-      <div className="mb-8">
-        <div className="h-7 bg-slate-200 rounded-lg w-48 mb-2" />
-        <div className="h-4 bg-slate-100 rounded w-64" />
-      </div>
+      <header className="mb-10">
+        <div className="skeleton h-3 w-32 rounded" />
+        <div className="skeleton h-9 w-72 rounded mt-3" />
+        <div className="skeleton h-4 w-96 rounded mt-3" />
+      </header>
+
       {/* Cards skeleton */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-        {[1, 2, 3].map((i) => (
-          <div key={i} className="bg-white border border-slate-200 rounded-xl p-5">
-            <div className="h-8 w-8 bg-slate-200 rounded-lg mb-4" />
-            <div className="h-5 bg-slate-200 rounded w-3/4 mb-2" />
-            <div className="h-4 bg-slate-100 rounded w-1/2" />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
+        {[0, 1, 2].map((i) => (
+          <div
+            key={i}
+            className="bg-[var(--surface)] border border-[var(--border)] rounded-2xl p-6"
+          >
+            <div className="skeleton w-12 h-12 rounded-xl mb-4" />
+            <div className="skeleton h-5 w-3/4 rounded mb-2" />
+            <div className="skeleton h-3 w-full rounded" />
+            <div className="skeleton h-3 w-5/6 rounded mt-1.5" />
           </div>
         ))}
       </div>
+
       {/* List skeleton */}
       <div className="space-y-3">
-        {[1, 2, 3, 4].map((i) => (
-          <div key={i} className="bg-white border border-slate-200 rounded-xl p-4 flex items-center gap-4">
-            <div className="w-10 h-10 bg-slate-200 rounded-xl flex-shrink-0" />
+        {[0, 1, 2, 3].map((i) => (
+          <div
+            key={i}
+            className="bg-[var(--surface)] border border-[var(--border)] rounded-2xl p-4 flex items-center gap-4"
+          >
+            <div className="skeleton w-11 h-11 rounded-xl flex-shrink-0" />
             <div className="flex-1">
-              <div className="h-4 bg-slate-200 rounded w-1/2 mb-2" />
-              <div className="h-3 bg-slate-100 rounded w-3/4" />
+              <div className="skeleton h-4 w-1/2 rounded mb-2" />
+              <div className="skeleton h-3 w-3/4 rounded" />
             </div>
           </div>
         ))}

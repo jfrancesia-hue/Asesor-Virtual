@@ -1,13 +1,24 @@
 import Link from 'next/link';
+
 export default function NotFound() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50">
-      <div className="text-center">
-        <p className="text-6xl font-bold text-blue-600 mb-4">404</p>
-        <h1 className="text-2xl font-semibold text-slate-800 mb-2">Página no encontrada</h1>
-        <p className="text-slate-500 mb-6">El recurso que buscás no existe o fue movido.</p>
-        <Link href="/home" className="bg-blue-600 text-white px-6 py-2.5 rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">
-          Ir al inicio
+    <div className="dashboard-bg min-h-screen flex items-center justify-center px-6">
+      <div className="text-center max-w-md">
+        <p className="font-display text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--cta-dark)]">
+          Error 404
+        </p>
+        <h1 className="mt-3 font-display text-[clamp(2.5rem,6vw,4rem)] font-extrabold leading-[0.98] tracking-[-0.035em] text-[var(--text-strong)]">
+          Esta página{' '}
+          <span className="gradient-text">no existe</span>.
+        </h1>
+        <p className="mt-5 text-[15px] leading-relaxed text-[var(--text-medium)]">
+          El recurso que buscás puede haberse movido o nunca existió. Volvé a la portada para empezar de nuevo.
+        </p>
+        <Link
+          href="/landing"
+          className="magnetic-btn inline-flex items-center gap-2 mt-8 rounded-2xl bg-[var(--cta)] px-7 py-3.5 text-[15px] font-bold text-white shadow-[0_12px_32px_rgba(230,126,34,0.4)] hover:bg-[var(--cta-dark)] transition-all"
+        >
+          Volver al inicio
         </Link>
       </div>
     </div>
