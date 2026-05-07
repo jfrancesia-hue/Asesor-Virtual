@@ -137,52 +137,58 @@ export class EnvironmentVariables {
   @IsOptional()
   CLAUDE_MAX_HISTORY?: number;
 
-  // ── Stripe ────────────────────────────────────────────────
+  // ── Stripe (opcional — billing se desactiva si faltan) ────
+  // Si seteás cualquier STRIPE_*, se valida el formato.
+  // Si no las seteás, el backend arranca igual y los endpoints
+  // de billing devuelven error en runtime hasta que las configures.
+  @ValidateIf((o) => o.STRIPE_SECRET_KEY !== undefined && o.STRIPE_SECRET_KEY !== '')
   @IsString()
   @Matches(/^sk_(test|live)_/, {
     message: 'STRIPE_SECRET_KEY debe empezar con sk_test_ o sk_live_',
   })
-  STRIPE_SECRET_KEY: string;
+  STRIPE_SECRET_KEY?: string;
 
+  @ValidateIf((o) => o.STRIPE_WEBHOOK_SECRET !== undefined && o.STRIPE_WEBHOOK_SECRET !== '')
   @IsString()
   @Matches(/^whsec_/, {
     message: 'STRIPE_WEBHOOK_SECRET debe empezar con whsec_',
   })
-  STRIPE_WEBHOOK_SECRET: string;
+  STRIPE_WEBHOOK_SECRET?: string;
 
-  // En producción, los price IDs son obligatorios
-  @ValidateIf((o) => o.NODE_ENV === Environment.Production)
+  // Price IDs: opcionales. Cuando se invoca un endpoint de billing
+  // sin ellos configurados, falla con un error claro en runtime.
+  @ValidateIf((o) => o.STRIPE_PRICE_START !== undefined && o.STRIPE_PRICE_START !== '')
   @IsString()
   @Matches(/^price_/, { message: 'STRIPE_PRICE_START debe empezar con price_' })
   STRIPE_PRICE_START?: string;
 
-  @ValidateIf((o) => o.NODE_ENV === Environment.Production)
+  @ValidateIf((o) => o.STRIPE_PRICE_PRO !== undefined && o.STRIPE_PRICE_PRO !== '')
   @IsString()
   @Matches(/^price_/, { message: 'STRIPE_PRICE_PRO debe empezar con price_' })
   STRIPE_PRICE_PRO?: string;
 
-  @ValidateIf((o) => o.NODE_ENV === Environment.Production)
+  @ValidateIf((o) => o.STRIPE_PRICE_ENTERPRISE !== undefined && o.STRIPE_PRICE_ENTERPRISE !== '')
   @IsString()
   @Matches(/^price_/, {
     message: 'STRIPE_PRICE_ENTERPRISE debe empezar con price_',
   })
   STRIPE_PRICE_ENTERPRISE?: string;
 
-  @ValidateIf((o) => o.NODE_ENV === Environment.Production)
+  @ValidateIf((o) => o.STRIPE_PRICE_CREDITS_10 !== undefined && o.STRIPE_PRICE_CREDITS_10 !== '')
   @IsString()
   @Matches(/^price_/, {
     message: 'STRIPE_PRICE_CREDITS_10 debe empezar con price_',
   })
   STRIPE_PRICE_CREDITS_10?: string;
 
-  @ValidateIf((o) => o.NODE_ENV === Environment.Production)
+  @ValidateIf((o) => o.STRIPE_PRICE_CREDITS_30 !== undefined && o.STRIPE_PRICE_CREDITS_30 !== '')
   @IsString()
   @Matches(/^price_/, {
     message: 'STRIPE_PRICE_CREDITS_30 debe empezar con price_',
   })
   STRIPE_PRICE_CREDITS_30?: string;
 
-  @ValidateIf((o) => o.NODE_ENV === Environment.Production)
+  @ValidateIf((o) => o.STRIPE_PRICE_CREDITS_100 !== undefined && o.STRIPE_PRICE_CREDITS_100 !== '')
   @IsString()
   @Matches(/^price_/, {
     message: 'STRIPE_PRICE_CREDITS_100 debe empezar con price_',

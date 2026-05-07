@@ -44,17 +44,16 @@ describe('env.validation — validateEnv', () => {
     expect(() => validateEnv(config)).not.toThrow();
   });
 
-  it('rejects in production without STRIPE_PRICE_START', () => {
+  it('accepts production without Stripe price IDs because billing is optional', () => {
     const config = {
       ...validTestEnv,
       NODE_ENV: 'production',
       OPENAI_API_KEY: 'sk-prod-123456',
       RESEND_API_KEY: 're_test_123',
-      // Missing STRIPE_PRICE_START, STRIPE_PRICE_PRO, etc.
+      // STRIPE_PRICE_* not set — Stripe billing is opt-in.
     };
 
-    expect(() => validateEnv(config)).toThrow();
-    expect(() => validateEnv(config)).toThrow(/STRIPE_PRICE_START/);
+    expect(() => validateEnv(config)).not.toThrow();
   });
 
   it('accepts production without RESEND_API_KEY because email can be enabled later', () => {
