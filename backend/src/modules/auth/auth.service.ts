@@ -14,6 +14,12 @@ import { RegisterDto, LoginDto } from './auth.dto';
 import { JwtPayload } from '../../common/decorators/current-user.decorator';
 
 const REFRESH_TOKEN_TYPE = 'refresh';
+const FREE_PLAN_LIMITS = {
+  max_users: 1,
+  max_contracts_per_month: 1,
+  max_ai_queries_per_month: 2,
+  max_analysis_credits: 1,
+};
 
 export interface AuthTokens {
   accessToken: string;
@@ -53,13 +59,11 @@ export class AuthService {
         .insert({
           name: dto.companyName || dto.fullName,
           slug,
-          plan: 'start',
+          plan: 'free',
+          subscription_status: 'free',
           country: dto.country || 'AR',
           legal_jurisdiction: this.getJurisdiction(dto.country || 'AR'),
-          max_users: 1,
-          max_contracts_per_month: 5,
-          max_ai_queries_per_month: 20,
-          max_analysis_credits: 2,
+          ...FREE_PLAN_LIMITS,
         })
         .select()
         .single();

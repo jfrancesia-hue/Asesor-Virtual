@@ -9,13 +9,14 @@ import { SUPABASE_ADMIN } from '../../config/supabase.module';
 import { NotificationsService } from '../notifications/notifications.service';
 
 // Precios en ARS (pesos argentinos). MP solo cobra en pesos.
-const PLAN_PRICES_ARS = {
+const PAID_PLAN_PRICES_ARS = {
   start: 7900,
   pro: 19900,
   enterprise: 59900,
 };
 
 const PLAN_LIMITS = {
+  free: { max_users: 1, max_contracts_per_month: 1, max_ai_queries_per_month: 2, max_analysis_credits: 1 },
   start: { max_users: 1, max_contracts_per_month: 5, max_ai_queries_per_month: 20, max_analysis_credits: 2 },
   pro: { max_users: 5, max_contracts_per_month: 25, max_ai_queries_per_month: 100, max_analysis_credits: 10 },
   enterprise: { max_users: 99999, max_contracts_per_month: 99999, max_ai_queries_per_month: 1000, max_analysis_credits: 30 },
@@ -28,7 +29,7 @@ const CREDIT_PACKS = {
 };
 
 type CreditPackKey = keyof typeof CREDIT_PACKS;
-type PlanKey = keyof typeof PLAN_LIMITS;
+type PaidPlanKey = keyof typeof PAID_PLAN_PRICES_ARS;
 
 @Injectable()
 export class BillingService {
@@ -77,8 +78,8 @@ export class BillingService {
   // ────────────────────────────────────────────────────────────
   // Checkout → MP Preference (one-shot payment)
   // ────────────────────────────────────────────────────────────
-  async createPlanCheckout(tenantId: string, userId: string, plan: PlanKey) {
-    const ars = PLAN_PRICES_ARS[plan];
+  async createPlanCheckout(tenantId: string, userId: string, plan: PaidPlanKey) {
+    const ars = PAID_PLAN_PRICES_ARS[plan];
     if (!ars) throw new BadRequestException(`Plan "${plan}" inválido`);
 
     return this.createPreference(tenantId, userId, {
@@ -239,7 +240,7 @@ export class BillingService {
       if (kind === 'credits') {
         await this.processCreditPurchase(String(payment.id), tenantId, userId, target as CreditPackKey);
       } else if (kind === 'plan') {
-        await this.processPlanPurchase(String(payment.id), tenantId, userId, target as PlanKey);
+        await this.processPlanPurchase(String(payment.id), tenantId, userId, target as PaidPlanKey);
       }
     } catch (error: any) {
       this.logger.error(`Error procesando payment ${dataId} (${kind}/${target}): ${error?.message}`);
@@ -324,7 +325,7 @@ export class BillingService {
     paymentId: string,
     tenantId: string,
     userId: string | undefined,
-    plan: PlanKey,
+    plan: PaidPlanKey,
   ) {
     const limits = PLAN_LIMITS[plan];
     if (!limits) {

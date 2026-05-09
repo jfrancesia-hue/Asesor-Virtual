@@ -26,6 +26,7 @@ Plataforma SaaS multi-asesor con IA para Latinoamérica. 5 asesores especializad
 
 | Plan | Precio | Usuarios | Contratos/mes | Consultas IA | Créditos |
 |------|--------|----------|---------------|--------------|---------|
+| Gratis | $0 | 1 | 1 | 2 | 1 |
 | Start | $7.900 | 1 | 5 | 20 | 2 |
 | Pro | $19.900 | 5 | 25 | 100 | 10 |
 | Enterprise | $59.900 | ilimitados | ilimitados | 1.000 | 30 |

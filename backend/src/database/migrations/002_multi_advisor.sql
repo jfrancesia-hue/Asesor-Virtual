@@ -69,7 +69,7 @@ RESTRICCIONES DE PLAN:
 
 '["Generación de contratos", "Análisis de riesgo", "Base jurídica LATAM", "Revisión de cláusulas", "Orientación legal"]',
 
-'start', 1),
+'free', 1),
 
 -- SALUD
 ('health', 'Asesor de Salud', 'Salud', 'Orientación en Salud y Bienestar',
@@ -285,6 +285,13 @@ Soy como ese vecino que sabe de todo: plomería, electricidad básica, pintura, 
 -- ============================================================
 -- PLAN LIMITS CONFIG
 -- ============================================================
+UPDATE tenants SET
+  max_users = 1,
+  max_contracts_per_month = 1,
+  max_ai_queries_per_month = 2,
+  max_analysis_credits = 1
+WHERE plan = 'free';
+
 UPDATE tenants SET
   max_users = 1,
   max_contracts_per_month = 5,

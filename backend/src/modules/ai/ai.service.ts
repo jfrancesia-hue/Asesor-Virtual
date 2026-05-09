@@ -82,7 +82,7 @@ export class AiService {
 
     return advisors.map((a) => ({
       ...a,
-      available: this.isPlanSufficient(tenant?.plan || 'start', a.requires_plan),
+      available: this.isPlanSufficient(tenant?.plan || 'free', a.requires_plan),
     }));
   }
 
@@ -102,7 +102,7 @@ export class AiService {
     }
 
     const advisor = advisorResult.data;
-    const available = this.isPlanSufficient(tenantResult.data?.plan || 'start', advisor.requires_plan);
+    const available = this.isPlanSufficient(tenantResult.data?.plan || 'free', advisor.requires_plan);
     return { ...advisor, available };
   }
 
@@ -126,7 +126,7 @@ export class AiService {
       .eq('id', tenantId)
       .single();
 
-    if (!this.isPlanSufficient(tenant?.plan || 'start', advisor.requires_plan)) {
+    if (!this.isPlanSufficient(tenant?.plan || 'free', advisor.requires_plan)) {
       throw new ForbiddenException('Tu plan no incluye acceso a este asesor');
     }
 
@@ -671,7 +671,12 @@ Siempre usás la herramienta save_risk_analysis para entregar el resultado estru
   }
 
   private isPlanSufficient(userPlan: string, requiredPlan: string): boolean {
-    const planOrder = { start: 1, pro: 2, enterprise: 3 };
-    return (planOrder[userPlan] || 1) >= (planOrder[requiredPlan] || 1);
+    const planOrder: Record<string, number> = {
+      free: 0,
+      start: 1,
+      pro: 2,
+      enterprise: 3,
+    };
+    return (planOrder[userPlan] ?? 0) >= (planOrder[requiredPlan] ?? 1);
   }
 }

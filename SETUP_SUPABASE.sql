@@ -64,7 +64,7 @@ CREATE EXTENSION IF NOT EXISTS "vector";
 -- ============================================================
 -- ENUMS
 -- ============================================================
-CREATE TYPE plan_type AS ENUM ('start', 'pro', 'enterprise');
+CREATE TYPE plan_type AS ENUM ('free', 'start', 'pro', 'enterprise');
 CREATE TYPE user_role AS ENUM ('owner', 'admin', 'member', 'viewer');
 CREATE TYPE contract_type AS ENUM ('alquiler', 'servicios', 'laboral', 'nda', 'comercial', 'freelance', 'compraventa');
 CREATE TYPE contract_status AS ENUM ('draft', 'review', 'active', 'expired', 'terminated');
@@ -85,19 +85,19 @@ CREATE TABLE tenants (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   name VARCHAR(255) NOT NULL,
   slug VARCHAR(100) NOT NULL UNIQUE,
-  plan plan_type NOT NULL DEFAULT 'start',
+  plan plan_type NOT NULL DEFAULT 'free',
   country VARCHAR(10) NOT NULL DEFAULT 'AR',
   legal_jurisdiction VARCHAR(50) NOT NULL DEFAULT 'argentina',
   stripe_customer_id VARCHAR(255),
   stripe_subscription_id VARCHAR(255),
   stripe_price_id VARCHAR(255),
-  subscription_status VARCHAR(50) DEFAULT 'active',
+  subscription_status VARCHAR(50) DEFAULT 'free',
   subscription_period_end TIMESTAMPTZ,
   settings JSONB NOT NULL DEFAULT '{}',
   max_users INT NOT NULL DEFAULT 1,
-  max_contracts_per_month INT NOT NULL DEFAULT 5,
-  max_ai_queries_per_month INT NOT NULL DEFAULT 20,
-  max_analysis_credits INT NOT NULL DEFAULT 2,
+  max_contracts_per_month INT NOT NULL DEFAULT 1,
+  max_ai_queries_per_month INT NOT NULL DEFAULT 2,
+  max_analysis_credits INT NOT NULL DEFAULT 1,
   is_active BOOLEAN NOT NULL DEFAULT true,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
@@ -619,10 +619,11 @@ AS $$
 BEGIN
   INSERT INTO credit_wallets (tenant_id, balance)
   VALUES (NEW.id, CASE NEW.plan
+    WHEN 'free' THEN 1
     WHEN 'start' THEN 2
     WHEN 'pro' THEN 10
     WHEN 'enterprise' THEN 30
-    ELSE 2
+    ELSE 1
   END);
   RETURN NEW;
 END;
@@ -804,7 +805,7 @@ RESTRICCIONES DE PLAN:
 
 '["Generación de contratos", "Análisis de riesgo", "Base jurídica LATAM", "Revisión de cláusulas", "Orientación legal"]',
 
-'start', 1),
+'free', 1),
 
 -- SALUD
 ('health', 'Asesor de Salud', 'Salud', 'Orientación en Salud y Bienestar',
@@ -1020,6 +1021,13 @@ Soy como ese vecino que sabe de todo: plomería, electricidad básica, pintura, 
 -- ============================================================
 -- PLAN LIMITS CONFIG
 -- ============================================================
+UPDATE tenants SET
+  max_users = 1,
+  max_contracts_per_month = 1,
+  max_ai_queries_per_month = 2,
+  max_analysis_credits = 1
+WHERE plan = 'free';
+
 UPDATE tenants SET
   max_users = 1,
   max_contracts_per_month = 5,

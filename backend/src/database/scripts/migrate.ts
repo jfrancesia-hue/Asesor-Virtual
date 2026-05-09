@@ -10,6 +10,11 @@ const MIGRATION_ORDER = [
   '001_initial_schema.sql',
   '002_multi_advisor.sql',
   '003_advisor_tools.sql',
+  '004_billing_idempotency.sql',
+  '005_terms_acceptance.sql',
+  '006_drop_stripe_columns.sql',
+  '007_add_free_plan_enum.sql',
+  '008_enable_free_plan.sql',
 ];
 
 async function migrate() {

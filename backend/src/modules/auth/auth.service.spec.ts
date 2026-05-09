@@ -2,6 +2,7 @@ import { UnauthorizedException } from '@nestjs/common';
 import { AuthService } from './auth.service';
 
 type Builder = {
+  insert: jest.Mock;
   select: jest.Mock;
   eq: jest.Mock;
   single: jest.Mock;
@@ -9,10 +10,12 @@ type Builder = {
 
 function makeBuilder(overrides: Partial<Record<keyof Builder, any>> = {}): Builder {
   const b: Builder = {
+    insert: jest.fn(),
     select: jest.fn(),
     eq: jest.fn(),
     single: jest.fn().mockResolvedValue({ data: null, error: null }),
   };
+  b.insert.mockReturnValue(b);
   b.select.mockReturnValue(b);
   b.eq.mockReturnValue(b);
   Object.assign(b, overrides);
@@ -43,6 +46,16 @@ function buildService(opts: {
   };
 
   const supabase = {
+    auth: {
+      admin: {
+        createUser: jest.fn().mockResolvedValue({
+          data: { user: { id: 'auth_user_1' } },
+          error: null,
+        }),
+        deleteUser: jest.fn().mockResolvedValue({ error: null }),
+      },
+      signInWithPassword: jest.fn(),
+    },
     from: jest.fn((table: string) => {
       if (!supabaseBuilders[table]) supabaseBuilders[table] = makeBuilder();
       return supabaseBuilders[table];
@@ -53,6 +66,54 @@ function buildService(opts: {
 
   return { service, jwtService, config, supabase, builders: supabaseBuilders };
 }
+
+describe('AuthService.register', () => {
+  it('creates new accounts on the free plan, not Start', async () => {
+    const tenantBuilder = makeBuilder({
+      single: jest.fn().mockResolvedValue({
+        data: {
+          id: 'tenant_1',
+          name: 'Juan Perez',
+          slug: 'juan-perez-abc12',
+          plan: 'free',
+        },
+        error: null,
+      }),
+    });
+    const userBuilder = makeBuilder({
+      single: jest.fn().mockResolvedValue({
+        data: {
+          id: 'auth_user_1',
+          email: 'juan@example.com',
+          full_name: 'Juan Perez',
+          role: 'owner',
+        },
+        error: null,
+      }),
+    });
+
+    const { service } = buildService({
+      supabaseBuilders: { tenants: tenantBuilder, users: userBuilder },
+    });
+
+    const result = await service.register({
+      fullName: 'Juan Perez',
+      email: 'juan@example.com',
+      password: 'password123',
+      country: 'AR',
+    } as any);
+
+    expect(tenantBuilder.insert).toHaveBeenCalledWith(expect.objectContaining({
+      plan: 'free',
+      subscription_status: 'free',
+      max_users: 1,
+      max_contracts_per_month: 1,
+      max_ai_queries_per_month: 2,
+      max_analysis_credits: 1,
+    }));
+    expect(result.tenant.plan).toBe('free');
+  });
+});
 
 describe('AuthService.refresh', () => {
   it('rejects when refreshToken is undefined', async () => {

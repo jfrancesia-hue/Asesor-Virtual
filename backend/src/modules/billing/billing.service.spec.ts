@@ -32,11 +32,12 @@ function makeBuilder(overrides: Partial<Record<keyof Builder, any>> = {}): Build
     select: jest.fn(),
     eq: jest.fn(),
     maybeSingle: jest.fn().mockResolvedValue({ data: null, error: null }),
-    update: jest.fn().mockResolvedValue({ data: null, error: null }),
+    update: jest.fn(),
     single: jest.fn().mockResolvedValue({ data: null, error: null }),
   };
   b.select.mockReturnValue(b);
   b.eq.mockReturnValue(b);
+  b.update.mockReturnValue(b);
   Object.assign(b, overrides);
   return b;
 }

@@ -26,6 +26,7 @@ const SECTIONS = [
     num: 'III',
     title: 'Planes y cobros',
     body: [
+      'El plan gratuito permite una cantidad limitada de pruebas iniciales sin tarjeta. Sus límites pueden cambiar para prevenir abuso, costos excesivos o uso automatizado.',
       'El servicio se comercializa mediante pagos mensuales en pesos argentinos procesados por Mercado Pago. El plan se activa por treinta días desde la confirmación del pago; al vencimiento, el usuario debe abonar nuevamente para continuar accediendo a las prestaciones del plan.',
       'La cancelación es inmediata desde tu panel y surte efecto al final del período ya facturado. No se emiten reembolsos prorrateados salvo en casos de indisponibilidad prolongada del servicio atribuible a la plataforma.',
     ],

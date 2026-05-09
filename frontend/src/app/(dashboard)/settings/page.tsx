@@ -17,6 +17,7 @@ const CREDIT_PACKS = [
 ];
 
 const PLANS = [
+  { id: 'free', label: 'Gratis', price: '$0', users: '1 usuario', contracts: '1 contrato', queries: '2 consultas', credits: '1 crédito', free: true },
   { id: 'start', label: 'Start', price: '$7.900/mes', users: '1 usuario', contracts: '5 contratos', queries: '20 consultas', credits: '2 créditos' },
   { id: 'pro', label: 'Pro', price: '$19.900/mes', users: '5 usuarios', contracts: '25 contratos', queries: '100 consultas', credits: '10 créditos', popular: true },
   { id: 'enterprise', label: 'Enterprise', price: '$59.900/mes', users: 'Ilimitados', contracts: 'Ilimitados', queries: '1.000 consultas', credits: '30 créditos' },
@@ -189,7 +190,7 @@ function SettingsContent() {
               {/* Credit Packs */}
               <div>
                 <h3 className="font-semibold text-[var(--text-medium)] mb-3">Comprar créditos</h3>
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid gap-3 md:grid-cols-3">
                   {CREDIT_PACKS.map((pack) => (
                     <Card key={pack.id} className="p-4 text-center hover:border-[var(--primary)]/40 transition-colors">
                       <p className="text-2xl mb-2">{pack.icon}</p>
@@ -214,7 +215,7 @@ function SettingsContent() {
                 <h3 className="font-semibold text-[var(--text-medium)] mb-3">
                   Plan actual: <span className="text-[var(--primary)] capitalize">{tenant?.plan}</span>
                 </h3>
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
                   {PLANS.map((plan) => (
                     <Card
                       key={plan.id}
@@ -239,6 +240,8 @@ function SettingsContent() {
                       </ul>
                       {tenant?.plan === plan.id ? (
                         <Badge color="green" className="w-full justify-center">Plan actual</Badge>
+                      ) : plan.free ? (
+                        <Badge color="slate" className="w-full justify-center">Plan inicial</Badge>
                       ) : (
                         <Button
                           size="sm"
@@ -299,9 +302,9 @@ function SettingsContent() {
               </div>
             ))}
           </div>
-          {tenant?.plan === 'start' && (
+          {(tenant?.plan === 'free' || tenant?.plan === 'start') && (
             <p className="text-xs text-[var(--text-muted)] mt-4 text-center">
-              Plan Start permite 1 usuario. Actualizá a Pro para agregar más.
+              Tu plan permite 1 usuario. Actualizá a Pro para agregar más.
             </p>
           )}
         </Card>

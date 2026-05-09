@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { ArrowRight, FileText, Lock, Briefcase, Home as HomeIcon } from 'lucide-react';
@@ -13,6 +14,24 @@ const CONTRACT_SHORTCUTS = [
   { type: 'nda', label: 'NDA', icon: Lock, hint: 'Confidencialidad' },
   { type: 'freelance', label: 'Freelance', icon: FileText, hint: 'Trabajo por proyecto' },
 ];
+
+const HOME_BACKGROUND_IMAGE =
+  'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=1800&h=1200&fit=crop&auto=format&q=80';
+
+const ADVISOR_VISUALS: Record<string, string> = {
+  legal: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=280&h=280&fit=crop&auto=format&q=80',
+  health: 'https://images.unsplash.com/photo-1551076805-e1869033e561?w=280&h=280&fit=crop&auto=format&q=80',
+  finance: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=280&h=280&fit=crop&auto=format&q=80',
+  psychology: 'https://images.unsplash.com/photo-1499209974431-9dddcece7f88?w=280&h=280&fit=crop&auto=format&q=80',
+  home: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=280&h=280&fit=crop&auto=format&q=80',
+};
+
+const CONTRACT_VISUALS: Record<string, string> = {
+  alquiler: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=260&h=220&fit=crop&auto=format&q=80',
+  servicios: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=260&h=220&fit=crop&auto=format&q=80',
+  nda: 'https://images.unsplash.com/photo-1554224154-26032ffc0d07?w=260&h=220&fit=crop&auto=format&q=80',
+  freelance: 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=260&h=220&fit=crop&auto=format&q=80',
+};
 
 // Fallback si el backend no responde
 const ADVISORS_FALLBACK = [
@@ -51,7 +70,21 @@ export default function HomePage() {
   const firstName = user?.fullName?.split(' ')[0] || 'usuario';
 
   return (
-    <div className="px-6 md:px-8 py-10 md:py-12 max-w-6xl mx-auto">
+    <div className="relative min-h-screen overflow-hidden px-6 py-10 md:px-8 md:py-12">
+      <div className="pointer-events-none absolute inset-0 -z-10">
+        <Image
+          src={HOME_BACKGROUND_IMAGE}
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover opacity-[0.13]"
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-[rgba(254,249,224,0.94)] via-[rgba(254,243,199,0.9)] to-[rgba(251,227,207,0.84)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_18%,rgba(230,126,34,0.2),transparent_32%),radial-gradient(circle_at_25%_70%,rgba(46,134,193,0.13),transparent_34%)]" />
+      </div>
+
+      <div className="mx-auto max-w-6xl">
       {/* Header */}
       <header className="mb-10">
         <p className="font-display text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--cta-dark)]">
@@ -83,12 +116,28 @@ export default function HomePage() {
                 key={advisor.id}
                 onClick={() => handleAdvisorClick(advisor)}
                 disabled={!advisor.available}
-                className={`bento-card text-left p-6 rounded-2xl border bg-[var(--surface)] transition-all ${
+                className={`bento-card group overflow-hidden text-left rounded-2xl border bg-[var(--surface)] transition-all ${
                   advisor.available
                     ? 'border-[var(--border)] cursor-pointer'
                     : 'border-[var(--border)] cursor-not-allowed opacity-60'
                 }`}
               >
+                <div className="relative h-28 overflow-hidden">
+                  <Image
+                    src={ADVISOR_VISUALS[advisor.id] || ADVISOR_VISUALS.legal}
+                    alt=""
+                    fill
+                    sizes="(min-width: 1024px) 22vw, (min-width: 640px) 45vw, 90vw"
+                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[rgba(31,46,61,0.62)] via-transparent to-transparent" />
+                  {!advisor.available && (
+                    <div className="absolute right-4 top-4">
+                      <Badge color="orange">Pro</Badge>
+                    </div>
+                  )}
+                </div>
+                <div className="p-6">
                 <div className="flex items-start justify-between mb-4">
                   <div
                     className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl shadow-soft"
@@ -99,7 +148,6 @@ export default function HomePage() {
                   >
                     {advisor.icon}
                   </div>
-                  {!advisor.available && <Badge color="orange">Pro</Badge>}
                 </div>
                 <h3 className="font-display font-bold text-[var(--text-strong)] text-[15.5px] tracking-tight">
                   {advisor.name}
@@ -115,6 +163,7 @@ export default function HomePage() {
                     Consultar <ArrowRight className="w-3.5 h-3.5" strokeWidth={2.4} />
                   </div>
                 )}
+                </div>
               </button>
             ))}
           </div>
@@ -146,12 +195,22 @@ export default function HomePage() {
               <button
                 key={s.type}
                 onClick={() => handleContractShortcut(s.type)}
-                className="bento-card flex flex-col items-start gap-3 p-5 bg-[var(--surface)] rounded-2xl border border-[var(--border)] text-left"
+                className="bento-card overflow-hidden bg-[var(--surface)] rounded-2xl border border-[var(--border)] text-left"
               >
-                <div className="w-10 h-10 rounded-xl bg-[var(--primary-bg)] text-[var(--primary)] flex items-center justify-center" aria-hidden="true">
-                  <Icon className="w-5 h-5" strokeWidth={2.2} />
+                <div className="relative h-20 overflow-hidden">
+                  <Image
+                    src={CONTRACT_VISUALS[s.type]}
+                    alt=""
+                    fill
+                    sizes="(min-width: 640px) 22vw, 45vw"
+                    className="object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[rgba(31,46,61,0.55)] to-transparent" />
+                  <div className="absolute left-4 top-4 w-10 h-10 rounded-xl bg-white/88 text-[var(--primary)] flex items-center justify-center shadow-soft" aria-hidden="true">
+                    <Icon className="w-5 h-5" strokeWidth={2.2} />
+                  </div>
                 </div>
-                <div>
+                <div className="p-5 pt-4">
                   <p className="font-display font-semibold text-[14.5px] text-[var(--text-strong)] tracking-tight">{s.label}</p>
                   <p className="text-[12px] text-[var(--text-muted)] mt-0.5">{s.hint}</p>
                 </div>
@@ -160,6 +219,7 @@ export default function HomePage() {
           })}
         </div>
       </section>
+      </div>
     </div>
   );
 }

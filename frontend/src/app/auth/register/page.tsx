@@ -53,13 +53,13 @@ export default function RegisterPage() {
     <div className="bg-[var(--surface)] rounded-2xl shadow-medium border border-[var(--border)] p-8 md:p-10">
       <div className="mb-7">
         <p className="font-display text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--cta-dark)]">
-          Plan Start · Gratis
+          Plan Gratis · 2 pruebas
         </p>
         <h1 className="mt-2 font-display text-[28px] font-bold tracking-tight text-[var(--text-strong)]">
           Crear cuenta
         </h1>
         <p className="mt-1.5 text-sm text-[var(--text-medium)]">
-          Cinco asesores IA — sin tarjeta de crédito.
+          Empezá con el asesor legal: 2 consultas y 1 análisis inicial. Sin tarjeta.
         </p>
       </div>
 

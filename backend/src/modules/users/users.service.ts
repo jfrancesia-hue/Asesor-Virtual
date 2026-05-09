@@ -2,6 +2,7 @@ import {
   Injectable, Inject, Logger, NotFoundException, ForbiddenException, BadRequestException,
 } from '@nestjs/common';
 import { SupabaseClient } from '@supabase/supabase-js';
+import { randomBytes } from 'crypto';
 import { SUPABASE_ADMIN } from '../../config/supabase.module';
 
 @Injectable()
@@ -86,9 +87,7 @@ export class UsersService {
   private generateTempPassword(): string {
     // 16 caracteres aleatorios con al menos un dígito y un símbolo.
     // Usa crypto.randomBytes para entropía real.
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const crypto = require('crypto') as typeof import('crypto');
-    const base = crypto.randomBytes(12).toString('base64').replace(/[+/=]/g, '');
+    const base = randomBytes(12).toString('base64').replace(/[+/=]/g, '');
     return `${base}A1!`;
   }
 

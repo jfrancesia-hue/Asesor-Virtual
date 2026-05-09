@@ -85,6 +85,14 @@ const flow = [
 
 const plans = [
   {
+    name: 'Gratis',
+    price: '0',
+    pricePost: 'ARS',
+    copy: 'Para probar MiAsesor Legal sin tarjeta.',
+    features: ['1 usuario', '2 consultas IA', '1 contrato / mes', '1 crédito de análisis'],
+    free: true,
+  },
+  {
     name: 'Start',
     price: '7.900',
     pricePost: 'ARS/mes',
@@ -421,9 +429,9 @@ function PlansSection() {
         <SectionIntro
           eyebrow="Planes simples"
           title="Planes simples, en pesos."
-          copy="Sin letra chica. Cancelás cuando quieras. Pagás con Mercado Pago — tarjeta, débito, efectivo o saldo en cuenta."
+          copy="Empezá gratis sin tarjeta y pasá a Start cuando necesites más consultas, historial y acceso completo."
         />
-        <div className="mt-12 grid gap-5 lg:grid-cols-3">
+        <div className="mt-12 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
           {plans.map((plan, i) => (
             <RevealItem key={plan.name} delay={i * 80}>
               <article
@@ -466,7 +474,7 @@ function PlansSection() {
                       : 'bg-[var(--text-strong)] text-white hover:bg-[var(--primary-dark)]'
                   }`}
                 >
-                  Elegir {plan.name} <ChevronRight className="h-4 w-4" strokeWidth={2.4} />
+                  {plan.free ? 'Empezar gratis' : `Elegir ${plan.name}`} <ChevronRight className="h-4 w-4" strokeWidth={2.4} />
                 </Link>
               </article>
             </RevealItem>
