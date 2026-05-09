@@ -122,6 +122,9 @@ const metrics = [
   ['AES-256', 'datos cifrados'],
 ];
 
+const heroVisualImage =
+  'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=1200&h=1400&fit=crop&crop=entropy&auto=format&q=85';
+
 export default function LandingPage() {
   return (
     <main className="dashboard-bg min-h-screen relative">
@@ -253,52 +256,61 @@ function Hero() {
           </dl>
         </div>
 
-        {/* Visual stack — 5 asesores como cards en isométrico */}
+        {/* Visual principal: asesoria real + senales de producto */}
         <div className="lg:col-span-5 hidden lg:block reveal in-view" aria-hidden="true">
-          <AdvisorStack />
+          <HeroVisual />
         </div>
       </div>
     </section>
   );
 }
 
-function AdvisorStack() {
+function HeroVisual() {
   return (
-    <div className="relative h-[520px] [perspective:1400px]">
-      {advisors.map((a, i) => {
-        const Icon = a.icon;
-        const rotation = -10 + i * 5;
-        const offsetY = i * 18;
-        const offsetX = i * 12 - 24;
-        return (
-          <div
-            key={a.name}
-            className="absolute left-1/2 top-1/2 w-[260px] rounded-2xl bg-[var(--surface)] border border-[var(--border)] p-5 shadow-strong"
-            style={{
-              transform: `translate(-50%, -50%) translateX(${offsetX}px) translateY(${offsetY - 24}px) rotateZ(${rotation}deg)`,
-              zIndex: 10 - i,
-            }}
-          >
-            <div className="flex items-center gap-3">
-              <div
-                className="w-11 h-11 rounded-xl flex items-center justify-center text-white shadow-soft"
-                style={{ background: a.color }}
-              >
-                <Icon className="h-5 w-5" strokeWidth={2.2} />
+    <div className="relative h-[540px]">
+      <div className="absolute inset-0 translate-x-5 rotate-2 rounded-[28px] bg-[var(--primary)]/10" />
+      <div className="relative h-full overflow-hidden rounded-[28px] border border-white/70 bg-[var(--surface)] shadow-strong">
+        <Image
+          src={heroVisualImage}
+          alt=""
+          fill
+          priority
+          sizes="(min-width: 1024px) 42vw, 100vw"
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-[rgba(31,46,61,0.72)] via-[rgba(31,46,61,0.12)] to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 p-6">
+          <div className="rounded-2xl border border-white/25 bg-white/18 p-5 text-white shadow-soft backdrop-blur-xl">
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <p className="font-display text-[12px] font-bold uppercase tracking-[0.1em] text-white/75">
+                  Consulta analizada
+                </p>
+                <p className="mt-1 font-display text-[22px] font-extrabold tracking-tight">
+                  Respuesta clara, con criterio local.
+                </p>
               </div>
-              <div className="min-w-0">
-                <p className="font-display font-bold text-[15px] text-[var(--text-strong)] tracking-tight">{a.title}</p>
-                <p className="text-[11.5px] font-semibold text-[var(--text-muted)] uppercase tracking-wider">{a.name}</p>
-              </div>
+              <span className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl bg-[var(--accent)] text-white shadow-soft">
+                <BadgeCheck className="h-6 w-6" strokeWidth={2.4} />
+              </span>
             </div>
-            <div className="mt-4 space-y-2">
-              <div className="h-2 rounded-full bg-[var(--surface-subtle)] w-full" />
-              <div className="h-2 rounded-full bg-[var(--surface-subtle)] w-4/5" />
-              <div className="h-2 rounded-full bg-[var(--surface-subtle)] w-3/5" />
+            <div className="mt-5 grid grid-cols-5 gap-2">
+              {advisors.map((advisor) => {
+                const Icon = advisor.icon;
+                return (
+                  <div
+                    key={advisor.name}
+                    className="flex h-14 items-center justify-center rounded-xl border border-white/20 bg-white/14"
+                    title={advisor.name}
+                  >
+                    <Icon className="h-5 w-5" strokeWidth={2.3} />
+                  </div>
+                );
+              })}
             </div>
           </div>
-        );
-      })}
+        </div>
+      </div>
     </div>
   );
 }
