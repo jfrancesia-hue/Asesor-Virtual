@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import {
   Home, MessageCircle, FileText, Shield, LayoutDashboard,
-  Settings, LogOut, Scale, X, Menu, Bell, History,
+  Settings, LogOut, Sparkles, X, Menu, Bell, History,
 } from 'lucide-react';
 import { clsx } from 'clsx';
 import { useAuthStore, useAlertsStore } from '@/stores';
@@ -30,18 +30,19 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
   };
 
   return (
-    <aside className="flex h-full w-full flex-col border-r border-[rgba(188,102,27,0.55)] bg-gradient-to-b from-[#C85F12] via-[#E46F17] to-[#A94D0D] text-white shadow-[18px_0_50px_rgba(188,102,27,0.16)]">
+    <aside className="flex flex-col h-full w-full bg-[var(--surface)]/95 backdrop-blur-xl border-r border-[var(--border)]">
       {/* Logo */}
-      <div className="flex items-center justify-between border-b border-white/18 px-5 py-5">
+      <div className="px-5 py-5 border-b border-[var(--border)] flex items-center justify-between">
         <Link href="/home" onClick={onClose} className="flex items-center gap-3 group">
           <div
-            className="flex h-9 w-9 items-center justify-center rounded-xl bg-white text-[#BC661B] shadow-soft transition-transform group-hover:scale-105"
+            className="w-9 h-9 rounded-xl flex items-center justify-center text-white shadow-soft transition-transform group-hover:scale-105"
+            style={{ background: 'linear-gradient(135deg, #E46F17, #A94D0D)' }}
           >
-            <Scale className="w-4.5 h-4.5" strokeWidth={2.4} />
+            <Sparkles className="w-4.5 h-4.5" strokeWidth={2.4} />
           </div>
           <div className="min-w-0">
-            <p className="font-display text-[15px] font-bold leading-none tracking-tight text-white">MiAsesor</p>
-            <p className="mt-1 text-[11px] font-semibold capitalize tracking-wide text-white/72">
+            <p className="font-display font-bold text-[var(--text-strong)] text-[15px] leading-none tracking-tight">MiAsesor</p>
+            <p className="text-[11px] font-medium text-[var(--cta-dark)] mt-1 capitalize tracking-wide">
               Plan {tenant?.plan || 'start'}
             </p>
           </div>
@@ -50,7 +51,7 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
           <button
             onClick={onClose}
             aria-label="Cerrar menú"
-            className="rounded-lg p-1.5 text-white/75 transition-colors hover:bg-white/12 hover:text-white md:hidden"
+            className="p-1.5 text-[var(--text-muted)] hover:text-[var(--text-strong)] hover:bg-[var(--surface-subtle)] rounded-lg md:hidden transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -69,14 +70,14 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
               className={clsx(
                 'flex items-center gap-3 px-3 py-2.5 rounded-xl text-[14px] font-medium transition-all',
                 active
-                  ? 'bg-white text-[#9A470D] shadow-soft'
-                  : 'text-white/82 hover:bg-white/13 hover:text-white',
+                  ? 'bg-[#E46F17] text-white shadow-[0_8px_22px_rgba(188,102,27,0.24)]'
+                  : 'text-[var(--text-medium)] hover:bg-[#FBE3CF] hover:text-[#9A470D]',
               )}
             >
-              <Icon className={clsx('w-[18px] h-[18px] flex-shrink-0', active ? 'text-[#BC661B]' : 'text-white/82')} strokeWidth={2.2} />
+              <Icon className={clsx('w-[18px] h-[18px] flex-shrink-0', active ? 'text-white' : 'text-[#BC661B]')} strokeWidth={2.2} />
               <span>{label}</span>
               {showBadge && unreadCount > 0 && (
-                <span className="ml-auto flex h-5 min-w-[20px] items-center justify-center rounded-full bg-white px-1.5 text-[10px] font-bold text-[#BC661B]">
+                <span className="ml-auto bg-white text-[#BC661B] text-[10px] font-bold rounded-full min-w-[20px] h-5 px-1.5 flex items-center justify-center">
                   {unreadCount > 9 ? '9+' : unreadCount}
                 </span>
               )}
@@ -86,21 +87,21 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
       </nav>
 
       {/* Bottom */}
-      <div className="space-y-1 border-t border-white/18 px-3 py-3">
+      <div className="px-3 py-3 border-t border-[var(--border)] space-y-1">
         <Link
           href="/alerts"
           onClick={onClose}
           className={clsx(
             'flex items-center gap-3 px-3 py-2.5 rounded-xl text-[14px] font-medium transition-all',
             pathname === '/alerts'
-              ? 'bg-white text-[#9A470D]'
-              : 'text-white/82 hover:bg-white/13 hover:text-white',
+              ? 'bg-[#E46F17] text-white'
+              : 'text-[var(--text-medium)] hover:bg-[#FBE3CF] hover:text-[#9A470D]',
           )}
         >
           <Bell className="w-[18px] h-[18px]" strokeWidth={2.2} />
           Alertas
           {unreadCount > 0 && (
-            <span className="ml-auto flex h-5 min-w-[20px] items-center justify-center rounded-full bg-white px-1.5 text-[10px] font-bold text-[#BC661B]">
+            <span className="ml-auto bg-[#E46F17] text-white text-[10px] font-bold rounded-full min-w-[20px] h-5 px-1.5 flex items-center justify-center">
               {unreadCount > 9 ? '9+' : unreadCount}
             </span>
           )}
@@ -111,8 +112,8 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
           className={clsx(
             'flex items-center gap-3 px-3 py-2.5 rounded-xl text-[14px] font-medium transition-all',
             pathname === '/settings'
-              ? 'bg-white text-[#9A470D]'
-              : 'text-white/82 hover:bg-white/13 hover:text-white',
+              ? 'bg-[#E46F17] text-white'
+              : 'text-[var(--text-medium)] hover:bg-[#FBE3CF] hover:text-[#9A470D]',
           )}
         >
           <Settings className="w-[18px] h-[18px]" strokeWidth={2.2} />
@@ -120,21 +121,22 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
         </Link>
 
         {/* User card */}
-        <div className="mt-2 flex items-center gap-3 rounded-xl border border-white/18 bg-white/12 px-3 py-3 backdrop-blur">
+        <div className="flex items-center gap-3 px-3 py-3 mt-2 rounded-xl bg-[var(--surface-subtle)] border border-[var(--border)]">
           <div
-            className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-white text-xs font-bold text-[#BC661B] shadow-soft"
+            className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0 shadow-soft"
+            style={{ background: 'linear-gradient(135deg, #E46F17, #A94D0D)' }}
             aria-hidden="true"
           >
             {user?.fullName?.[0]?.toUpperCase() || 'U'}
           </div>
           <div className="min-w-0 flex-1">
-            <p className="truncate text-[12.5px] font-semibold leading-tight text-white">{user?.fullName || 'Usuario'}</p>
-            <p className="mt-0.5 truncate text-[11px] capitalize text-white/68">{user?.role}</p>
+            <p className="text-[12.5px] font-semibold text-[var(--text-strong)] truncate leading-tight">{user?.fullName || 'Usuario'}</p>
+            <p className="text-[11px] text-[var(--text-muted)] truncate capitalize mt-0.5">{user?.role}</p>
           </div>
           <button
             onClick={handleLogout}
             aria-label="Cerrar sesión"
-            className="rounded-lg p-1.5 text-white/68 transition-colors hover:bg-white/14 hover:text-white"
+            className="text-[var(--text-muted)] hover:text-red-600 hover:bg-red-50 rounded-lg p-1.5 transition-colors"
           >
             <LogOut className="w-[16px] h-[16px]" />
           </button>
@@ -182,7 +184,7 @@ export function Sidebar() {
             style={{ background: 'linear-gradient(135deg, var(--primary), var(--primary-dark))' }}
             aria-hidden="true"
           >
-            <Scale className="w-4 h-4" strokeWidth={2.4} />
+            <Sparkles className="w-4 h-4" strokeWidth={2.4} />
           </div>
           <span className="font-display font-bold text-[var(--text-strong)] text-[14.5px] tracking-tight">MiAsesor</span>
         </div>
