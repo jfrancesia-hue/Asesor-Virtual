@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const PUBLIC_PATHS = ['/landing', '/auth/login', '/auth/register', '/api'];
+const PUBLIC_PATHS = ['/', '/landing', '/auth/login', '/auth/register', '/api'];
 
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  const isPublic = PUBLIC_PATHS.some((p) => pathname.startsWith(p));
+  const isPublic = PUBLIC_PATHS.some((p) => (p === '/' ? pathname === '/' : pathname.startsWith(p)));
   if (isPublic) return NextResponse.next();
 
   // Solo chequea presencia de la cookie httpOnly (la validez la valida el backend).
