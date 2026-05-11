@@ -59,14 +59,27 @@ async function bootstrap() {
   );
   app.use(cookieParser());
 
-  // CORS
-  const allowedOrigins = [
-    process.env.FRONTEND_URL || 'http://localhost:3000',
-    ...(process.env.EXTRA_ORIGINS ? process.env.EXTRA_ORIGINS.split(',').map((o) => o.trim()) : []),
+  // CORS — incluye dominio canónico de prod, deploy raíz de Vercel y previews
+  const DEFAULT_ALLOWED = [
+    'https://www.miasesor.com.ar',
+    'https://miasesor.com.ar',
+    'https://tuasesor-web.vercel.app',
+    'http://localhost:3000',
   ];
+  const VERCEL_PREVIEW = /^https:\/\/tuasesor-web-[a-z0-9-]+\.vercel\.app$/;
+  const allowedOrigins = new Set<string>([
+    ...DEFAULT_ALLOWED,
+    process.env.FRONTEND_URL || 'http://localhost:3000',
+    ...(process.env.EXTRA_ORIGINS
+      ? process.env.EXTRA_ORIGINS.split(',').map((o) => o.trim()).filter(Boolean)
+      : []),
+  ]);
   app.enableCors({
     origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.has(origin) || VERCEL_PREVIEW.test(origin)) {
+        return callback(null, true);
+      }
       callback(new Error(`CORS bloqueado para origen: ${origin}`));
     },
     credentials: true,

@@ -15,6 +15,8 @@ const MIGRATION_ORDER = [
   '006_drop_stripe_columns.sql',
   '007_add_free_plan_enum.sql',
   '008_enable_free_plan.sql',
+  '009_enable_rls.sql',
+  '010_fix_function_search_path.sql',
 ];
 
 async function migrate() {

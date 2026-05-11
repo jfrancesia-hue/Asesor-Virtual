@@ -73,10 +73,9 @@ export class AuthController {
   @Post('forgot-password')
   @HttpCode(HttpStatus.OK)
   @Throttle({ default: { limit: 5, ttl: 60000 } })
-  async forgotPassword(@Body() dto: ForgotPasswordDto) {
-    const frontendUrl =
-      this.config.get<string>('FRONTEND_URL') || 'http://localhost:3000';
-    const redirectTo = `${frontendUrl.replace(/\/+$/, '')}/auth/reset-password`;
+  async forgotPassword(@Body() dto: ForgotPasswordDto, @Req() req: Request) {
+    const origin = this.resolveSafeOrigin(req);
+    const redirectTo = `${origin}/auth/reset-password`;
     await this.authService.requestPasswordReset(dto.email, redirectTo);
     return { ok: true };
   }
@@ -121,6 +120,49 @@ export class AuthController {
       ...baseOptions,
       maxAge: REFRESH_MAX_AGE_MS,
     });
+  }
+
+  private isAllowedOrigin(origin: string): boolean {
+    const allowed = new Set([
+      'https://www.miasesor.com.ar',
+      'https://miasesor.com.ar',
+      'https://tuasesor-web.vercel.app',
+      'http://localhost:3000',
+    ]);
+    if (allowed.has(origin)) return true;
+    return /^https:\/\/tuasesor-web-[a-z0-9-]+\.vercel\.app$/.test(origin);
+  }
+
+  private resolveSafeOrigin(req: Request): string {
+    const tryParse = (value: unknown): string | null => {
+      if (!value) return null;
+      try {
+        const url = new URL(value.toString());
+        return `${url.protocol}//${url.host}`;
+      } catch {
+        return null;
+      }
+    };
+
+    const candidates: (string | null)[] = [
+      tryParse(req.headers.origin),
+      tryParse(req.headers.referer),
+    ];
+
+    const fwdHost = req.headers['x-forwarded-host'];
+    const fwdProto = req.headers['x-forwarded-proto'] || 'https';
+    if (fwdHost) {
+      const host = Array.isArray(fwdHost) ? fwdHost[0] : fwdHost;
+      candidates.push(`${fwdProto}://${host}`);
+    }
+
+    for (const c of candidates) {
+      if (c && this.isAllowedOrigin(c)) return c;
+    }
+
+    const fallback =
+      this.config.get<string>('FRONTEND_URL') || 'https://www.miasesor.com.ar';
+    return fallback.replace(/\/+$/, '');
   }
 
   private clearAuthCookies(res: Response) {
