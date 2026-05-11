@@ -48,3 +48,21 @@ export class LoginDto {
   @MinLength(1)
   password: string;
 }
+
+export class ForgotPasswordDto {
+  @ApiProperty({ example: 'juan@empresa.com' })
+  @IsEmail()
+  email: string;
+}
+
+export class ResetPasswordDto {
+  @ApiProperty({ description: 'Access token recibido en el fragmento URL del email de recuperación' })
+  @IsString()
+  @MinLength(10)
+  accessToken: string;
+
+  @ApiProperty({ example: 'NuevaPass123!', minLength: 8 })
+  @IsString()
+  @MinLength(8)
+  newPassword: string;
+}

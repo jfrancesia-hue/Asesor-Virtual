@@ -125,6 +125,15 @@ export class AuthService {
       throw new UnauthorizedException('Cuenta desactivada');
     }
 
+    if (!user.tenant) {
+      this.logger.error(
+        `Login bloqueado: user ${user.id} (${user.email}) sin tenant asociado (tenant_id=${user.tenant_id})`,
+      );
+      throw new UnauthorizedException(
+        'Tu cuenta no tiene una organización asociada. Contactanos para restaurarla.',
+      );
+    }
+
     this.supabase
       .from('users')
       .update({ last_login: new Date().toISOString() })
@@ -181,6 +190,39 @@ export class AuthService {
     }
 
     return this.issueTokens(user.id, user.email, user.tenant_id, user.role);
+  }
+
+  async requestPasswordReset(email: string, redirectTo: string): Promise<void> {
+    const { error } = await this.supabase.auth.resetPasswordForEmail(email, {
+      redirectTo,
+    });
+    if (error) {
+      this.logger.warn(`resetPasswordForEmail falló para ${email}: ${error.message}`);
+    }
+  }
+
+  async resetPasswordWithToken(accessToken: string, newPassword: string): Promise<void> {
+    let payload: { sub?: string };
+    try {
+      const part = accessToken.split('.')[1];
+      const decoded = Buffer.from(part.replace(/-/g, '+').replace(/_/g, '/'), 'base64').toString('utf8');
+      payload = JSON.parse(decoded);
+    } catch {
+      throw new UnauthorizedException('Token inválido');
+    }
+
+    if (!payload?.sub) {
+      throw new UnauthorizedException('Token sin identificador de usuario');
+    }
+
+    const { error } = await this.supabase.auth.admin.updateUserById(payload.sub, {
+      password: newPassword,
+    });
+
+    if (error) {
+      this.logger.error(`updateUserById falló para ${payload.sub}: ${error.message}`);
+      throw new InternalServerErrorException('No se pudo actualizar la contraseña');
+    }
   }
 
   async getProfile(userId: string) {

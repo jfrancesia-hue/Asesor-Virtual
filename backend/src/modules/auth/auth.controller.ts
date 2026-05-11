@@ -16,7 +16,7 @@ import { ConfigService } from '@nestjs/config';
 import { Throttle } from '@nestjs/throttler';
 import { Response, Request } from 'express';
 import { AuthService, AuthTokens } from './auth.service';
-import { RegisterDto, LoginDto } from './auth.dto';
+import { RegisterDto, LoginDto, ForgotPasswordDto, ResetPasswordDto } from './auth.dto';
 import { CurrentUser, JwtPayload } from '../../common/decorators/current-user.decorator';
 import { IsString, IsOptional, IsObject } from 'class-validator';
 
@@ -67,6 +67,25 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   logout(@Res({ passthrough: true }) res: Response) {
     this.clearAuthCookies(res);
+    return { ok: true };
+  }
+
+  @Post('forgot-password')
+  @HttpCode(HttpStatus.OK)
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
+  async forgotPassword(@Body() dto: ForgotPasswordDto) {
+    const frontendUrl =
+      this.config.get<string>('FRONTEND_URL') || 'http://localhost:3000';
+    const redirectTo = `${frontendUrl.replace(/\/+$/, '')}/auth/reset-password`;
+    await this.authService.requestPasswordReset(dto.email, redirectTo);
+    return { ok: true };
+  }
+
+  @Post('reset-password')
+  @HttpCode(HttpStatus.OK)
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
+  async resetPassword(@Body() dto: ResetPasswordDto) {
+    await this.authService.resetPasswordWithToken(dto.accessToken, dto.newPassword);
     return { ok: true };
   }
 
