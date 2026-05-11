@@ -120,19 +120,16 @@ export class AuthService {
   }
 
   async login(dto: LoginDto) {
-    const { data: authData, error: authError } = await this.supabase.auth.signInWithPassword({
-      email: dto.email,
-      password: dto.password,
-    });
-
-    if (authError || !authData.user) {
-      throw new UnauthorizedException('Credenciales incorrectas');
-    }
+    // Verificamos password con HTTP directo al endpoint anon de Supabase Auth.
+    // No usamos this.supabase.auth.signInWithPassword porque ese método mete
+    // el JWT authenticated del usuario en el state interno del cliente
+    // singleton — y las queries siguientes van con ese JWT, que cae en RLS.
+    const authUserId = await this.verifyPasswordViaSupabase(dto.email, dto.password);
 
     const { data: user, error: userError } = await this.supabase
       .from('users')
       .select('*, tenant:tenants(*)')
-      .eq('id', authData.user.id)
+      .eq('id', authUserId)
       .single();
 
     if (userError || !user) {
@@ -213,6 +210,45 @@ export class AuthService {
     }
 
     return this.issueTokens(user.id, user.email, user.tenant_id, user.role);
+  }
+
+  private async verifyPasswordViaSupabase(email: string, password: string): Promise<string> {
+    const supabaseUrl = this.config.getOrThrow<string>('SUPABASE_URL');
+    const anonKey = this.config.get<string>('SUPABASE_ANON_KEY');
+    if (!anonKey) {
+      this.logger.error('SUPABASE_ANON_KEY no configurada — login deshabilitado');
+      throw new InternalServerErrorException('Auth provider no configurado');
+    }
+
+    let res: Response;
+    try {
+      res = await fetch(`${supabaseUrl}/auth/v1/token?grant_type=password`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          apikey: anonKey,
+          Authorization: `Bearer ${anonKey}`,
+        },
+        body: JSON.stringify({ email, password }),
+      });
+    } catch (err: any) {
+      this.logger.error(`No pude contactar a Supabase Auth: ${err?.message ?? err}`);
+      throw new InternalServerErrorException('No pudimos verificar tu cuenta en este momento');
+    }
+
+    if (!res.ok) {
+      // Supabase devuelve 400 con error_description en casos de creds malas, email no confirmado, etc.
+      // No queremos filtrar cuál de los dos para no facilitar enumeración de cuentas.
+      throw new UnauthorizedException('Credenciales incorrectas');
+    }
+
+    const tokenData = (await res.json()) as { user?: { id?: string } };
+    const userId = tokenData?.user?.id;
+    if (!userId) {
+      this.logger.error(`Token response sin user.id: ${JSON.stringify(tokenData).slice(0, 200)}`);
+      throw new UnauthorizedException('Credenciales incorrectas');
+    }
+    return userId;
   }
 
   async requestPasswordReset(email: string, redirectTo: string): Promise<void> {
