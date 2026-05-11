@@ -222,31 +222,63 @@ export class AuthService {
 
     if (error) {
       this.logger.error(`updateUserById falló para ${payload.sub}: ${error.message}`);
-      const msg = (error.message || '').toLowerCase();
-      // Errores de validación del provider → 400 con mensaje claro al usuario
-      if (
-        msg.includes('password') &&
-        (msg.includes('weak') ||
-          msg.includes('pwned') ||
-          msg.includes('breach') ||
-          msg.includes('leak') ||
-          msg.includes('compromised') ||
-          msg.includes('short') ||
-          msg.includes('characters') ||
-          msg.includes('length'))
-      ) {
-        throw new BadRequestException(
-          'Esa contraseña es débil o aparece en filtraciones conocidas. Probá una más larga y única (12+ caracteres, mezcla letras, números y símbolos).',
-        );
-      }
-      if (msg.includes('same') && msg.includes('password')) {
-        throw new BadRequestException('La contraseña nueva no puede ser igual a la anterior.');
-      }
-      if (msg.includes('expired') || msg.includes('invalid')) {
-        throw new UnauthorizedException('El link de recuperación expiró. Pedí uno nuevo.');
-      }
-      throw new InternalServerErrorException(`No se pudo actualizar la contraseña: ${error.message}`);
+      throw this.mapPasswordError(error.message || '');
     }
+  }
+
+  private mapPasswordError(rawMessage: string) {
+    const msg = rawMessage.toLowerCase();
+
+    if (msg.includes('one character of each') || msg.includes('required characters')) {
+      return new BadRequestException(
+        'Tu contraseña debe incluir al menos una letra mayúscula, una minúscula y un número.',
+      );
+    }
+
+    if (
+      (msg.includes('at least') && (msg.includes('characters') || msg.includes('character'))) ||
+      msg.includes('too short')
+    ) {
+      return new BadRequestException('Tu contraseña debe tener al menos 8 caracteres.');
+    }
+
+    if (msg.includes('pwned') || msg.includes('breach') || msg.includes('leak') || msg.includes('compromised')) {
+      return new BadRequestException(
+        'Esa contraseña aparece en filtraciones conocidas de otros sitios. Elegí una distinta.',
+      );
+    }
+
+    if (msg.includes('weak')) {
+      return new BadRequestException('La contraseña es demasiado fácil de adivinar. Probá una distinta.');
+    }
+
+    if (msg.includes('same') && msg.includes('password')) {
+      return new BadRequestException('La contraseña nueva no puede ser igual a la anterior.');
+    }
+
+    if (msg.includes('expired')) {
+      return new UnauthorizedException(
+        'El link del email expiró. Pedí uno nuevo desde "¿Olvidaste tu contraseña?".',
+      );
+    }
+
+    if (msg.includes('invalid token') || msg.includes('jwt')) {
+      return new UnauthorizedException(
+        'El link del email ya no es válido. Pedí uno nuevo desde "¿Olvidaste tu contraseña?".',
+      );
+    }
+
+    if (msg.includes('not found') || msg.includes('no user')) {
+      return new BadRequestException('No encontramos una cuenta asociada a este link.');
+    }
+
+    if (msg.includes('rate') || msg.includes('too many')) {
+      return new BadRequestException('Probaste muchas veces seguidas. Esperá un minuto y volvé a intentar.');
+    }
+
+    return new InternalServerErrorException(
+      'No pudimos actualizar tu contraseña. Probá de nuevo en unos minutos o escribinos.',
+    );
   }
 
   async getProfile(userId: string) {

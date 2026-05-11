@@ -34,7 +34,11 @@ function ResetPasswordForm() {
 
   const validate = () => {
     const e: any = {};
-    if (!password || password.length < 6) e.password = 'Mínimo 6 caracteres';
+    if (!password || password.length < 8) {
+      e.password = 'Mínimo 8 caracteres';
+    } else if (!/[a-z]/.test(password) || !/[A-Z]/.test(password) || !/[0-9]/.test(password)) {
+      e.password = 'Incluí al menos una mayúscula, una minúscula y un número';
+    }
     if (password !== confirm) e.confirm = 'Las contraseñas no coinciden';
     setErrors(e);
     return Object.keys(e).length === 0;
@@ -83,16 +87,17 @@ function ResetPasswordForm() {
       <Input
         label="Nueva contraseña"
         type="password"
-        placeholder="Mínimo 6 caracteres"
+        placeholder="Ej: MiAsesor2026"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         error={errors.password}
+        helperText="8 caracteres o más, con una mayúscula, una minúscula y un número."
         autoComplete="new-password"
       />
       <Input
         label="Repetir contraseña"
         type="password"
-        placeholder="Mínimo 6 caracteres"
+        placeholder="Volvé a escribirla"
         value={confirm}
         onChange={(e) => setConfirm(e.target.value)}
         error={errors.confirm}

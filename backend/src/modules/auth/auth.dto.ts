@@ -1,4 +1,4 @@
-import { IsEmail, IsString, MinLength, IsOptional, MaxLength } from 'class-validator';
+import { IsEmail, IsString, MinLength, IsOptional, MaxLength, Matches } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class RegisterDto {
@@ -12,9 +12,16 @@ export class RegisterDto {
   @IsEmail()
   email: string;
 
-  @ApiProperty({ example: 'Password123', minLength: 6 })
+  @ApiProperty({
+    example: 'Password123',
+    minLength: 8,
+    description: 'Mínimo 8 caracteres con al menos una mayúscula, una minúscula y un número.',
+  })
   @IsString()
-  @MinLength(6)
+  @MinLength(8)
+  @Matches(/[a-z]/, { message: 'La contraseña debe incluir al menos una letra minúscula' })
+  @Matches(/[A-Z]/, { message: 'La contraseña debe incluir al menos una letra mayúscula' })
+  @Matches(/[0-9]/, { message: 'La contraseña debe incluir al menos un número' })
   password: string;
 
   @ApiPropertyOptional({ example: 'Mi Empresa S.A.' })
@@ -61,8 +68,15 @@ export class ResetPasswordDto {
   @MinLength(10)
   accessToken: string;
 
-  @ApiProperty({ example: 'NuevaPass123', minLength: 6 })
+  @ApiProperty({
+    example: 'NuevaPass123',
+    minLength: 8,
+    description: 'Mínimo 8 caracteres con al menos una mayúscula, una minúscula y un número.',
+  })
   @IsString()
-  @MinLength(6)
+  @MinLength(8)
+  @Matches(/[a-z]/, { message: 'La contraseña debe incluir al menos una letra minúscula' })
+  @Matches(/[A-Z]/, { message: 'La contraseña debe incluir al menos una letra mayúscula' })
+  @Matches(/[0-9]/, { message: 'La contraseña debe incluir al menos un número' })
   newPassword: string;
 }
