@@ -2,6 +2,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Sidebar } from '@/components/layout/Sidebar';
+import { PlanStatusBanner } from '@/components/layout/PlanStatusBanner';
 import { useAuthStore } from '@/stores';
 import { Spinner } from '@/components/ui';
 
@@ -31,6 +32,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <Sidebar />
       {/* Desktop: margin for fixed sidebar. Mobile: padding-top for top bar */}
       <main className="flex-1 md:ml-[240px] pt-14 md:pt-0 min-h-screen overflow-auto">
+        <PlanStatusBanner />
         {children}
       </main>
     </div>

@@ -138,7 +138,7 @@ export class AiService {
       throw new ForbiddenException('Tu plan no incluye acceso a este asesor');
     }
 
-    await this.checkMonthlyLimit(tenantId, tenant?.max_ai_queries_per_month);
+    await this.checkMonthlyLimit(tenantId, tenant?.plan || 'free', tenant?.max_ai_queries_per_month);
 
     const { data: conversation, error } = await this.supabase
       .from('conversations')
@@ -471,27 +471,31 @@ Siempre usás la herramienta save_risk_analysis para entregar el resultado estru
       .eq('tenant_id', tenantId);
   }
 
-  private async checkMonthlyLimit(tenantId: string, maxQueries?: number) {
-    // El cap es POR TENANT (compartido entre todos los users del equipo).
-    // Si en el futuro se quiere cap por usuario, sumar el filtro user_id
-    // y exponer max_per_user en la tabla tenants.
+  private async checkMonthlyLimit(tenantId: string, plan: string, maxQueries?: number) {
     if (!maxQueries || maxQueries >= 99999) return;
 
-    const startOfMonth = new Date();
-    startOfMonth.setDate(1);
-    startOfMonth.setHours(0, 0, 0, 0);
-
-    const { count } = await this.supabase
+    // Plan free no se renueva: los 2 queries son acumulados de por vida hasta
+    // que el tenant compre un plan pago. Plan pago: cuenta lo del mes en curso.
+    let query = this.supabase
       .from('conversation_messages')
       .select('id', { count: 'exact', head: true })
       .eq('tenant_id', tenantId)
-      .eq('role', 'user')
-      .gte('created_at', startOfMonth.toISOString());
+      .eq('role', 'user');
+
+    if (plan !== 'free') {
+      const startOfMonth = new Date();
+      startOfMonth.setDate(1);
+      startOfMonth.setHours(0, 0, 0, 0);
+      query = query.gte('created_at', startOfMonth.toISOString());
+    }
+
+    const { count } = await query;
 
     if ((count || 0) >= maxQueries) {
-      throw new ForbiddenException(
-        'Alcanzaste el límite mensual de consultas IA del plan. Actualizá tu plan o esperá al próximo mes.',
-      );
+      const message = plan === 'free'
+        ? 'Usaste tus consultas gratuitas. Para seguir conversando con los asesores, activá un plan pago.'
+        : 'Alcanzaste el límite mensual de consultas IA del plan. Actualizá tu plan o esperá al próximo mes.';
+      throw new ForbiddenException(message);
     }
   }
 

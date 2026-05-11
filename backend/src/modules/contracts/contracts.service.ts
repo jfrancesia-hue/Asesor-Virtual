@@ -48,14 +48,24 @@ export class ContractsService {
       .single();
 
     if (tenant?.max_contracts_per_month !== 99999) {
-      const { count } = await this.supabase
+      // Plan free no se renueva: el contrato gratis es de por vida hasta upgrade.
+      // Plan pago: cuenta los del mes en curso.
+      let query = this.supabase
         .from('contracts')
         .select('id', { count: 'exact', head: true })
-        .eq('tenant_id', tenantId)
-        .gte('created_at', new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString());
+        .eq('tenant_id', tenantId);
+
+      if (tenant?.plan !== 'free') {
+        query = query.gte('created_at', new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString());
+      }
+
+      const { count } = await query;
 
       if ((count || 0) >= (tenant?.max_contracts_per_month || 5)) {
-        throw new ForbiddenException('Alcanzaste el límite de contratos del mes. Actualizá tu plan.');
+        const message = tenant?.plan === 'free'
+          ? 'Usaste tu contrato gratuito. Activá un plan pago para crear más.'
+          : 'Alcanzaste el límite de contratos del mes. Actualizá tu plan.';
+        throw new ForbiddenException(message);
       }
     }
 

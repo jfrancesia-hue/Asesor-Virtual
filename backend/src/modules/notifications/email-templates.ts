@@ -26,34 +26,6 @@ export const emailTemplates = {
 </body></html>`,
   }),
 
-  planExpiringSoon: (name: string, plan: string, daysLeft: number, renewUrl: string) => ({
-    subject: daysLeft <= 1
-      ? `⏰ Tu plan ${plan} de MiAsesor vence ${daysLeft === 0 ? 'HOY' : 'mañana'}`
-      : `Tu plan ${plan} de MiAsesor vence en ${daysLeft} días`,
-    html: `
-<!DOCTYPE html><html><body style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px">
-<div style="background:${daysLeft <= 1 ? '#dc2626' : '#E67E22'};padding:20px;border-radius:8px 8px 0 0;text-align:center">
-  <h1 style="color:white;margin:0">${daysLeft <= 1 ? '⏰ Tu plan vence ' + (daysLeft === 0 ? 'hoy' : 'mañana') : '⚠️ Tu plan está por vencer'}</h1>
-</div>
-<div style="background:#FBF8F2;padding:30px;border-radius:0 0 8px 8px">
-  <p>Hola <strong>${name}</strong>,</p>
-  <p>Tu plan <strong>${plan}</strong> en MiAsesor ${daysLeft === 0 ? '<strong>vence hoy</strong>' : daysLeft === 1 ? '<strong>vence mañana</strong>' : `vence en <strong>${daysLeft} días</strong>`}.</p>
-  <p>Cuando venza, tu cuenta pasa automáticamente a <strong>plan Gratis</strong> con los siguientes límites:</p>
-  <ul style="line-height:1.8">
-    <li>1 contrato por mes</li>
-    <li>2 consultas con asesores IA por mes</li>
-    <li>1 análisis de documento</li>
-  </ul>
-  <p>Si querés mantener el plan ${plan}, renová ahora:</p>
-  <a href="${renewUrl}" style="background:#E67E22;color:white;padding:14px 28px;border-radius:6px;text-decoration:none;display:inline-block;margin-top:20px;font-weight:bold">
-    Renovar ${plan} →
-  </a>
-  <p style="color:#666;font-size:13px;margin-top:24px">Renová antes del vencimiento y no perdés acceso ni un minuto.</p>
-</div>
-<p style="color:#9ca3af;font-size:12px;text-align:center;margin-top:20px">MiAsesor</p>
-</body></html>`,
-  }),
-
   planExpired: (name: string, plan: string, renewUrl: string) => ({
     subject: `Tu plan ${plan} expiró — pasaste a Gratis`,
     html: `
