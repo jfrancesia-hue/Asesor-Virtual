@@ -3,6 +3,7 @@ import {
   UnauthorizedException,
   ConflictException,
   InternalServerErrorException,
+  BadRequestException,
   Inject,
   Logger,
 } from '@nestjs/common';
@@ -221,7 +222,30 @@ export class AuthService {
 
     if (error) {
       this.logger.error(`updateUserById falló para ${payload.sub}: ${error.message}`);
-      throw new InternalServerErrorException('No se pudo actualizar la contraseña');
+      const msg = (error.message || '').toLowerCase();
+      // Errores de validación del provider → 400 con mensaje claro al usuario
+      if (
+        msg.includes('password') &&
+        (msg.includes('weak') ||
+          msg.includes('pwned') ||
+          msg.includes('breach') ||
+          msg.includes('leak') ||
+          msg.includes('compromised') ||
+          msg.includes('short') ||
+          msg.includes('characters') ||
+          msg.includes('length'))
+      ) {
+        throw new BadRequestException(
+          'Esa contraseña es débil o aparece en filtraciones conocidas. Probá una más larga y única (12+ caracteres, mezcla letras, números y símbolos).',
+        );
+      }
+      if (msg.includes('same') && msg.includes('password')) {
+        throw new BadRequestException('La contraseña nueva no puede ser igual a la anterior.');
+      }
+      if (msg.includes('expired') || msg.includes('invalid')) {
+        throw new UnauthorizedException('El link de recuperación expiró. Pedí uno nuevo.');
+      }
+      throw new InternalServerErrorException(`No se pudo actualizar la contraseña: ${error.message}`);
     }
   }
 
