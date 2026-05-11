@@ -12,9 +12,9 @@ export class RegisterDto {
   @IsEmail()
   email: string;
 
-  @ApiProperty({ example: 'Password123!', minLength: 8 })
+  @ApiProperty({ example: 'Password123', minLength: 6 })
   @IsString()
-  @MinLength(8)
+  @MinLength(6)
   password: string;
 
   @ApiPropertyOptional({ example: 'Mi Empresa S.A.' })
@@ -61,8 +61,8 @@ export class ResetPasswordDto {
   @MinLength(10)
   accessToken: string;
 
-  @ApiProperty({ example: 'NuevaPass123!', minLength: 8 })
+  @ApiProperty({ example: 'NuevaPass123', minLength: 6 })
   @IsString()
-  @MinLength(8)
+  @MinLength(6)
   newPassword: string;
 }

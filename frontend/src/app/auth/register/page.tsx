@@ -30,7 +30,7 @@ export default function RegisterPage() {
     const e: any = {};
     if (!form.fullName || form.fullName.length < 2) e.fullName = 'Nombre requerido (mínimo 2 caracteres)';
     if (!form.email) e.email = 'Email requerido';
-    if (!form.password || form.password.length < 8) e.password = 'Mínimo 8 caracteres';
+    if (!form.password || form.password.length < 6) e.password = 'Mínimo 6 caracteres';
     if (!acceptedTerms) e.acceptedTerms = 'Debés aceptar los términos y la política de privacidad';
     setErrors(e);
     return Object.keys(e).length === 0;
@@ -84,7 +84,7 @@ export default function RegisterPage() {
         <Input
           label="Contraseña"
           type="password"
-          placeholder="Mínimo 8 caracteres"
+          placeholder="Mínimo 6 caracteres"
           value={form.password}
           onChange={(e) => setForm({ ...form, password: e.target.value })}
           error={errors.password}
