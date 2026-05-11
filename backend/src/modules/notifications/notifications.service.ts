@@ -22,7 +22,7 @@ export class NotificationsService {
     } else {
       this.logger.warn('RESEND_API_KEY no configurada; emails deshabilitados.');
     }
-    this.fromEmail = config.get('RESEND_FROM', 'noreply@tuasesor.app');
+    this.fromEmail = config.get('RESEND_FROM', '"MiAsesor" <no-reply@miasesor.com.ar>');
   }
 
   async getAlerts(tenantId: string, userId: string, page = 1, limit = 20) {
@@ -187,6 +187,127 @@ export class NotificationsService {
         hasMore = contracts.length === pageSize;
         page++;
       }
+    }
+  }
+
+  // Daily at 9:15am: planes que vencen pronto + planes ya vencidos
+  // - Aviso 7 días antes (énfasis medio)
+  // - Aviso 1 día antes (énfasis alto)
+  // - Aviso día del vencimiento (énfasis alto + downgrade automático a free)
+  @Cron('15 9 * * *')
+  async checkPlanExpirations() {
+    const frontendUrl = this.config.get('FRONTEND_URL', 'https://www.miasesor.com.ar');
+    const renewUrl = `${frontendUrl.replace(/\/+$/, '')}/settings?tab=billing`;
+
+    // 1) Vencen en 7 días — alerta media + email aviso
+    await this.notifyPlanExpiring(7, renewUrl, 'medium');
+    // 2) Vencen en 1 día — alerta alta + email urgente
+    await this.notifyPlanExpiring(1, renewUrl, 'high');
+    // 3) Ya vencidos — downgrade + email "expiró"
+    await this.downgradeExpiredPlans(renewUrl);
+  }
+
+  private async notifyPlanExpiring(daysAhead: number, renewUrl: string, priority: 'medium' | 'high') {
+    const startOfDay = new Date();
+    startOfDay.setDate(startOfDay.getDate() + daysAhead);
+    startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date(startOfDay);
+    endOfDay.setHours(23, 59, 59, 999);
+
+    const { data: tenants, error } = await this.supabase
+      .from('tenants')
+      .select('id, name, plan, subscription_period_end, users!inner(email, full_name, role)')
+      .neq('plan', 'free')
+      .eq('subscription_status', 'active')
+      .gte('subscription_period_end', startOfDay.toISOString())
+      .lte('subscription_period_end', endOfDay.toISOString())
+      .eq('users.role', 'owner');
+
+    if (error || !tenants?.length) return;
+
+    for (const tenant of tenants as any[]) {
+      const owner = Array.isArray(tenant.users) ? tenant.users[0] : tenant.users;
+      const dedupKey = `plan_expiring_${tenant.id}_${daysAhead}d_${new Date().toISOString().split('T')[0].slice(0, 7)}`;
+
+      await this.createAlert({
+        tenantId: tenant.id,
+        type: 'plan_expiring',
+        priority,
+        title: daysAhead === 1
+          ? `Tu plan ${tenant.plan} vence mañana`
+          : `Tu plan ${tenant.plan} vence en ${daysAhead} días`,
+        message: `Renová ahora para no perder acceso. Si no renovás, tu cuenta pasa a Gratis automáticamente.`,
+        metadata: { plan: tenant.plan, daysLeft: daysAhead, periodEnd: tenant.subscription_period_end },
+        dedupKey,
+      });
+
+      if (owner?.email) {
+        const template = emailTemplates.planExpiringSoon(
+          owner.full_name || 'Usuario',
+          tenant.plan,
+          daysAhead,
+          renewUrl,
+        );
+        this.sendEmail(owner.email, template.subject, template.html).catch(() => {});
+      }
+    }
+  }
+
+  private async downgradeExpiredPlans(renewUrl: string) {
+    // Tenants pagos cuya fecha de fin ya pasó.
+    const { data: tenants, error } = await this.supabase
+      .from('tenants')
+      .select('id, name, plan, subscription_period_end, users!inner(email, full_name, role)')
+      .neq('plan', 'free')
+      .eq('subscription_status', 'active')
+      .lt('subscription_period_end', new Date().toISOString())
+      .eq('users.role', 'owner');
+
+    if (error || !tenants?.length) return;
+
+    for (const tenant of tenants as any[]) {
+      const previousPlan = tenant.plan;
+      const owner = Array.isArray(tenant.users) ? tenant.users[0] : tenant.users;
+
+      const { error: updateErr } = await this.supabase
+        .from('tenants')
+        .update({
+          plan: 'free',
+          subscription_status: 'free',
+          subscription_period_end: null,
+          max_users: 1,
+          max_contracts_per_month: 1,
+          max_ai_queries_per_month: 2,
+          max_analysis_credits: 1,
+        })
+        .eq('id', tenant.id);
+
+      if (updateErr) {
+        this.logger.error(`No pude downgrade tenant ${tenant.id}: ${updateErr.message}`);
+        continue;
+      }
+
+      const dedupKey = `plan_expired_${tenant.id}_${new Date().toISOString().split('T')[0]}`;
+      await this.createAlert({
+        tenantId: tenant.id,
+        type: 'plan_expired',
+        priority: 'high',
+        title: `Tu plan ${previousPlan} expiró`,
+        message: `Tu cuenta pasó a plan Gratis. Renová ${previousPlan} cuando quieras desde Billing.`,
+        metadata: { previousPlan },
+        dedupKey,
+      });
+
+      if (owner?.email) {
+        const template = emailTemplates.planExpired(
+          owner.full_name || 'Usuario',
+          previousPlan,
+          renewUrl,
+        );
+        this.sendEmail(owner.email, template.subject, template.html).catch(() => {});
+      }
+
+      this.logger.log(`Plan ${previousPlan} de tenant ${tenant.id} expiró → downgraded a free`);
     }
   }
 

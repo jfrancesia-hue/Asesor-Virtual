@@ -17,9 +17,22 @@ export class TenantsService {
   }
 
   async update(tenantId: string, updates: { name?: string; country?: string; settings?: object }) {
+    // Defensa en profundidad: aunque el DTO no exponga estos campos, filtramos
+    // explícitamente para que ningún path pueda escalarlos via este endpoint.
+    // Plan/limits/billing sólo se cambian desde billing.service tras pago MP.
+    const SAFE_FIELDS = new Set(['name', 'country', 'settings']);
+    const safeUpdates: Record<string, unknown> = {};
+    for (const [key, value] of Object.entries(updates)) {
+      if (SAFE_FIELDS.has(key)) safeUpdates[key] = value;
+    }
+
+    if (Object.keys(safeUpdates).length === 0) {
+      throw new BadRequestException('No hay campos válidos para actualizar');
+    }
+
     const { data, error } = await this.supabase
       .from('tenants')
-      .update(updates)
+      .update(safeUpdates)
       .eq('id', tenantId)
       .select()
       .single();
