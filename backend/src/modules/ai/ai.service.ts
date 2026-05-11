@@ -55,8 +55,16 @@ export class AiService {
     private readonly config: ConfigService,
     private readonly ragService: RagService,
   ) {
-    this.openai = new OpenAI({ apiKey: config.get('OPENAI_API_KEY') || 'missing-openai-key' });
-    this.anthropic = new Anthropic({ apiKey: config.get('ANTHROPIC_API_KEY') || 'missing-anthropic-key' });
+    const openaiKey = config.get<string>('OPENAI_API_KEY');
+    const anthropicKey = config.get<string>('ANTHROPIC_API_KEY');
+    if (!anthropicKey) {
+      this.logger.error('ANTHROPIC_API_KEY no configurada — el chat de los asesores no va a funcionar');
+    }
+    if (!openaiKey) {
+      this.logger.warn('OPENAI_API_KEY no configurada — embeddings/RAG quedan deshabilitados');
+    }
+    this.openai = new OpenAI({ apiKey: openaiKey || 'sk-disabled' });
+    this.anthropic = new Anthropic({ apiKey: anthropicKey || 'sk-ant-disabled' });
     // Default to anthropic — Claude is the primary model
     this.primaryProvider = config.get('AI_PROVIDER', 'anthropic');
     this.promptCacheEnabled = config.get('CLAUDE_PROMPT_CACHE', 'true') === 'true';
@@ -168,7 +176,8 @@ export class AiService {
       conversationId, tenantId, aiResponse,
     );
 
-    this.updateConversationStats(conversationId, conversation, aiResponse).catch(() => {});
+    this.updateConversationStats(conversationId, tenantId, conversation, aiResponse)
+      .catch((err) => this.logger.warn(`updateConversationStats failed: ${err?.message ?? err}`));
 
     return {
       messageId: savedMessage?.id,
@@ -230,7 +239,8 @@ export class AiService {
         model,
       });
 
-      this.updateConversationStats(conversationId, conversation, { tokensInput, tokensOutput }).catch(() => {});
+      this.updateConversationStats(conversationId, tenantId, conversation, { tokensInput, tokensOutput })
+        .catch((err) => this.logger.warn(`updateConversationStats stream failed: ${err?.message ?? err}`));
 
       yield { type: 'done', messageId: savedMessage?.id, model, tokensInput, tokensOutput };
     } catch (error) {
@@ -446,6 +456,7 @@ Siempre usás la herramienta save_risk_analysis para entregar el resultado estru
 
   private async updateConversationStats(
     conversationId: string,
+    tenantId: string,
     conversation: any,
     aiResponse: { tokensInput: number; tokensOutput: number },
   ) {
@@ -456,7 +467,8 @@ Siempre usás la herramienta save_risk_analysis para entregar el resultado estru
         messages_count: (conversation.messages_count || 0) + 2,
         updated_at: new Date().toISOString(),
       })
-      .eq('id', conversationId);
+      .eq('id', conversationId)
+      .eq('tenant_id', tenantId);
   }
 
   private async checkMonthlyLimit(tenantId: string, maxQueries?: number) {

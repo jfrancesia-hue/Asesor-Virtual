@@ -17,6 +17,7 @@ const MIGRATION_ORDER = [
   '008_enable_free_plan.sql',
   '009_enable_rls.sql',
   '010_fix_function_search_path.sql',
+  '011_add_missing_fk_indexes.sql',
 ];
 
 async function migrate() {

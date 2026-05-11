@@ -52,6 +52,7 @@ export class AuthService {
     }
 
     const authUserId = authData.user.id;
+    let tenantIdToRollback: string | null = null;
 
     try {
       const slug = this.generateSlug(dto.companyName || dto.fullName);
@@ -70,6 +71,7 @@ export class AuthService {
         .single();
 
       if (tenantError) throw new Error('Error al crear tenant: ' + tenantError.message);
+      tenantIdToRollback = tenant.id;
 
       const { data: user, error: userError } = await this.supabase
         .from('users')
@@ -96,7 +98,22 @@ export class AuthService {
         tenant: { id: tenant.id, name: tenant.name, slug: tenant.slug, plan: tenant.plan },
       };
     } catch (error) {
-      await this.supabase.auth.admin.deleteUser(authUserId).catch(() => {});
+      // Rollback completo: borrar tenant huérfano si llegó a crearse, después borrar auth user.
+      if (tenantIdToRollback) {
+        await this.supabase
+          .from('tenants')
+          .delete()
+          .eq('id', tenantIdToRollback)
+          .then(
+            (res) => {
+              if (res.error) this.logger.warn(`Rollback tenant delete falló: ${res.error.message}`);
+            },
+            (err) => this.logger.warn(`Rollback tenant delete error: ${err?.message ?? err}`),
+          );
+      }
+      await this.supabase.auth.admin.deleteUser(authUserId).catch((err) =>
+        this.logger.warn(`Rollback auth user delete error: ${err?.message ?? err}`),
+      );
       this.logger.error('Register rollback executed', error.message);
       throw new InternalServerErrorException(error.message || 'Error al registrar');
     }
@@ -139,7 +156,12 @@ export class AuthService {
       .from('users')
       .update({ last_login: new Date().toISOString() })
       .eq('id', user.id)
-      .then(() => {}, () => {});
+      .then(
+        (res) => {
+          if (res.error) this.logger.warn(`last_login update failed: ${res.error.message}`);
+        },
+        (err) => this.logger.warn(`last_login update error: ${err?.message ?? err}`),
+      );
 
     const tokens = this.issueTokens(user.id, user.email, user.tenant_id, user.role);
 

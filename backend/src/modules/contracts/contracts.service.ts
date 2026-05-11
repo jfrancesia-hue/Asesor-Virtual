@@ -23,6 +23,22 @@ export class ContractsService {
     private readonly pdfService: PdfService,
   ) {}
 
+  private writeAuditLog(entry: {
+    tenant_id: string;
+    user_id: string;
+    action: string;
+    resource_type: string;
+    resource_id: string;
+  }): void {
+    // Fire-and-forget pero con visibilidad: si falla, loguear (no romper el request del usuario).
+    this.supabase
+      .from('audit_logs')
+      .insert(entry)
+      .then((res) => {
+        if (res.error) this.logger.warn(`audit_logs insert failed: ${res.error.message}`);
+      }, (err) => this.logger.warn(`audit_logs insert error: ${err?.message ?? err}`));
+  }
+
   async create(dto: CreateContractDto, userId: string, tenantId: string) {
     // Check monthly limit
     const { data: tenant } = await this.supabase
@@ -66,11 +82,7 @@ export class ContractsService {
 
     if (error) throw new BadRequestException('Error al crear contrato: ' + error.message);
 
-    // Audit log (fire-and-forget)
-    this.supabase
-      .from('audit_logs')
-      .insert({ tenant_id: tenantId, user_id: userId, action: 'contract.create', resource_type: 'contract', resource_id: data.id })
-      .then(() => {}, () => {});
+    this.writeAuditLog({ tenant_id: tenantId, user_id: userId, action: 'contract.create', resource_type: 'contract', resource_id: data.id });
 
     return data;
   }
@@ -149,11 +161,7 @@ export class ContractsService {
 
     if (error) throw new BadRequestException('Error al actualizar contrato');
 
-    // Audit log (fire-and-forget)
-    this.supabase
-      .from('audit_logs')
-      .insert({ tenant_id: tenantId, user_id: userId, action: 'contract.update', resource_type: 'contract', resource_id: id })
-      .then(() => {}, () => {});
+    this.writeAuditLog({ tenant_id: tenantId, user_id: userId, action: 'contract.update', resource_type: 'contract', resource_id: id });
 
     return data;
   }
@@ -169,10 +177,7 @@ export class ContractsService {
 
     if (error) throw new BadRequestException('Error al eliminar contrato');
 
-    this.supabase
-      .from('audit_logs')
-      .insert({ tenant_id: tenantId, user_id: userId, action: 'contract.delete', resource_type: 'contract', resource_id: id })
-      .then(() => {}, () => {});
+    this.writeAuditLog({ tenant_id: tenantId, user_id: userId, action: 'contract.delete', resource_type: 'contract', resource_id: id });
 
     return { deleted: true };
   }

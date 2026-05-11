@@ -4,6 +4,8 @@
  * implementa welcome / invite / analysisComplete / creditsLow,
  * agregar el template acá y la llamada en el service correspondiente.
  */
+const FRONTEND_URL = process.env.FRONTEND_URL || 'https://www.miasesor.com.ar';
+
 export const emailTemplates = {
   contractExpiring: (name: string, contractTitle: string, daysLeft: number, contractUrl: string) => ({
     subject: `⚠️ Contrato por vencer: ${contractTitle}`,
@@ -34,7 +36,7 @@ export const emailTemplates = {
 <div style="background:#FBF8F2;padding:30px;border-radius:0 0 8px 8px">
   <p>Hola <strong>${name}</strong>,</p>
   <p>La obligación <strong>"${itemTitle}"</strong> venció el <strong>${dueDate}</strong> y está sin completar.</p>
-  <a href="${process.env.FRONTEND_URL}/dashboard" style="background:#dc2626;color:white;padding:12px 24px;border-radius:6px;text-decoration:none;display:inline-block;margin-top:20px">
+  <a href="${FRONTEND_URL}/dashboard" style="background:#dc2626;color:white;padding:12px 24px;border-radius:6px;text-decoration:none;display:inline-block;margin-top:20px">
     Ver obligaciones →
   </a>
 </div>

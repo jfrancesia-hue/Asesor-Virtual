@@ -13,7 +13,11 @@ export class RagService {
     @Inject(SUPABASE_ADMIN) private readonly supabase: SupabaseClient,
     private readonly config: ConfigService,
   ) {
-    this.openai = new OpenAI({ apiKey: config.get('OPENAI_API_KEY') || 'missing-openai-key' });
+    const openaiKey = config.get<string>('OPENAI_API_KEY');
+    if (!openaiKey) {
+      this.logger.warn('OPENAI_API_KEY no configurada — RAG (búsqueda de conocimiento legal) deshabilitado');
+    }
+    this.openai = new OpenAI({ apiKey: openaiKey || 'sk-disabled' });
   }
 
   async searchKnowledge(query: string, country?: string): Promise<string> {
