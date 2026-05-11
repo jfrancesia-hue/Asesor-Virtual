@@ -43,7 +43,9 @@ function AdvisorChat() {
   }, [advisorId]);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    // block: 'nearest' evita que el teclado virtual mobile tape el último mensaje
+    // y no genera scroll si el usuario ya está al fondo.
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }, [messages]);
 
   const loadAdvisor = async () => {

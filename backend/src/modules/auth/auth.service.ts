@@ -38,8 +38,13 @@ export class AuthService {
   ) {}
 
   async register(dto: RegisterDto) {
+    // Normalizar email: lowercase + trim. Sin esto, "Juan@Email.com" y
+    // "juan@email.com" generan dos cuentas distintas, y el segundo no puede
+    // loguear con la capitalización del primero.
+    const email = dto.email.toLowerCase().trim();
+
     const { data: authData, error: authError } = await this.supabase.auth.admin.createUser({
-      email: dto.email,
+      email,
       password: dto.password,
       email_confirm: true,
     });
@@ -78,7 +83,7 @@ export class AuthService {
         .insert({
           id: authUserId,
           tenant_id: tenant.id,
-          email: dto.email,
+          email,
           full_name: dto.fullName,
           role: 'owner',
           is_active: true,
@@ -120,11 +125,12 @@ export class AuthService {
   }
 
   async login(dto: LoginDto) {
+    const email = dto.email.toLowerCase().trim();
     // Verificamos password con HTTP directo al endpoint anon de Supabase Auth.
     // No usamos this.supabase.auth.signInWithPassword porque ese método mete
     // el JWT authenticated del usuario en el state interno del cliente
     // singleton — y las queries siguientes van con ese JWT, que cae en RLS.
-    const authUserId = await this.verifyPasswordViaSupabase(dto.email, dto.password);
+    const authUserId = await this.verifyPasswordViaSupabase(email, dto.password);
 
     const { data: user, error: userError } = await this.supabase
       .from('users')
@@ -252,11 +258,12 @@ export class AuthService {
   }
 
   async requestPasswordReset(email: string, redirectTo: string): Promise<void> {
-    const { error } = await this.supabase.auth.resetPasswordForEmail(email, {
+    const normalized = email.toLowerCase().trim();
+    const { error } = await this.supabase.auth.resetPasswordForEmail(normalized, {
       redirectTo,
     });
     if (error) {
-      this.logger.warn(`resetPasswordForEmail falló para ${email}: ${error.message}`);
+      this.logger.warn(`resetPasswordForEmail falló para ${normalized}: ${error.message}`);
     }
   }
 

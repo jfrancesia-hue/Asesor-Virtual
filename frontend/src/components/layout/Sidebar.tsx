@@ -62,7 +62,7 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
           <button
             onClick={onClose}
             aria-label="Cerrar menú"
-            className="p-1.5 text-[var(--text-muted)] hover:text-[var(--text-strong)] hover:bg-[var(--surface-subtle)] rounded-lg md:hidden transition-colors"
+            className="p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--text-strong)] hover:bg-[var(--surface-subtle)] rounded-lg md:hidden transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -235,12 +235,12 @@ export function Sidebar() {
         <SidebarContent />
       </div>
 
-      {/* Mobile top bar */}
-      <div className="md:hidden fixed top-0 left-0 right-0 z-30 h-14 bg-[var(--surface)]/90 backdrop-blur-xl border-b border-[var(--border)] flex items-center px-4 gap-3">
+      {/* Mobile top bar — pt-[env(safe-area-inset-top)] respeta el notch en iOS */}
+      <div className="md:hidden fixed top-0 left-0 right-0 z-30 bg-[var(--surface)]/90 backdrop-blur-xl border-b border-[var(--border)] flex items-center px-4 gap-3 pt-[env(safe-area-inset-top)] h-[calc(3.5rem+env(safe-area-inset-top))]">
         <button
           onClick={() => setMobileOpen(true)}
           aria-label="Abrir menú"
-          className="p-2 text-[var(--text-medium)] hover:text-[var(--text-strong)] hover:bg-[var(--surface-subtle)] rounded-lg transition-colors"
+          className="p-2.5 -ml-1 min-w-[44px] min-h-[44px] flex items-center justify-center text-[var(--text-medium)] hover:text-[var(--text-strong)] hover:bg-[var(--surface-subtle)] rounded-lg transition-colors"
         >
           <Menu className="w-5 h-5" />
         </button>

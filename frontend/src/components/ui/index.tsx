@@ -33,10 +33,11 @@ export function Button({
     outline: 'border border-[var(--border-strong)] text-[var(--text-strong)] hover:bg-[var(--surface-subtle)]',
   };
 
+  // min-h asegura el WCAG/Apple HIG mínimo de 44px en mobile para evitar tap accidental
   const sizes = {
-    sm: 'px-3 py-1.5 text-sm rounded-[10px]',
-    md: 'px-5 py-2.5 text-sm rounded-xl',
-    lg: 'px-7 py-3.5 text-base rounded-[14px]',
+    sm: 'px-3 py-2 min-h-[36px] text-sm rounded-[10px]',
+    md: 'px-5 py-2.5 min-h-[44px] text-sm rounded-xl',
+    lg: 'px-7 py-3.5 min-h-[48px] text-base rounded-[14px]',
   };
 
   return (

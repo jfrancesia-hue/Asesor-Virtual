@@ -180,7 +180,7 @@ export class NotificationsService {
               days,
               `${frontendUrl}/contracts/${contract.id}`,
             );
-            this.sendEmail(user.email, template.subject, template.html).catch(() => {});
+            this.sendEmail(user.email, template.subject, template.html).catch((err) => this.logger.warn(`sendEmail failed: ${err?.message ?? err}`));
           }
         }
 
@@ -252,7 +252,7 @@ export class NotificationsService {
           previousPlan,
           renewUrl,
         );
-        this.sendEmail(owner.email, template.subject, template.html).catch(() => {});
+        this.sendEmail(owner.email, template.subject, template.html).catch((err) => this.logger.warn(`sendEmail failed: ${err?.message ?? err}`));
       }
 
       this.logger.log(`Plan ${previousPlan} de tenant ${tenant.id} expiró → downgraded a free`);
@@ -302,7 +302,7 @@ export class NotificationsService {
             item.title,
             dueDate,
           );
-          this.sendEmail(user.email, template.subject, template.html).catch(() => {});
+          this.sendEmail(user.email, template.subject, template.html).catch((err) => this.logger.warn(`sendEmail failed: ${err?.message ?? err}`));
         }
       }
 

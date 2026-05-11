@@ -44,7 +44,7 @@ export default function DashboardPage() {
       </header>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
         <StatCard label="Contratos activos" value={stats?.active_contracts || 0} sub={`${stats?.total_contracts || 0} total`} icon={<FileText className="w-5 h-5" strokeWidth={2.2} />} color="var(--primary)" />
         <StatCard label="Consultas / mes" value={stats?.conversations_this_month || 0} sub="con asesores IA" icon={<MessageCircle className="w-5 h-5" strokeWidth={2.2} />} color="var(--accent)" />
         <StatCard label="Análisis" value={stats?.total_analyses || 0} sub="totales" icon={<Shield className="w-5 h-5" strokeWidth={2.2} />} color="var(--brand-lavender)" />

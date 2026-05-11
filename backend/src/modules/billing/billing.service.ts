@@ -42,10 +42,15 @@ export class BillingService {
     private readonly notifications: NotificationsService,
   ) {
     const accessToken = config.get<string>('MP_ACCESS_TOKEN');
+    const nodeEnv = config.get<string>('NODE_ENV');
     if (accessToken) {
       this.mp = new MercadoPagoConfig({ accessToken });
+    } else if (nodeEnv === 'production') {
+      this.logger.error(
+        'MP_ACCESS_TOKEN no configurado en producción — checkouts y webhooks de Mercado Pago deshabilitados',
+      );
     } else {
-      this.logger.warn('Mercado Pago not configured — billing endpoints disabled');
+      this.logger.warn('MP_ACCESS_TOKEN no configurado — billing endpoints deshabilitados (dev)');
     }
   }
 

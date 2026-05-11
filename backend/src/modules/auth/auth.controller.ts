@@ -82,7 +82,7 @@ export class AuthController {
 
   @Post('reset-password')
   @HttpCode(HttpStatus.OK)
-  @Throttle({ default: { limit: 5, ttl: 60000 } })
+  @Throttle({ default: { limit: 3, ttl: 60000 } })
   async resetPassword(@Body() dto: ResetPasswordDto) {
     await this.authService.resetPasswordWithToken(dto.accessToken, dto.newPassword);
     return { ok: true };
@@ -107,7 +107,12 @@ export class AuthController {
     const baseOptions = {
       httpOnly: true,
       secure: isProd,
-      sameSite: isProd ? ('none' as const) : ('lax' as const),
+      // 'lax' es seguro contra CSRF en navegaciones top-level (cubre el redirect
+      // de MP de vuelta a /settings?tab=billing) y bloquea cross-site POSTs.
+      // 'none' sólo es necesario si el frontend está en un dominio distinto
+      // al que sirve cookies — acá el frontend hace rewrites de /api a Render,
+      // así que desde el browser todo es same-origin (miasesor.com.ar).
+      sameSite: 'lax' as const,
       path: '/',
     };
 
@@ -170,7 +175,12 @@ export class AuthController {
     const baseOptions = {
       httpOnly: true,
       secure: isProd,
-      sameSite: isProd ? ('none' as const) : ('lax' as const),
+      // 'lax' es seguro contra CSRF en navegaciones top-level (cubre el redirect
+      // de MP de vuelta a /settings?tab=billing) y bloquea cross-site POSTs.
+      // 'none' sólo es necesario si el frontend está en un dominio distinto
+      // al que sirve cookies — acá el frontend hace rewrites de /api a Render,
+      // así que desde el browser todo es same-origin (miasesor.com.ar).
+      sameSite: 'lax' as const,
       path: '/',
     };
     res.clearCookie(ACCESS_COOKIE, baseOptions);
