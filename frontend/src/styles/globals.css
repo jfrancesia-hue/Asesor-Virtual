@@ -36,6 +36,14 @@
   --brand-lavender: #A569BD;
   --brand-lavender-bg: #EDE3F6;
 
+  /* Estilo geometrico etnico moderno */
+  --ethnic-terracotta: #C44A2D;
+  --ethnic-red: #B02E2E;
+  --ethnic-petrol: #1E3A5F;
+  --ethnic-jade: #1E8A73;
+  --ethnic-sand: #E6C9A8;
+  --ethnic-cream: #F4E1C1;
+
   /* ─── Surfaces ─── */
   --surface: #ffffff;
   --surface-elevated: #ffffff;
@@ -288,6 +296,50 @@ h1 { letter-spacing: -0.03em; }
   opacity: 0.35;
   pointer-events: none;
   z-index: -1;
+}
+
+/* Acentos geometricos etnicos: usar como textura sutil, nunca detras de texto largo. */
+.ethnic-corner {
+  position: absolute;
+  pointer-events: none;
+  width: 148px;
+  height: 148px;
+  opacity: 0.18;
+  background:
+    linear-gradient(45deg, transparent 42%, var(--ethnic-petrol) 43% 57%, transparent 58%),
+    linear-gradient(-45deg, transparent 42%, var(--ethnic-terracotta) 43% 57%, transparent 58%),
+    repeating-linear-gradient(45deg, transparent 0 12px, color-mix(in srgb, var(--ethnic-sand) 70%, transparent) 12px 18px);
+  mask:
+    radial-gradient(circle at center, transparent 0 18px, #000 19px 34px, transparent 35px 44px, #000 45px);
+}
+
+.ethnic-corner::before,
+.ethnic-corner::after {
+  content: '';
+  position: absolute;
+  inset: 28px;
+  border: 9px solid var(--ethnic-jade);
+  transform: rotate(45deg);
+}
+
+.ethnic-corner::after {
+  inset: 52px;
+  border-color: var(--ethnic-red);
+}
+
+.ethnic-divider {
+  height: 8px;
+  border-radius: 999px;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      var(--ethnic-terracotta) 0 20px,
+      var(--ethnic-sand) 20px 31px,
+      var(--ethnic-petrol) 31px 51px,
+      var(--ethnic-cream) 51px 62px,
+      var(--ethnic-jade) 62px 82px
+    );
+  opacity: 0.78;
 }
 
 /* Mesh hero (orbs canónicos) */

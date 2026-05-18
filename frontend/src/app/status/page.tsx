@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { BrandBird } from '@/components/brand/BrandBird';
 
 export const metadata: Metadata = {
   title: 'Estado del servicio',
@@ -48,8 +49,9 @@ export default function StatusPage() {
     <div className="editorial-body min-h-screen font-body selection:bg-oxblood selection:text-paper">
       <header className="border-b border-ink/15 bg-paper/95">
         <div className="max-w-[1100px] mx-auto px-6 h-20 flex items-center justify-between">
-          <Link href="/landing" className="font-brand text-[18px] text-ink" style={{ fontWeight: 600, letterSpacing: '-0.01em' }}>
-            MiAsesor
+          <Link href="/landing" className="flex items-center gap-2.5 font-brand text-[18px] text-ink" style={{ fontWeight: 600, letterSpacing: '-0.01em' }}>
+            <BrandBird className="h-9 w-11 shrink-0" />
+            <span>MiAsesor</span>
           </Link>
           <nav className="flex items-center gap-6 font-mono text-[11px] uppercase tracking-editorial text-ink-muted">
             <Link href="/legal/privacidad" className="editorial-link">Privacidad</Link>

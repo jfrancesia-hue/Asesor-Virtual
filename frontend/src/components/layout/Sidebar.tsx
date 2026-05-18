@@ -3,12 +3,13 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import {
   Home, MessageCircle, FileText, Shield, LayoutDashboard,
-  Settings, LogOut, Sparkles, X, Menu, Bell, History,
+  Settings, LogOut, X, Menu, Bell, History,
   ChevronDown, Scale, HeartPulse, BriefcaseBusiness, Brain, Wrench,
 } from 'lucide-react';
 import { clsx } from 'clsx';
 import { useAuthStore, useAlertsStore } from '@/stores';
 import { useEffect, useState } from 'react';
+import { BrandBird } from '@/components/brand/BrandBird';
 
 const advisorItems = [
   { href: '/advisor/legal', icon: Scale, label: 'Legal', color: '#2E86C1' },
@@ -45,12 +46,7 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
       {/* Logo */}
       <div className="px-5 py-5 border-b border-[var(--border)] flex items-center justify-between">
         <Link href="/home" onClick={onClose} className="flex items-center gap-3 group">
-          <div
-            className="w-9 h-9 rounded-xl flex items-center justify-center text-white shadow-soft transition-transform group-hover:scale-105"
-            style={{ background: 'linear-gradient(135deg, #E46F17, #A94D0D)' }}
-          >
-            <Sparkles className="w-4.5 h-4.5" strokeWidth={2.4} />
-          </div>
+          <BrandBird className="h-10 w-12 shrink-0 transition-transform group-hover:scale-105" />
           <div className="min-w-0">
             <p className="font-display font-bold text-[var(--text-strong)] text-[15px] leading-none tracking-tight">MiAsesor</p>
             <p className="text-[11px] font-medium text-[var(--cta-dark)] mt-1 capitalize tracking-wide">
@@ -245,13 +241,7 @@ export function Sidebar() {
           <Menu className="w-5 h-5" />
         </button>
         <div className="flex items-center gap-2">
-          <div
-            className="w-7 h-7 rounded-lg flex items-center justify-center text-white"
-            style={{ background: 'linear-gradient(135deg, var(--primary), var(--primary-dark))' }}
-            aria-hidden="true"
-          >
-            <Sparkles className="w-4 h-4" strokeWidth={2.4} />
-          </div>
+          <BrandBird className="h-8 w-10 shrink-0" />
           <span className="font-display font-bold text-[var(--text-strong)] text-[14.5px] tracking-tight">MiAsesor</span>
         </div>
       </div>

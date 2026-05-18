@@ -9,15 +9,18 @@ import { Spinner } from '@/components/ui';
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const { isAuthenticated, isLoading, loadProfile } = useAuthStore();
+  const isDevPreview = process.env.NODE_ENV === 'development';
 
   useEffect(() => {
+    if (isDevPreview) return;
+
     loadProfile().then(() => {
       const state = useAuthStore.getState();
       if (!state.isAuthenticated) {
         router.push('/auth/login');
       }
     });
-  }, [loadProfile, router]);
+  }, [isDevPreview, loadProfile, router]);
 
   if (isLoading) {
     return (

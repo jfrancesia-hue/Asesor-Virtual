@@ -21,49 +21,94 @@ import {
   FileText,
   Bot,
 } from 'lucide-react';
+import { BrandBird } from '@/components/brand/BrandBird';
 
 const advisors = [
   {
     name: 'Legal',
-    title: 'Lex',
+    title: 'Legal Simple',
+    person: 'Abogado/a en incorporacion',
+    credentials: 'Orientacion legal | Documentos y pasos iniciales',
     icon: Scale,
     color: 'var(--primary)',
+    trust: 'Perfil profesional pendiente',
+    highlights: ['Contratos', 'Reclamos', 'Borradores'],
+    summary: 'Ordena contratos, reclamos y documentos en lenguaje claro para llegar mejor preparado a una consulta profesional.',
     copy: 'Contratos, riesgos, cláusulas y criterio jurídico para Argentina, México y Colombia.',
     image: 'https://images.unsplash.com/photo-1589994965851-a8f479c573a9?w=800&h=900&fit=crop&auto=format&q=80',
+    imagePosition: 'center',
+    profileImage: false,
   },
   {
     name: 'Salud',
-    title: 'Vita',
+    title: 'Salud Familiar',
+    person: 'Dra. Maria Belen Acosta',
+    credentials: 'Medica Generalista | Especialista en Medicina Familiar',
     icon: HeartPulse,
     color: 'var(--accent)',
+    trust: 'Especialista en Medicina Familiar',
+    highlights: ['Atencion integral', 'Prevencion', 'Habitos saludables'],
+    summary: 'Acompana a personas y familias en el cuidado integral de su salud, con una mirada preventiva, humana y centrada en cada etapa de la vida.',
     copy: 'Orientación preventiva, hábitos y triage responsable. Sin diagnósticos, con cabeza.',
-    image: 'https://images.unsplash.com/photo-1551076805-e1869033e561?w=800&h=900&fit=crop&auto=format&q=80',
+    image: '/advisors/maria-belen-acosta.jpeg',
+    imagePosition: '58% 18%',
+    profileImage: true,
+    imageWidth: 1024,
+    imageHeight: 1536,
   },
   {
     name: 'Finanzas',
-    title: 'Capi',
+    title: 'Finanzas Claras',
+    person: 'Fernando Martinis',
+    credentials: 'Contador Publico | Finanzas, gestion e impuestos',
     icon: BriefcaseBusiness,
     color: 'var(--cta)',
+    trust: 'Contador Publico con experiencia institucional',
+    highlights: ['Gestion financiera', 'Asesor universitario', 'Criterio contable'],
+    summary: 'Contador Publico con experiencia en asesoramiento a personas, empresas e instituciones. Ayuda a ordenar numeros y planificar con seguridad.',
     copy: 'Presupuestos, monotributo, inversiones y proyecciones adaptadas a la realidad LATAM.',
-    image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800&h=900&fit=crop&auto=format&q=80',
+    image: '/advisors/fernando-martinis.jpeg',
+    imagePosition: '54% 12%',
+    profileImage: true,
+    imageWidth: 1024,
+    imageHeight: 1536,
+    hideProfileFooter: true,
   },
   {
     name: 'Bienestar',
-    title: 'Alma',
+    title: 'Alma Bienestar',
+    person: 'Lic. Luciana Francesia',
+    credentials: 'Psicologa | Bienestar emocional y conciencia corporal',
     icon: Brain,
     color: 'var(--brand-lavender)',
+    trust: 'Profesional matriculada',
+    highlights: ['Ansiedad y estres', 'Mindfulness', 'Conciencia corporal'],
+    summary: 'Acompana procesos de autoconocimiento integrando salud mental, respiracion consciente y trabajo corporal desde una mirada calida e integral.',
     copy: 'Acompañamiento emocional, manejo de ansiedad y ejercicios guiados de respiración.',
-    image: 'https://images.unsplash.com/photo-1528319725582-ddc096101511?w=800&h=900&fit=crop&auto=format&q=80',
+    image: '/advisors/luciana-francesia.jpeg',
+    imagePosition: 'left center',
+    profileImage: true,
+    imageWidth: 1536,
+    imageHeight: 1024,
   },
   {
     name: 'Hogar',
-    title: 'Tito',
+    title: 'Hogar y Servicios',
+    person: 'Red Toori Servicios Ya',
+    credentials: 'IA de orientacion | Derivacion a profesionales',
     icon: Wrench,
     color: 'var(--cta-light)',
+    trust: 'Conexion con profesionales',
+    highlights: ['Diagnostico inicial', 'Profesionales', 'Soluciones practicas'],
+    summary: 'La IA ayuda a entender el problema del hogar y, si hace falta resolverlo en persona, deriva a profesionales de servicios.',
     copy: 'Plomería, electricidad básica, pintura y mantenimiento — como ese vecino que sabe.',
     image: 'https://images.unsplash.com/photo-1503594384566-461fe158e797?w=800&h=900&fit=crop&auto=format&q=80',
+    imagePosition: 'center',
+    profileImage: false,
   },
 ];
+
+const advisorDisplayOrder = ['Bienestar', 'Salud', 'Finanzas', 'Hogar', 'Legal'];
 
 const flow = [
   {
@@ -131,7 +176,7 @@ const metrics = [
 ];
 
 const heroVisualImage =
-  'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=1200&h=1400&fit=crop&crop=entropy&auto=format&q=85';
+  'https://images.unsplash.com/photo-1573497620053-ea5300f94f21?w=1200&h=1400&fit=crop&crop=faces&auto=format&q=86';
 
 export default function LandingPage() {
   return (
@@ -170,13 +215,7 @@ function Navbar() {
     >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <Link href="/landing" className="flex items-center gap-2.5" aria-label="MiAsesor">
-          <span
-            className="flex h-9 w-9 items-center justify-center rounded-xl text-white shadow-soft"
-            style={{ background: 'linear-gradient(135deg, var(--primary), var(--primary-dark))' }}
-            aria-hidden="true"
-          >
-            <Scale className="h-4.5 w-4.5" strokeWidth={2.4} />
-          </span>
+          <BrandBird className="h-10 w-12 shrink-0" />
           <span className="font-display text-[15px] font-bold tracking-tight text-[var(--text-strong)]">
             MiAsesor
           </span>
@@ -220,16 +259,16 @@ function Hero() {
             className="inline-flex items-center gap-2 rounded-full border border-[var(--cta)]/25 bg-[var(--cta-bg)] px-3 py-1.5 text-[11.5px] font-bold uppercase tracking-[0.08em] text-[var(--cta-dark)]"
           >
             <Zap className="h-3.5 w-3.5" strokeWidth={2.6} aria-hidden="true" />
-            Cinco especialistas IA — una sola suscripción
+            Profesionales reales + IA — una sola plataforma
           </div>
 
           <h1 className="mt-6 font-display text-[clamp(2.5rem,6vw,4.5rem)] font-extrabold leading-[0.98] tracking-[-0.035em] text-[var(--text-strong)]">
-            Asesoría que entiende{' '}
-            <span className="gradient-text">tu realidad</span>.
+            Asesores humanos potenciados con{' '}
+            <span className="gradient-text">IA</span>.
           </h1>
 
           <p className="mt-6 max-w-2xl text-[17px] leading-[1.65] text-[var(--text-medium)]">
-            Legal, salud, finanzas, bienestar y hogar en un solo lugar. Cinco asesores IA entrenados para hablar tu idioma, conocer tu jurisdicción y darte respuestas claras sin esperar turno ni cobrar consulta.
+            Salud, bienestar, finanzas, hogar y legal en un solo lugar. Primero te orienta una IA preparada para cada area; cuando hace falta, el camino sigue con un profesional humano.
           </p>
 
           <div className="mt-9 flex flex-col sm:flex-row gap-3">
@@ -243,7 +282,7 @@ function Hero() {
               href="#asesores"
               className="inline-flex items-center justify-center gap-2 rounded-2xl border border-[var(--border-strong)] bg-[var(--surface)]/70 backdrop-blur px-7 py-4 text-[15px] font-bold text-[var(--text-strong)] hover:bg-[var(--surface)] transition-all"
             >
-              Conocé los 5 asesores
+              Conoce a los especialistas
             </a>
           </div>
 
@@ -278,15 +317,17 @@ function HeroVisual() {
     <div className="relative h-[540px]">
       <div className="absolute inset-0 translate-x-5 rotate-2 rounded-[28px] bg-[var(--primary)]/10" />
       <div className="relative h-full overflow-hidden rounded-[28px] border border-white/70 bg-[var(--surface)] shadow-strong">
+        <div className="ethnic-corner absolute right-[-26px] top-[-28px] z-10 rotate-45" />
+        <div className="ethnic-corner absolute bottom-[-32px] left-[-34px] z-10 -rotate-[135deg]" />
         <Image
           src={heroVisualImage}
           alt=""
           fill
           priority
           sizes="(min-width: 1024px) 42vw, 100vw"
-          className="object-cover"
+          className="object-cover object-center"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[rgba(31,46,61,0.72)] via-[rgba(31,46,61,0.12)] to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[rgba(31,46,61,0.66)] via-[rgba(31,46,61,0.08)] to-transparent" />
         <div className="absolute inset-x-0 bottom-0 p-6">
           <div className="rounded-2xl border border-white/25 bg-white/18 p-5 text-white shadow-soft backdrop-blur-xl">
             <div className="flex items-center justify-between gap-4">
@@ -327,45 +368,178 @@ function HeroVisual() {
 // ADVISORS SECTION
 // ============================================================
 function AdvisorsSection() {
+  const orderedAdvisors = [...advisors].sort(
+    (a, b) => advisorDisplayOrder.indexOf(a.name) - advisorDisplayOrder.indexOf(b.name),
+  );
+
   return (
     <section id="asesores" className="relative bg-[var(--surface)] border-y border-[var(--border)] px-4 py-20 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         <SectionIntro
-          eyebrow="Tus 5 asesores"
-          title="Cinco especialistas, una misma memoria."
-          copy="Cada asesor tiene su personalidad, su tono y sus herramientas, pero comparten contexto: no tenés que repetirles tu situación cada vez."
+          eyebrow="Equipo profesional"
+          title="Asesores IA respaldados por personas reales."
+          copy="Cada area combina una guia inteligente con criterio humano: profesionales, experiencia real y derivacion cuando la situacion necesita acompanamiento personal."
         />
-        <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-5">
-          {advisors.map((advisor, i) => {
+        <div className="ethnic-divider mt-8 max-w-2xl" aria-hidden="true" />
+        <div className="mt-12 space-y-8">
+          {orderedAdvisors.map((advisor, i) => {
             const Icon = advisor.icon;
+            if (advisor.profileImage) {
+              return (
+                <RevealItem key={advisor.name} delay={i * 60}>
+                  <article className="bento-card overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface)]">
+                    <div className="flex flex-col gap-4 border-b border-[var(--border)] p-6 sm:flex-row sm:items-end sm:justify-between sm:p-8">
+                      <div>
+                        <p className="font-display text-[11px] font-bold uppercase tracking-[0.08em]" style={{ color: advisor.color }}>
+                          {advisor.title}
+                        </p>
+                        <h3 className="mt-2 font-display text-[clamp(34px,5vw,58px)] font-extrabold leading-[1.02] text-[var(--text-strong)] tracking-normal">
+                          {advisor.person}
+                        </h3>
+                        <p className="mt-3 max-w-3xl text-[16px] font-semibold leading-relaxed text-[var(--text-medium)]">{advisor.credentials}</p>
+                      </div>
+                      <span
+                        className="inline-flex w-fit items-center gap-2 rounded-full px-3.5 py-2 text-[12.5px] font-bold"
+                        style={{
+                          background: `color-mix(in srgb, ${advisor.color} 11%, var(--surface-subtle))`,
+                          color: advisor.color,
+                        }}
+                      >
+                        <ShieldCheck className="h-4 w-4" strokeWidth={2.4} />
+                        {advisor.trust}
+                      </span>
+                    </div>
+
+                    <div className="bg-[#f8f5ef] p-3 sm:p-5">
+                      <div
+                        className="mx-auto overflow-hidden rounded-xl border border-[var(--border)] shadow-soft"
+                        style={{
+                          aspectRatio: advisor.hideProfileFooter
+                            ? `${advisor.imageWidth || 1536} / ${Math.round((advisor.imageHeight || 1024) * 0.92)}`
+                            : `${advisor.imageWidth || 1536} / ${advisor.imageHeight || 1024}`,
+                        }}
+                      >
+                        <Image
+                          src={advisor.image}
+                          alt={advisor.person}
+                          width={advisor.imageWidth || 1536}
+                          height={advisor.imageHeight || 1024}
+                          sizes="(min-width: 1280px) 1180px, 94vw"
+                          className="h-auto w-full"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid gap-6 p-6 sm:p-8 lg:grid-cols-[1fr_auto] lg:items-end">
+                      <div>
+                        <h4 className="font-display text-[28px] font-extrabold leading-tight text-[var(--text-strong)] tracking-normal">
+                          {advisor.name}
+                        </h4>
+                        <p className="mt-3 max-w-4xl text-[17px] leading-[1.75] text-[var(--text-medium)]">{advisor.summary}</p>
+                        <div className="mt-6 grid gap-3 sm:grid-cols-3">
+                          {advisor.highlights.map((item) => (
+                            <div
+                              key={item}
+                              className="flex min-h-[72px] items-center gap-3 rounded-xl border border-[var(--border)] bg-[var(--surface-subtle)] px-4 py-3"
+                            >
+                              <Icon className="h-5 w-5 shrink-0" style={{ color: advisor.color }} strokeWidth={2.35} />
+                              <span className="text-[14px] font-bold leading-snug text-[var(--text-strong)]">{item}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                      <Link
+                        href="/auth/register"
+                        className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl px-5 py-3 text-[14px] font-bold text-white shadow-soft transition-transform hover:-translate-y-0.5"
+                        style={{ background: advisor.color }}
+                      >
+                        Entrar al asesor <ArrowRight className="h-4 w-4" strokeWidth={2.4} />
+                      </Link>
+                    </div>
+                  </article>
+                </RevealItem>
+              );
+            }
+
             return (
               <RevealItem key={advisor.name} delay={i * 60}>
-                <article className="bento-card group overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface)] h-full">
-                  <div className="relative aspect-[4/5] overflow-hidden">
-                    <Image
-                      src={advisor.image}
-                      alt=""
-                      fill
-                      sizes="(min-width: 1024px) 20vw, (min-width: 768px) 50vw, 100vw"
-                      className="object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
+                <article className="bento-card group grid min-h-[560px] overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface)] lg:grid-cols-[minmax(520px,0.92fr)_1fr]">
+                  <div className={`relative min-h-[420px] overflow-hidden lg:min-h-full ${advisor.profileImage ? 'bg-[#f8f5ef]' : ''}`}>
+                    <div className="absolute inset-0 p-4 sm:p-6">
+                      <div className="relative h-full w-full overflow-hidden rounded-xl bg-[var(--surface-subtle)]">
+                        <Image
+                          src={advisor.image}
+                          alt={advisor.person}
+                          fill
+                          sizes="(min-width: 1024px) 52vw, 100vw"
+                          className={`transition-transform duration-700 group-hover:scale-[1.015] ${
+                            advisor.profileImage ? 'object-contain' : 'object-cover'
+                          }`}
+                          style={{ objectPosition: advisor.imagePosition }}
+                        />
+                      </div>
+                    </div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-[rgba(31,46,61,0.7)] via-transparent to-transparent pointer-events-none" />
                     <div
-                      className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t mix-blend-multiply opacity-90"
-                      style={{ background: `linear-gradient(to top, ${advisor.color}, transparent 70%)` }}
-                    />
-                    <div
-                      className="absolute left-4 top-4 flex h-10 w-10 items-center justify-center rounded-xl border border-white/30 bg-white/15 backdrop-blur-md text-white"
+                      className="absolute left-6 top-6 flex h-11 w-11 items-center justify-center rounded-xl border border-white/30 bg-white/15 backdrop-blur-md text-white"
                       aria-hidden="true"
                     >
                       <Icon className="h-5 w-5" strokeWidth={2.2} />
                     </div>
+                    <div className="absolute bottom-7 left-7 right-7">
+                      <p className="font-display text-[clamp(25px,3vw,34px)] font-extrabold leading-tight text-white tracking-normal">{advisor.person}</p>
+                      <p className="mt-2 max-w-[34rem] text-[13px] font-semibold uppercase tracking-[0.08em] text-white/82">{advisor.credentials}</p>
+                    </div>
                   </div>
-                  <div className="p-5">
-                    <p className="font-display text-[10.5px] font-bold uppercase tracking-[0.08em]" style={{ color: advisor.color }}>
-                      {advisor.title}
-                    </p>
-                    <h3 className="mt-1 font-display text-[18px] font-bold text-[var(--text-strong)] tracking-tight">{advisor.name}</h3>
-                    <p className="mt-2 text-[13px] leading-relaxed text-[var(--text-medium)]">{advisor.copy}</p>
+                  <div className="flex min-h-full flex-col p-8 sm:p-10 lg:p-12">
+                    <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                      <div>
+                        <p className="font-display text-[11px] font-bold uppercase tracking-[0.08em]" style={{ color: advisor.color }}>
+                          {advisor.title}
+                        </p>
+                        <h3 className="mt-2 font-display text-[clamp(34px,5vw,56px)] font-extrabold leading-[1.02] text-[var(--text-strong)] tracking-normal">
+                          {advisor.name}
+                        </h3>
+                        <p className="mt-3 text-[16px] font-semibold leading-relaxed text-[var(--text-medium)]">{advisor.credentials}</p>
+                      </div>
+                      <span
+                        className="inline-flex w-fit items-center gap-2 rounded-full px-3.5 py-2 text-[12.5px] font-bold"
+                        style={{
+                          background: `color-mix(in srgb, ${advisor.color} 11%, var(--surface-subtle))`,
+                          color: advisor.color,
+                        }}
+                      >
+                        <ShieldCheck className="h-4 w-4" strokeWidth={2.4} />
+                        {advisor.trust}
+                      </span>
+                    </div>
+
+                    <p className="mt-8 max-w-3xl text-[18px] leading-[1.75] text-[var(--text-medium)]">{advisor.summary}</p>
+
+                    <div className="mt-8 grid gap-4 sm:grid-cols-3">
+                      {advisor.highlights.map((item) => (
+                        <div
+                          key={item}
+                          className="flex min-h-[82px] items-center gap-3 rounded-xl border border-[var(--border)] bg-[var(--surface-subtle)] px-4 py-4"
+                        >
+                          <Icon className="h-5 w-5 shrink-0" style={{ color: advisor.color }} strokeWidth={2.35} />
+                          <span className="text-[14px] font-bold leading-snug text-[var(--text-strong)]">{item}</span>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="mt-auto flex flex-col gap-5 pt-10 sm:flex-row sm:items-center sm:justify-between">
+                      <p className="max-w-2xl text-[14.5px] leading-relaxed text-[var(--text-muted)]">
+                        La IA te orienta primero. Si tu consulta requiere criterio profesional o seguimiento humano, el asesor te indica el siguiente paso.
+                      </p>
+                      <Link
+                        href="/auth/register"
+                        className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl px-5 py-3 text-[14px] font-bold text-white shadow-soft transition-transform hover:-translate-y-0.5"
+                        style={{ background: advisor.color }}
+                      >
+                        Entrar al asesor <ArrowRight className="h-4 w-4" strokeWidth={2.4} />
+                      </Link>
+                    </div>
                   </div>
                 </article>
               </RevealItem>
@@ -648,7 +822,7 @@ function RevealItem({ children, delay = 0 }: { children: React.ReactNode; delay?
   return (
     <div
       ref={ref}
-      className={`reveal ${visible ? 'in-view' : ''} h-full`}
+      className={`reveal in-view ${visible ? 'in-view' : ''} h-full`}
       style={{ transitionDelay: `${Math.min(delay, 360)}ms` }}
     >
       {children}
