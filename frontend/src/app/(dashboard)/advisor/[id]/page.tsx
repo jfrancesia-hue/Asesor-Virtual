@@ -18,6 +18,7 @@ import {
   MessageCircle,
   Quote,
   Scale,
+  Send,
   ShieldCheck,
   Sparkles,
   Stethoscope,
@@ -416,6 +417,21 @@ const ADVISOR_TOOLS: Record<string, AdvisorTool[]> = {
   ],
 };
 
+const WHATSAPP_CONTACTS: Record<string, string | undefined> = {
+  legal: process.env.NEXT_PUBLIC_WHATSAPP_LEGAL,
+  health: process.env.NEXT_PUBLIC_WHATSAPP_HEALTH,
+  nutrition: process.env.NEXT_PUBLIC_WHATSAPP_NUTRITION,
+  finance: process.env.NEXT_PUBLIC_WHATSAPP_FINANCE,
+  psychology: process.env.NEXT_PUBLIC_WHATSAPP_PSYCHOLOGY,
+  home: process.env.NEXT_PUBLIC_WHATSAPP_HOME,
+};
+
+function buildWhatsAppUrl(phone: string | undefined, message: string) {
+  const cleanedPhone = phone?.replace(/[^\d]/g, '');
+  if (!cleanedPhone) return null;
+  return `https://wa.me/${cleanedPhone}?text=${encodeURIComponent(message)}`;
+}
+
 function CrisisModal({ onClose }: { onClose: () => void }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -556,6 +572,11 @@ export default function AdvisorDetailPage() {
   const tools = ADVISOR_TOOLS[id] || [];
   const Icon = profile.icon;
   const advisorColor = profile.color || advisor.color || 'var(--primary)';
+  const whatsappMessage = `Hola, quiero solicitar una consulta con ${profile.person}. Ya estoy usando MiAsesor y quiero compartir un resumen de mi caso.`;
+  const whatsappUrl = buildWhatsAppUrl(
+    WHATSAPP_CONTACTS[id] || process.env.NEXT_PUBLIC_WHATSAPP_DEFAULT,
+    whatsappMessage,
+  );
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 md:px-8 md:py-10">
@@ -677,6 +698,79 @@ export default function AdvisorDetailPage() {
                   <p className="mt-3 text-sm leading-relaxed text-[var(--text-medium)]">{profile.summary}</p>
                 </div>
               </div>
+            )}
+          </div>
+        </div>
+      </section>
+
+      <section className="mt-8 grid gap-5 lg:grid-cols-[1fr_0.88fr]">
+        <div className="rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-6 shadow-soft">
+          <div className="mb-5 flex items-center gap-3">
+            <ClipboardList className="h-5 w-5" style={{ color: advisorColor }} strokeWidth={2.2} />
+            <h2 className="font-display text-xl font-bold tracking-tight text-[var(--text-strong)]">
+              Guia inteligente de primera linea
+            </h2>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2">
+            {[
+              { title: '1. Releva datos clave', description: 'Pregunta de a una cosa: motivo, contexto, urgencia, antecedentes y objetivo.' },
+              { title: '2. Clasifica el caso', description: 'Distingue consultas simples, casos que necesitan seguimiento y situaciones de riesgo.' },
+              { title: '3. Resuelve lo orientativo', description: 'Entrega pasos claros cuando la IA puede ayudar sin reemplazar criterio profesional.' },
+              { title: '4. Prepara derivacion', description: 'Si hace falta humano, arma un resumen listo para enviar por WhatsApp o llevar a consulta.' },
+            ].map((step) => (
+              <div key={step.title} className="rounded-2xl border border-[var(--border)] bg-[var(--surface-subtle)] p-4">
+                <p className="font-display text-[14px] font-bold text-[var(--text-strong)]">{step.title}</p>
+                <p className="mt-1.5 text-[13px] leading-relaxed text-[var(--text-medium)]">{step.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-6 shadow-soft">
+          <div className="mb-5 flex items-center gap-3">
+            <MessageCircle className="h-5 w-5" style={{ color: advisorColor }} strokeWidth={2.2} />
+            <h2 className="font-display text-xl font-bold tracking-tight text-[var(--text-strong)]">
+              WhatsApp con contexto
+            </h2>
+          </div>
+          <p className="text-[14px] leading-relaxed text-[var(--text-medium)]">
+            La IA atiende primero y deja un resumen breve para que el profesional no tenga que empezar desde cero. El canal humano queda asincronico y reservado para casos que realmente lo necesitan.
+          </p>
+          <div className="mt-5 space-y-2.5">
+            {['Resumen del motivo y datos importantes', 'Prioridad sugerida antes de contactar', 'Mensaje listo para copiar o enviar'].map((item) => (
+              <div key={item} className="flex items-center gap-2 rounded-2xl bg-[var(--surface-subtle)] px-4 py-3 text-[13px] font-semibold text-[var(--text-medium)]">
+                <ShieldCheck className="h-4 w-4 shrink-0" style={{ color: advisorColor }} strokeWidth={2.2} />
+                {item}
+              </div>
+            ))}
+          </div>
+          <div className="mt-6 grid gap-3">
+            <Button size="lg" onClick={openHumanConsultation} className="justify-between">
+              <span className="inline-flex items-center gap-2">
+                <ClipboardList className="h-4 w-4" strokeWidth={2.4} />
+                Preparar resumen
+              </span>
+              <ArrowRight className="h-4 w-4" strokeWidth={2.4} />
+            </Button>
+            {whatsappUrl ? (
+              <a
+                href={whatsappUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center justify-center gap-2 rounded-2xl border border-[var(--border)] bg-[var(--surface-subtle)] px-5 py-3 text-sm font-semibold text-[var(--text-strong)] transition-all hover:border-[var(--border-strong)] hover:bg-[var(--surface)]"
+              >
+                <Send className="h-4 w-4" strokeWidth={2.4} />
+                Abrir WhatsApp
+              </a>
+            ) : (
+              <button
+                type="button"
+                onClick={openHumanConsultation}
+                className="inline-flex items-center justify-center gap-2 rounded-2xl border border-[var(--border)] bg-[var(--surface-subtle)] px-5 py-3 text-sm font-semibold text-[var(--text-strong)] transition-all hover:border-[var(--border-strong)] hover:bg-[var(--surface)]"
+              >
+                <Send className="h-4 w-4" strokeWidth={2.4} />
+                Preparar mensaje WhatsApp
+              </button>
             )}
           </div>
         </div>
