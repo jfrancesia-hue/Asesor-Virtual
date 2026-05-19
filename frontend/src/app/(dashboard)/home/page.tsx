@@ -30,12 +30,13 @@ const HOME_BACKGROUND_IMAGE =
 const ADVISOR_VISUALS: Record<string, string> = {
   legal: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=280&h=280&fit=crop&auto=format&q=80',
   health: '/advisors/maria-belen-acosta.jpeg',
+  nutrition: '/advisors/ana-sofia-rosalia-valdiviezo-portrait.jpeg',
   finance: '/advisors/fernando-martinis.jpeg',
   psychology: '/advisors/luciana-francesia.jpeg',
   home: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=280&h=280&fit=crop&auto=format&q=80',
 };
 
-const ADVISOR_PROFILE_ORDER = ['psychology', 'health', 'finance', 'home', 'legal'];
+const ADVISOR_PROFILE_ORDER = ['psychology', 'health', 'nutrition', 'finance', 'home', 'legal'];
 
 const ADVISOR_PROFILE_DETAILS: Record<string, {
   brand: string;
@@ -70,6 +71,17 @@ const ADVISOR_PROFILE_DETAILS: Record<string, {
     trust: 'Especialista en Medicina Familiar',
     badges: ['Atencion integral', 'Prevencion', 'Escucha activa'],
     services: ['Consultas generales', 'Habitos saludables', 'Salud familiar'],
+  },
+  nutrition: {
+    brand: 'Nutricion Clara',
+    professional: 'Ana Sofía Rosalía Valdiviezo',
+    credentials: 'Licenciada en Nutricion | Mat. Salta 851 · Jujuy 240',
+    focus: 'Nutricion integral, alimentacion consciente, habitos reales y enfoque no peso centrista.',
+    summary:
+      'Acompana a mejorar la relacion con la alimentacion desde un enfoque integral, real y consciente, adaptado al estilo de vida y necesidades de cada persona.',
+    trust: 'Licenciada en Nutricion',
+    badges: ['No peso centrista', 'Alimentacion consciente', 'Ciencia y empatia'],
+    services: ['Salud digestiva', 'Embarazo y lactancia', 'Nutricion deportiva'],
   },
   finance: {
     brand: 'Finanzas Claras',
@@ -116,6 +128,7 @@ const CONTRACT_VISUALS: Record<string, string> = {
 const ADVISORS_FALLBACK = [
   { id: 'legal', name: 'Asesor Legal', title: 'Experto en Derecho LATAM', description: 'Contratos, análisis jurídico y consultas legales para Argentina, México y Colombia.', icon: '⚖️', color: 'var(--primary)', available: true },
   { id: 'health', name: 'Asesor de Salud', title: 'Orientación en Salud', description: 'Síntomas, nutrición, prevención y bienestar general.', icon: '🏥', color: 'var(--accent)', available: true },
+  { id: 'nutrition', name: 'Ana Sofía Nutrición', title: 'Licenciada en Nutricion Integral', description: 'Alimentacion consciente, habitos reales y educacion nutricional.', icon: '🥗', color: '#2F9E44', available: true },
   { id: 'finance', name: 'Asesor Financiero', title: 'Finanzas Personales LATAM', description: 'Presupuesto, inversiones, deudas e impuestos.', icon: '💰', color: 'var(--cta)', available: true },
   { id: 'psychology', name: 'Asesor de Bienestar', title: 'Apoyo Emocional', description: 'Escucha empática, ansiedad y mindfulness.', icon: '💜', color: 'var(--brand-lavender)', available: true },
   { id: 'home', name: 'Asesor del Hogar', title: 'Mantenimiento del Hogar', description: 'Plomería, electricidad básica, pintura y jardinería.', icon: '🏠', color: 'var(--cta-light)', available: true },
@@ -205,7 +218,7 @@ export default function HomePage() {
               const profile = ADVISOR_PROFILE_DETAILS[advisor.id];
               const visual = ADVISOR_VISUALS[advisor.id] || ADVISOR_VISUALS.legal;
               const cardColor = advisor.color || 'var(--primary)';
-              const isFullProfile = ['psychology', 'health', 'finance'].includes(advisor.id);
+              const isFullProfile = ['psychology', 'health', 'nutrition', 'finance'].includes(advisor.id);
 
               return (
                 <button
@@ -233,9 +246,11 @@ export default function HomePage() {
                               ? 'object-left'
                               : advisor.id === 'health'
                                 ? 'object-[58%_18%]'
-                                : advisor.id === 'finance'
-                                  ? 'object-[54%_12%]'
-                                : 'object-center'
+                                : advisor.id === 'nutrition'
+                                  ? 'object-[50%_42%]'
+                                  : advisor.id === 'finance'
+                                    ? 'object-[54%_12%]'
+                                    : 'object-center'
                           }`}
                         />
                       </div>

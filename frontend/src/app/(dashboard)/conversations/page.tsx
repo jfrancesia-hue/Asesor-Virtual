@@ -10,6 +10,7 @@ import { clsx } from 'clsx';
 const ADVISOR_META: Record<string, { icon: string; color: string; label: string }> = {
   legal:      { icon: '⚖️', color: 'var(--primary)', label: 'Legal' },
   health:     { icon: '🏥', color: 'var(--accent)', label: 'Salud' },
+  nutrition:  { icon: '🥗', color: '#2F9E44', label: 'Nutricion' },
   finance:    { icon: '💰', color: 'var(--cta)', label: 'Finanzas' },
   psychology: { icon: '💜', color: 'var(--brand-lavender)', label: 'Bienestar' },
   home:       { icon: '🏠', color: 'var(--cta-light)', label: 'Hogar' },

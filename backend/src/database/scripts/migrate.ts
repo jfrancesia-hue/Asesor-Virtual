@@ -18,6 +18,7 @@ const MIGRATION_ORDER = [
   '009_enable_rls.sql',
   '010_fix_function_search_path.sql',
   '011_add_missing_fk_indexes.sql',
+  '012_add_nutrition_advisor.sql',
 ];
 
 async function migrate() {

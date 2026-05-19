@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import {
   ArrowRight,
+  Apple,
   BadgeCheck,
   Brain,
   BriefcaseBusiness,
@@ -55,6 +56,23 @@ const advisors = [
     profileImage: true,
     imageWidth: 1024,
     imageHeight: 1536,
+  },
+  {
+    name: 'Nutricion',
+    title: 'Nutricion Clara',
+    person: 'Ana Sofía Rosalía Valdiviezo',
+    credentials: 'Licenciada en Nutricion | Mat. Salta 851 · Jujuy 240',
+    icon: Apple,
+    color: '#2F9E44',
+    trust: 'Especialista en Nutricion Integral',
+    highlights: ['No peso centrista', 'Habitos reales', 'Ciencia y empatia'],
+    summary: 'Licenciada en Nutricion recibida en la Universidad Nacional de Salta. Acompana a mejorar la relacion con la alimentacion desde una mirada integral, consciente y adaptada a cada etapa de la vida.',
+    copy: 'Alimentacion consciente, habitos reales y acompanamiento nutricional sin dietas extremas.',
+    image: '/advisors/ana-sofia-rosalia-valdiviezo-portrait.jpeg',
+    imagePosition: 'center',
+    profileImage: true,
+    imageWidth: 485,
+    imageHeight: 555,
   },
   {
     name: 'Finanzas',
@@ -108,7 +126,7 @@ const advisors = [
   },
 ];
 
-const advisorDisplayOrder = ['Bienestar', 'Salud', 'Finanzas', 'Hogar', 'Legal'];
+const advisorDisplayOrder = ['Bienestar', 'Salud', 'Nutricion', 'Finanzas', 'Hogar', 'Legal'];
 
 const flow = [
   {
@@ -169,7 +187,7 @@ const faqs = [
 ];
 
 const metrics = [
-  ['5', 'asesores IA en uno'],
+  ['6', 'asesores IA en uno'],
   ['24/7', 'respuesta inmediata'],
   ['LATAM', 'criterio regional'],
   ['AES-256', 'datos cifrados'],
@@ -268,7 +286,7 @@ function Hero() {
           </h1>
 
           <p className="mt-6 max-w-2xl text-[17px] leading-[1.65] text-[var(--text-medium)]">
-            Salud, bienestar, finanzas, hogar y legal en un solo lugar. Primero te orienta una IA preparada para cada area; cuando hace falta, el camino sigue con un profesional humano.
+            Salud, nutricion, bienestar, finanzas, hogar y legal en un solo lugar. Primero te orienta una IA preparada para cada area; cuando hace falta, el camino sigue con un profesional humano.
           </p>
 
           <div className="mt-9 flex flex-col sm:flex-row gap-3">
@@ -343,7 +361,7 @@ function HeroVisual() {
                 <BadgeCheck className="h-6 w-6" strokeWidth={2.4} />
               </span>
             </div>
-            <div className="mt-5 grid grid-cols-5 gap-2">
+            <div className="mt-5 grid grid-cols-6 gap-2">
               {advisors.map((advisor) => {
                 const Icon = advisor.icon;
                 return (

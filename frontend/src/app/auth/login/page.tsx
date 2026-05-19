@@ -79,7 +79,7 @@ export default function LoginPage() {
           Ingresá a tu cuenta
         </h1>
         <p className="mt-1.5 text-sm text-[var(--text-medium)]">
-          Y volvé a charlar con tus 5 asesores.
+          Y volvé a charlar con tus 6 asesores.
         </p>
       </div>
 

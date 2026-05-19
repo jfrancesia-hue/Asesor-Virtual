@@ -1,7 +1,7 @@
 import { ShieldCheck, Sparkles, Users, Zap } from 'lucide-react';
 
 const VALUE_BULLETS = [
-  { icon: Sparkles, title: '5 asesores IA en uno', desc: 'Legal, salud, finanzas, bienestar y hogar — sin pagar cinco suscripciones.' },
+  { icon: Sparkles, title: '6 asesores IA en uno', desc: 'Legal, salud, nutricion, finanzas, bienestar y hogar — sin pagar seis suscripciones.' },
   { icon: ShieldCheck, title: 'Privacidad primero', desc: 'Tus documentos no se usan para entrenar modelos. Borrables en cualquier momento.' },
   { icon: Zap, title: 'Hecho para LATAM', desc: 'Conoce el monotributo, la Ley 27.551 y las realidades del bolsillo argentino.' },
   { icon: Users, title: '+1.000 personas', desc: 'Resolviendo dudas de contratos, salud y plata en menos de un minuto.' },
@@ -38,14 +38,14 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
 
           <div className="relative z-10 max-w-md">
             <p className="font-display text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--cta-dark)]">
-              MiAsesor · Cinco especialistas IA
+              MiAsesor · Seis especialistas IA
             </p>
             <h2 className="mt-4 font-display text-[clamp(28px,4vw,40px)] font-bold leading-[1.1] tracking-[-0.025em] text-[var(--text-strong)]">
               Asesoría que entiende{' '}
               <span className="gradient-text">tu realidad</span>.
             </h2>
             <p className="mt-4 text-[15px] leading-relaxed text-[var(--text-medium)]">
-              Una sola suscripción para resolver tus dudas legales, de salud, finanzas, bienestar y hogar. Sin agendar, sin esperar, sin que te miren mal por preguntar.
+              Una sola suscripción para resolver tus dudas legales, de salud, nutricion, finanzas, bienestar y hogar. Sin agendar, sin esperar, sin que te miren mal por preguntar.
             </p>
 
             <ul className="mt-10 space-y-5">

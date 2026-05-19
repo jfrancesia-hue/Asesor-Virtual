@@ -4,7 +4,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import {
   Home, MessageCircle, FileText, Shield, LayoutDashboard,
   Settings, LogOut, X, Menu, Bell, History,
-  ChevronDown, Scale, HeartPulse, BriefcaseBusiness, Brain, Wrench,
+  ChevronDown, Scale, HeartPulse, Apple, BriefcaseBusiness, Brain, Wrench,
 } from 'lucide-react';
 import { clsx } from 'clsx';
 import { useAuthStore, useAlertsStore } from '@/stores';
@@ -14,6 +14,7 @@ import { BrandBird } from '@/components/brand/BrandBird';
 const advisorItems = [
   { href: '/advisor/legal', icon: Scale, label: 'Legal', color: '#2E86C1' },
   { href: '/advisor/health', icon: HeartPulse, label: 'Salud', color: '#27AE60' },
+  { href: '/advisor/nutrition', icon: Apple, label: 'Nutricion', color: '#2F9E44' },
   { href: '/advisor/finance', icon: BriefcaseBusiness, label: 'Finanzas', color: '#E67E22' },
   { href: '/advisor/psychology', icon: Brain, label: 'Bienestar', color: '#A569BD' },
   { href: '/advisor/home', icon: Wrench, label: 'Hogar', color: '#F19C4C' },

@@ -116,14 +116,14 @@ describe('TuAsesor E2E Tests', () => {
   // AI — ADVISORS
   // ============================================================
   describe('AI — Advisors', () => {
-    it('GET /api/ai/advisors → returns 5 advisors with required fields', async () => {
+    it('GET /api/ai/advisors → returns 6 advisors with required fields', async () => {
       const { body } = await request(app.getHttpServer())
         .get('/api/ai/advisors')
         .set('Authorization', `Bearer ${authToken}`)
         .expect(200);
-      expect(body.data).toHaveLength(5);
+      expect(body.data).toHaveLength(6);
       expect(body.data.map((a: any) => a.id)).toEqual(
-        expect.arrayContaining(['legal', 'health', 'finance', 'psychology', 'home']),
+        expect.arrayContaining(['legal', 'health', 'nutrition', 'finance', 'psychology', 'home']),
       );
       body.data.forEach((a: any) => {
         expect(a.id).toBeDefined();

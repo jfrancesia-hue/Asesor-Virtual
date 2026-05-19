@@ -7,6 +7,8 @@ import toast from 'react-hot-toast';
 import {
   ArrowLeft,
   ArrowRight,
+  Apple,
+  BadgeCheck,
   Brain,
   CalendarCheck,
   ClipboardList,
@@ -14,6 +16,7 @@ import {
   Home,
   Landmark,
   MessageCircle,
+  Quote,
   Scale,
   ShieldCheck,
   Sparkles,
@@ -62,6 +65,9 @@ interface ProfessionalProfile {
   color: string;
   chips: string[];
   services: string[];
+  credentialsList: { title: string; description: string }[];
+  areas: { title: string; description: string }[];
+  quote: string;
   steps: { title: string; description: string }[];
   guidePrompt: string;
   humanPrompt: string;
@@ -95,6 +101,21 @@ const PROFESSIONAL_PROFILES: Record<string, ProfessionalProfile> = {
       'Psicologia aplicada al deporte',
       'Bienestar fisico y mental',
     ],
+    credentialsList: [
+      { title: 'Formacion', description: 'Licenciada en Psicologia' },
+      { title: 'Enfoque', description: 'Bienestar emocional y conciencia corporal' },
+      { title: 'Modalidad', description: 'Acompanamiento presencial y online' },
+      { title: 'Integracion corporal', description: 'Respiracion, mindfulness y Pole Terapeutico' },
+    ],
+    areas: [
+      { title: 'Ansiedad y estres', description: 'Herramientas de regulacion y respiracion consciente.' },
+      { title: 'Autoestima', description: 'Procesos de autoconocimiento y confianza personal.' },
+      { title: 'Cuerpo y emociones', description: 'Trabajo corporal integrado a la salud mental.' },
+      { title: 'Mindfulness', description: 'Practicas breves para volver al presente.' },
+      { title: 'Vinculos', description: 'Ordenar conflictos, limites y conversaciones dificiles.' },
+      { title: 'Derivacion', description: 'Preparar una consulta humana cuando hace falta.' },
+    ],
+    quote: 'El bienestar empieza cuando podes escucharte sin juicio y encontrar recursos posibles para hoy.',
     steps: [
       { title: 'Entender lo que te pasa', description: 'La guia ordena emociones, contexto, intensidad y recursos actuales.' },
       { title: 'Practicar herramientas', description: 'El agente propone respiracion, registro emocional y pautas de regulacion.' },
@@ -132,6 +153,21 @@ const PROFESSIONAL_PROFILES: Record<string, ProfessionalProfile> = {
       'Orientacion familiar',
       'Habitos saludables y calidad de vida',
     ],
+    credentialsList: [
+      { title: 'Formacion', description: 'Medica generalista' },
+      { title: 'Especialidad', description: 'Medicina Familiar' },
+      { title: 'Mirada clinica', description: 'Atencion integral, preventiva y centrada en la persona' },
+      { title: 'Modalidad', description: 'Orientacion inicial y preparacion de consulta' },
+    ],
+    areas: [
+      { title: 'Sintomas frecuentes', description: 'Ordenar motivo de consulta y senales de alarma.' },
+      { title: 'Prevencion', description: 'Controles, vacunas y habitos por etapa de vida.' },
+      { title: 'Salud familiar', description: 'Contexto, antecedentes y seguimiento integral.' },
+      { title: 'Mujer y ciclos', description: 'Preparar preguntas y datos para consulta medica.' },
+      { title: 'Adultos mayores', description: 'Controles, medicacion y calidad de vida.' },
+      { title: 'Derivacion segura', description: 'Identificar cuando conviene escalar a atencion profesional.' },
+    ],
+    quote: 'La salud se cuida mejor cuando la informacion es clara, humana y ubicada en tu contexto real.',
     steps: [
       { title: 'Ordenar la consulta', description: 'La guia pregunta sintomas, antecedentes, medicacion y senales de alarma.' },
       { title: 'Recibir orientacion', description: 'El agente ayuda con informacion clara y preparacion para la consulta.' },
@@ -141,6 +177,58 @@ const PROFESSIONAL_PROFILES: Record<string, ProfessionalProfile> = {
       'Quiero iniciar una guia personalizada de salud familiar. Haceme preguntas de a una para orientar mi consulta, detectar senales de alarma y preparar una consulta medica si hace falta.',
     humanPrompt:
       'Quiero solicitar una consulta humana con la Dra. Maria Belen Acosta. Ayudame a resumir mi motivo de consulta, sintomas, antecedentes y datos importantes.',
+  },
+  nutrition: {
+    area: 'Nutricion',
+    person: 'Ana Sofía Rosalía Valdiviezo',
+    credential: 'Licenciada en Nutricion',
+    specialty: 'Especialista en Nutricion Integral',
+    summary:
+      'Te acompana a mejorar tu relacion con la alimentacion desde un enfoque integral, real y consciente, adaptado a tu estilo de vida y tus necesidades.',
+    approach:
+      'Trabaja con una mirada no peso centrista y sin dietas, integrando alimentacion consciente, educacion alimentaria, ciencia, empatia y acompanamiento en cada etapa.',
+    trust: 'Matricula provincial: Salta 851; Jujuy 240 | Universidad Nacional de Salta | Diplomatura en Medicina del Estilo de Vida',
+    image: {
+      src: '/advisors/ana-sofia-rosalia-valdiviezo-portrait.jpeg',
+      alt: 'Perfil profesional de Ana Sofía Rosalía Valdiviezo',
+      width: 485,
+      height: 555,
+    },
+    icon: Apple,
+    color: '#2F9E44',
+    chips: ['No peso centrista', 'Alimentacion consciente', 'Habitos reales', 'Ciencia y empatia', 'Atencion personalizada'],
+    services: [
+      'Alimentacion consciente, intuitiva y real',
+      'Alimentacion para distintas edades y momentos biologicos',
+      'Patologias: diabetes, hipertension, hipotiroidismo y enfermedad renal',
+      'Nutricion deportiva',
+      'Alimentacion basada en plantas, vegetariana y vegana',
+      'Modelo no peso centrista, sin dieta',
+    ],
+    credentialsList: [
+      { title: 'Formacion', description: 'Licenciada en Nutricion, Universidad Nacional de Salta' },
+      { title: 'Matricula provincial', description: 'Salta 851; Jujuy 240' },
+      { title: 'Diplomatura', description: 'Medicina del Estilo de Vida' },
+      { title: 'Enfoque', description: 'No peso centrista, sin dietas y con educacion alimentaria' },
+    ],
+    areas: [
+      { title: 'Mujer y ciclos hormonales', description: 'Acompanamiento nutricional segun etapa y contexto.' },
+      { title: 'Salud digestiva y metabolica', description: 'Ordenar habitos, sintomas y datos para consulta.' },
+      { title: 'Embarazo y lactancia', description: 'Orientacion inicial y preparacion de preguntas.' },
+      { title: 'Enfermedades cronicas', description: 'Diabetes, hipertension, hipotiroidismo y enfermedad renal.' },
+      { title: 'Deporte y rendimiento', description: 'Habitos de energia, recuperacion y constancia.' },
+      { title: 'Alimentacion vegetal', description: 'Opciones vegetarianas, veganas y basadas en plantas.' },
+    ],
+    quote: 'La alimentacion no se trata de perfeccion, se trata de conexion, bienestar y decisiones que te hagan bien hoy y siempre.',
+    steps: [
+      { title: 'Conocer tu historia', description: 'La guia pregunta objetivo, rutina, contexto, etapas de vida y relacion actual con la comida.' },
+      { title: 'Armar cambios reales', description: 'El agente propone pequenos cambios sostenibles, sin culpa ni restricciones innecesarias.' },
+      { title: 'Preparar la consulta', description: 'Si hace falta acompanamiento humano, resume tu caso para coordinar con Ana Sofía.' },
+    ],
+    guidePrompt:
+      'Quiero iniciar una guia personalizada de nutricion. Haceme preguntas de a una para entender mi objetivo, rutina, comidas actuales, presupuesto, restricciones y si necesito derivacion profesional.',
+    humanPrompt:
+      'Quiero solicitar una consulta humana con Ana Sofía Rosalía Valdiviezo. Ayudame a resumir mi objetivo, rutina, antecedentes, restricciones y dudas principales.',
   },
   finance: {
     area: 'Finanzas',
@@ -170,6 +258,21 @@ const PROFESSIONAL_PROFILES: Record<string, ProfessionalProfile> = {
       'Presupuestos y control financiero',
       'Acompanamiento en decisiones clave',
     ],
+    credentialsList: [
+      { title: 'Formacion', description: 'Contador Publico' },
+      { title: 'Experiencia', description: 'Asesoramiento a personas, empresas e instituciones' },
+      { title: 'Gestion', description: 'Criterio contable y mirada institucional' },
+      { title: 'Enfoque', description: 'Numeros claros para decidir con mas seguridad' },
+    ],
+    areas: [
+      { title: 'Presupuesto personal', description: 'Ingresos, gastos, deudas y prioridades del mes.' },
+      { title: 'Impuestos', description: 'Monotributo, facturacion y dudas administrativas.' },
+      { title: 'Emprendedores', description: 'Costos, rentabilidad y flujo de caja.' },
+      { title: 'Deudas', description: 'Estrategias realistas para ordenar pagos.' },
+      { title: 'Metas financieras', description: 'Convertir objetivos en pasos medibles.' },
+      { title: 'Consulta contable', description: 'Preparar datos para hablar con Fernando.' },
+    ],
+    quote: 'Ordenar los numeros no es solo calcular: es recuperar claridad para tomar mejores decisiones.',
     steps: [
       { title: 'Diagnostico financiero', description: 'La guia releva ingresos, gastos, deudas, impuestos y prioridades.' },
       { title: 'Plan claro', description: 'El agente organiza acciones posibles con orden, plazos y foco realista.' },
@@ -201,6 +304,21 @@ const PROFESSIONAL_PROFILES: Record<string, ProfessionalProfile> = {
       'Derivacion a profesionales',
       'Seguimiento del caso',
     ],
+    credentialsList: [
+      { title: 'Red de apoyo', description: 'Derivacion a profesionales de Toori Servicios Ya' },
+      { title: 'Seguridad', description: 'Deteccion de riesgos de gas, electricidad, altura y estructuras' },
+      { title: 'Alcance', description: 'Orientacion inicial para mantenimiento y reparaciones menores' },
+      { title: 'Preparacion', description: 'Datos claros para pedir presupuesto o asistencia tecnica' },
+    ],
+    areas: [
+      { title: 'Plomeria', description: 'Perdidas, canillas, desagues y diagnostico inicial.' },
+      { title: 'Electricidad segura', description: 'Problemas basicos y senales para llamar a un profesional.' },
+      { title: 'Pintura y humedad', description: 'Preparacion, materiales y causas posibles.' },
+      { title: 'Mantenimiento', description: 'Checklists preventivos para evitar urgencias.' },
+      { title: 'Presupuesto', description: 'Resumen del problema para pedir cotizaciones.' },
+      { title: 'Derivacion', description: 'Cuando hace falta oficio o visita tecnica.' },
+    ],
+    quote: 'La mejor solucion empieza por entender el problema, medir el riesgo y pedir ayuda a tiempo.',
     steps: [
       { title: 'Identificar el problema', description: 'La guia pregunta ubicacion, sintomas, riesgos y urgencia.' },
       { title: 'Resolver lo simple', description: 'El agente sugiere pasos seguros cuando el caso lo permite.' },
@@ -232,6 +350,21 @@ const PROFESSIONAL_PROFILES: Record<string, ProfessionalProfile> = {
       'Organizacion de pruebas',
       'Preguntas para la consulta',
     ],
+    credentialsList: [
+      { title: 'Alcance', description: 'Orientacion legal inicial generada por IA' },
+      { title: 'Documentos', description: 'Contratos, reclamos, borradores y resumen de casos' },
+      { title: 'Jurisdiccion', description: 'Preparacion segun pais y contexto informado' },
+      { title: 'Derivacion', description: 'Resumen para validar con abogado matriculado' },
+    ],
+    areas: [
+      { title: 'Contratos', description: 'Alquiler, servicios, confidencialidad y acuerdos simples.' },
+      { title: 'Revision inicial', description: 'Detectar riesgos, ambiguedades y preguntas clave.' },
+      { title: 'Reclamos', description: 'Ordenar hechos, fechas, pruebas y proximos pasos.' },
+      { title: 'Documentos', description: 'Preparar borradores claros para revision profesional.' },
+      { title: 'Derechos', description: 'Entender opciones antes de tomar decisiones.' },
+      { title: 'Consulta legal', description: 'Armar un resumen para abogado matriculado.' },
+    ],
+    quote: 'Un caso bien ordenado permite preguntar mejor, decidir con mas calma y llegar mas preparado a una consulta profesional.',
     steps: [
       { title: 'Entender el caso', description: 'La guia releva hechos, fechas, documentos y jurisdiccion.' },
       { title: 'Ordenar opciones', description: 'El agente brinda orientacion informativa y proximos pasos.' },
@@ -256,6 +389,12 @@ const ADVISOR_TOOLS: Record<string, AdvisorTool[]> = {
     { label: 'Checklist medico', icon: 'CHK', description: 'Prepara controles, vacunas o preguntas para consulta.', action: { type: 'chat_prompt', prompt: 'Quiero preparar un checklist medico segun mi edad y situacion.' } },
     { label: 'Habitos saludables', icon: 'HAB', description: 'Arma cambios simples de descanso, alimentacion y actividad.', action: { type: 'chat_prompt', prompt: 'Necesito orientacion para mejorar mis habitos de salud.' } },
     { label: 'Consulta libre', icon: 'IA', description: 'Habla con el agente de salud.', action: { type: 'chat' } },
+  ],
+  nutrition: [
+    { label: 'Alimentacion consciente', icon: 'CON', description: 'Reconecta hambre, saciedad y disfrute de comer.', action: { type: 'chat_prompt', prompt: 'Quiero mejorar mi relacion con la comida desde la alimentacion consciente.' } },
+    { label: 'Habitos reales', icon: 'HAB', description: 'Define pequenos cambios sostenibles para tu dia a dia.', action: { type: 'chat_prompt', prompt: 'Quiero mejorar mis habitos alimentarios sin hacer una dieta extrema.' } },
+    { label: 'Areas de acompanamiento', icon: 'ARE', description: 'Orienta el motivo de consulta y datos importantes.', action: { type: 'chat_prompt', prompt: 'Quiero saber si mi caso corresponde a nutricion integral y que datos deberia llevar.' } },
+    { label: 'Consulta humana', icon: 'PRO', description: 'Prepara datos para coordinar con Ana Sofía.', action: { type: 'chat_prompt', prompt: 'Quiero preparar una consulta con Ana Sofía Rosalía Valdiviezo. Que datos deberia llevar?' } },
   ],
   finance: [
     { label: 'Mi presupuesto', icon: 'PTO', description: 'Organiza ingresos, gastos y prioridades del mes.', action: { type: 'chat_prompt', prompt: 'Quiero organizar mi presupuesto mensual. Por donde empiezo?' } },
@@ -543,6 +682,55 @@ export default function AdvisorDetailPage() {
         </div>
       </section>
 
+      <section className="mt-8 grid gap-5 lg:grid-cols-[1.05fr_0.95fr]">
+        <div className="rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-6 shadow-soft">
+          <div className="mb-5 flex items-center gap-3">
+            <BadgeCheck className="h-5 w-5" style={{ color: advisorColor }} strokeWidth={2.2} />
+            <h2 className="font-display text-xl font-bold tracking-tight text-[var(--text-strong)]">
+              Credenciales y respaldo
+            </h2>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2">
+            {profile.credentialsList.map((item) => (
+              <div key={item.title} className="rounded-2xl border border-[var(--border)] bg-[var(--surface-subtle)] p-4">
+                <p className="font-display text-[14px] font-bold text-[var(--text-strong)]">{item.title}</p>
+                <p className="mt-1.5 text-[13px] leading-relaxed text-[var(--text-medium)]">{item.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div
+          className="flex min-h-[260px] flex-col justify-between rounded-3xl p-7 text-white shadow-soft"
+          style={{ background: `linear-gradient(135deg, ${advisorColor}, color-mix(in srgb, ${advisorColor} 62%, #102B33))` }}
+        >
+          <Quote className="h-10 w-10 text-white/68" strokeWidth={1.8} />
+          <div>
+            <p className="font-display text-[clamp(24px,3vw,34px)] font-bold leading-tight tracking-normal">
+              {profile.quote}
+            </p>
+            <p className="mt-5 text-sm font-semibold text-white/78">- {profile.person}</p>
+          </div>
+        </div>
+      </section>
+
+      <section className="mt-8 rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-6 shadow-soft">
+        <div className="mb-5 flex items-center gap-3">
+          <Sparkles className="h-5 w-5" style={{ color: advisorColor }} strokeWidth={2.1} />
+          <h2 className="font-display text-xl font-bold tracking-tight text-[var(--text-strong)]">
+            Areas de acompanamiento
+          </h2>
+        </div>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {profile.areas.map((area) => (
+            <div key={area.title} className="rounded-2xl border border-[var(--border)] bg-[var(--surface-subtle)] p-4">
+              <p className="font-display text-[15px] font-bold text-[var(--text-strong)]">{area.title}</p>
+              <p className="mt-2 text-[13px] leading-relaxed text-[var(--text-medium)]">{area.description}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
       <section className="mt-8 grid gap-5 lg:grid-cols-[0.95fr_1.05fr]">
         <div className="rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-6 shadow-soft">
           <div className="mb-5 flex items-center gap-3">
@@ -619,6 +807,9 @@ export default function AdvisorDetailPage() {
         )}
         {id === 'health' && (
           <>Las respuestas son orientacion informativa generada por IA. No reemplazan la consulta con un profesional de la salud. Ante una emergencia, llama al 107, 911 o numero local.</>
+        )}
+        {id === 'nutrition' && (
+          <>Las respuestas son orientacion informativa generada por IA. No reemplazan a una nutricionista matriculada ni indicaciones medicas, especialmente ante condiciones clinicas, embarazo, medicacion o antecedentes de trastornos alimentarios.</>
         )}
         {id === 'finance' && (
           <>Las respuestas son orientacion informativa generada por IA. No reemplazan a un contador o asesor financiero matriculado para decisiones patrimoniales, tributarias o de inversion.</>

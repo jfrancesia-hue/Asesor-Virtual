@@ -72,7 +72,7 @@ CREATE INDEX idx_users_email ON users(email);
 -- ADVISORS
 -- ============================================================
 CREATE TABLE advisors (
-  id VARCHAR(50) PRIMARY KEY, -- 'legal', 'health', 'finance', 'psychology', 'home'
+  id VARCHAR(50) PRIMARY KEY, -- 'legal', 'health', 'nutrition', 'finance', 'psychology', 'home'
   name VARCHAR(100) NOT NULL,
   category VARCHAR(100) NOT NULL,
   title VARCHAR(255) NOT NULL,

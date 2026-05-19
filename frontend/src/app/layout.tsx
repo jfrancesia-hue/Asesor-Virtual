@@ -18,12 +18,12 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: { default: 'MiAsesor — Cinco especialistas IA', template: '%s | MiAsesor' },
-  description: 'Asesoría inteligente para Latinoamérica. Legal, Salud, Finanzas, Bienestar y Hogar bajo una sola suscripción.',
+  title: { default: 'MiAsesor — Seis especialistas IA', template: '%s | MiAsesor' },
+  description: 'Asesoría inteligente para Latinoamérica. Legal, Salud, Nutricion, Finanzas, Bienestar y Hogar bajo una sola suscripción.',
   keywords: ['asesor virtual', 'asesoria legal', 'inteligencia artificial', 'contratos', 'LATAM'],
   openGraph: {
     title: 'MiAsesor',
-    description: 'Cinco especialistas IA en una sola suscripción para LATAM.',
+    description: 'Seis especialistas IA en una sola suscripción para LATAM.',
     type: 'website',
   },
   applicationName: 'MiAsesor',

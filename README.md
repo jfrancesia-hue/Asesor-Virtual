@@ -1,13 +1,14 @@
 # MiAsesor
 
-Plataforma SaaS multi-asesor con IA para Latinoamérica. 5 asesores especializados bajo una sola suscripción, cobrada en pesos argentinos vía Mercado Pago.
+Plataforma SaaS multi-asesor con IA para Latinoamérica. 6 asesores especializados bajo una sola suscripción, cobrada en pesos argentinos vía Mercado Pago.
 
 ## Asesores IA
 
 | Asesor | ID | Ícono | Descripción |
 |--------|-----|-------|-------------|
 | Legal | `legal` | ⚖️ | Contratos, análisis de riesgo y consultas jurídicas para AR, MX y CO. Incluye RAG sobre legislación. |
-| Salud | `health` | 🏥 | Orientación de síntomas, nutrición, prevención y bienestar general. |
+| Salud | `health` | 🏥 | Orientación de síntomas, prevención y bienestar general. |
+| Nutricion | `nutrition` | 🥗 | Ana Sofía Rosalía Valdiviezo, Licenciada en Nutricion: alimentacion consciente, habitos reales y educacion alimentaria. |
 | Finanzas | `finance` | 💰 | Presupuesto, inversiones, deudas e impuestos adaptados a LATAM. |
 | Bienestar | `psychology` | 💜 | Escucha empática, manejo de ansiedad, ejercicios guiados y orientación emocional. |
 | Hogar | `home` | 🏠 | Plomería, electricidad básica, pintura, jardinería y mantenimiento. |
