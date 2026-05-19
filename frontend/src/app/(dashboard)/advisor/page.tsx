@@ -409,6 +409,7 @@ function AdvisorChat() {
           <span className="font-semibold text-[var(--text-strong)]">Orientación IA — </span>
           {advisorId === 'legal' && '⚖️ no somos abogados ni reemplazamos asesoramiento legal matriculado.'}
           {advisorId === 'health' && '🏥 no somos médicos ni reemplazamos la consulta con un profesional de la salud.'}
+          {advisorId === 'nutrition' && '🥗 no reemplaza a una nutricionista matriculada ni indicaciones medicas personalizadas.'}
           {advisorId === 'finance' && '💰 no somos contadores ni asesores financieros matriculados.'}
           {advisorId === 'psychology' && '💜 no reemplaza la terapia profesional. En emergencias llamá al 135 (AR) · 800-911-2000 (MX) · 106 (CO).'}
           {advisorId === 'home' && '🔧 para trabajos de gas o alta tensión consultá un profesional matriculado.'}

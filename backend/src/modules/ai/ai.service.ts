@@ -21,6 +21,7 @@ const VALID_CATEGORIES = ['abusiva', 'ambigua', 'faltante', 'ilegal', 'desbalanc
 const ADVISOR_MODELS: Record<string, string> = {
   legal: 'claude-sonnet-4-6',
   health: 'claude-haiku-4-5-20251001',
+  nutrition: 'claude-haiku-4-5-20251001',
   finance: 'claude-haiku-4-5-20251001',
   psychology: 'claude-haiku-4-5-20251001',
   home: 'claude-haiku-4-5-20251001',
@@ -117,7 +118,7 @@ export class AiService {
   // ─── Conversations ────────────────────────────────────────────────────────
 
   async createConversation(dto: CreateConversationDto, userId: string, tenantId: string) {
-    const advisorId = dto.advisorId || 'legal';
+    const advisorId = dto.advisorId || dto.advisor_id || 'legal';
 
     const { data: advisor, error: advisorError } = await this.supabase
       .from('advisors')

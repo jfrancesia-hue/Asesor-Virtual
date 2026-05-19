@@ -9,12 +9,18 @@ const PUBLIC_PATHS = [
   '/auth/reset-password',
   '/api',
 ];
+const DEV_PREVIEW_PATHS = ['/home', '/advisor'];
 
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   const isPublic = PUBLIC_PATHS.some((p) => (p === '/' ? pathname === '/' : pathname.startsWith(p)));
   if (isPublic) return NextResponse.next();
+
+  const isDevPreview =
+    process.env.NODE_ENV === 'development' &&
+    DEV_PREVIEW_PATHS.some((p) => pathname === p || pathname.startsWith(`${p}/`));
+  if (isDevPreview) return NextResponse.next();
 
   // Solo chequea presencia de la cookie httpOnly (la validez la valida el backend).
   // Si está expirada, el primer request 401 dispara refresh automático en el cliente.

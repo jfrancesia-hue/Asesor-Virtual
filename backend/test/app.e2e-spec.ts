@@ -116,14 +116,14 @@ describe('TuAsesor E2E Tests', () => {
   // AI — ADVISORS
   // ============================================================
   describe('AI — Advisors', () => {
-    it('GET /api/ai/advisors → returns 5 advisors with required fields', async () => {
+    it('GET /api/ai/advisors → returns 6 advisors with required fields', async () => {
       const { body } = await request(app.getHttpServer())
         .get('/api/ai/advisors')
         .set('Authorization', `Bearer ${authToken}`)
         .expect(200);
-      expect(body.data).toHaveLength(5);
+      expect(body.data).toHaveLength(6);
       expect(body.data.map((a: any) => a.id)).toEqual(
-        expect.arrayContaining(['legal', 'health', 'finance', 'psychology', 'home']),
+        expect.arrayContaining(['legal', 'health', 'nutrition', 'finance', 'psychology', 'home']),
       );
       body.data.forEach((a: any) => {
         expect(a.id).toBeDefined();
@@ -154,6 +154,17 @@ describe('TuAsesor E2E Tests', () => {
       expect(body.data.color).toBeDefined();
     });
 
+    it('GET /api/ai/advisors/nutrition → advisor detail', async () => {
+      const { body } = await request(app.getHttpServer())
+        .get('/api/ai/advisors/nutrition')
+        .set('Authorization', `Bearer ${authToken}`)
+        .expect(200);
+      expect(body.data.id).toBe('nutrition');
+      expect(body.data.name).toContain('Ana');
+      expect(body.data.quick_actions).toBeDefined();
+      expect(body.data.capabilities).toEqual(expect.arrayContaining(['Nutricion integral']));
+    });
+
     it('GET /api/ai/advisors/invalid → 404', async () => {
       await request(app.getHttpServer())
         .get('/api/ai/advisors/nonexistent')
@@ -181,6 +192,17 @@ describe('TuAsesor E2E Tests', () => {
         .expect(201);
       expect(body.data.advisor_id).toBe('health');
       expect(body.data.advisor.icon).toBeDefined();
+      expect(body.data.welcomeMessage).toBeDefined();
+    });
+
+    it('POST /api/ai/conversation → creates for nutrition', async () => {
+      const { body } = await request(app.getHttpServer())
+        .post('/api/ai/conversation')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({ advisorId: 'nutrition' })
+        .expect(201);
+      expect(body.data.advisor_id).toBe('nutrition');
+      expect(body.data.advisor.name).toContain('Ana');
       expect(body.data.welcomeMessage).toBeDefined();
     });
 

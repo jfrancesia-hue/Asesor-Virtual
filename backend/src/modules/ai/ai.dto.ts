@@ -13,6 +13,11 @@ export class CreateConversationDto {
   @IsString()
   advisorId?: string;
 
+  @ApiPropertyOptional({ example: 'legal', description: 'ID del asesor en formato snake_case. Default: legal' })
+  @IsOptional()
+  @IsString()
+  advisor_id?: string;
+
   @ApiPropertyOptional({ enum: ConversationType })
   @IsOptional()
   @IsEnum(ConversationType)
