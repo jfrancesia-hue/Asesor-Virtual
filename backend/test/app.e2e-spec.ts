@@ -154,6 +154,17 @@ describe('TuAsesor E2E Tests', () => {
       expect(body.data.color).toBeDefined();
     });
 
+    it('GET /api/ai/advisors/nutrition → advisor detail', async () => {
+      const { body } = await request(app.getHttpServer())
+        .get('/api/ai/advisors/nutrition')
+        .set('Authorization', `Bearer ${authToken}`)
+        .expect(200);
+      expect(body.data.id).toBe('nutrition');
+      expect(body.data.name).toContain('Ana');
+      expect(body.data.quick_actions).toBeDefined();
+      expect(body.data.capabilities).toEqual(expect.arrayContaining(['Nutricion integral']));
+    });
+
     it('GET /api/ai/advisors/invalid → 404', async () => {
       await request(app.getHttpServer())
         .get('/api/ai/advisors/nonexistent')
@@ -181,6 +192,17 @@ describe('TuAsesor E2E Tests', () => {
         .expect(201);
       expect(body.data.advisor_id).toBe('health');
       expect(body.data.advisor.icon).toBeDefined();
+      expect(body.data.welcomeMessage).toBeDefined();
+    });
+
+    it('POST /api/ai/conversation → creates for nutrition', async () => {
+      const { body } = await request(app.getHttpServer())
+        .post('/api/ai/conversation')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({ advisorId: 'nutrition' })
+        .expect(201);
+      expect(body.data.advisor_id).toBe('nutrition');
+      expect(body.data.advisor.name).toContain('Ana');
       expect(body.data.welcomeMessage).toBeDefined();
     });
 

@@ -127,7 +127,7 @@ const CONTRACT_VISUALS: Record<string, string> = {
 // Fallback si el backend no responde
 const ADVISORS_FALLBACK = [
   { id: 'legal', name: 'Asesor Legal', title: 'Experto en Derecho LATAM', description: 'Contratos, análisis jurídico y consultas legales para Argentina, México y Colombia.', icon: '⚖️', color: 'var(--primary)', available: true },
-  { id: 'health', name: 'Asesor de Salud', title: 'Orientación en Salud', description: 'Síntomas, nutrición, prevención y bienestar general.', icon: '🏥', color: 'var(--accent)', available: true },
+  { id: 'health', name: 'Asesor de Salud', title: 'Orientación en Salud', description: 'Síntomas, prevención, controles y bienestar general.', icon: '🏥', color: 'var(--accent)', available: true },
   { id: 'nutrition', name: 'Ana Sofía Nutrición', title: 'Licenciada en Nutricion Integral', description: 'Alimentacion consciente, habitos reales y educacion nutricional.', icon: '🥗', color: '#2F9E44', available: true },
   { id: 'finance', name: 'Asesor Financiero', title: 'Finanzas Personales LATAM', description: 'Presupuesto, inversiones, deudas e impuestos.', icon: '💰', color: 'var(--cta)', available: true },
   { id: 'psychology', name: 'Asesor de Bienestar', title: 'Apoyo Emocional', description: 'Escucha empática, ansiedad y mindfulness.', icon: '💜', color: 'var(--brand-lavender)', available: true },

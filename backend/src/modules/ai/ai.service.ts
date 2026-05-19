@@ -118,7 +118,7 @@ export class AiService {
   // ─── Conversations ────────────────────────────────────────────────────────
 
   async createConversation(dto: CreateConversationDto, userId: string, tenantId: string) {
-    const advisorId = dto.advisorId || 'legal';
+    const advisorId = dto.advisorId || dto.advisor_id || 'legal';
 
     const { data: advisor, error: advisorError } = await this.supabase
       .from('advisors')

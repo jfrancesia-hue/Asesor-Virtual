@@ -102,3 +102,52 @@ SET sort_order = CASE id
   ELSE sort_order
 END
 WHERE id IN ('legal', 'health', 'nutrition', 'finance', 'psychology', 'home');
+
+UPDATE advisors
+SET
+  title = 'Orientacion en Salud Familiar',
+  description = 'Sintomas, prevencion, controles y bienestar general. Orientacion profesional de salud.',
+  system_prompt = replace(
+    replace(
+      replace(
+        replace(
+          replace(
+            replace(
+              system_prompt,
+              '- Informacion sobre nutricion y alimentacion saludable' || chr(10),
+              ''
+            ),
+            '- Información sobre nutrición y alimentación saludable' || chr(10),
+            ''
+          ),
+          '- Para nutrición, usá listas organizadas por categorías',
+          '- Para habitos de salud, usa listas practicas y deriva nutricion especifica al asesor nutricional'
+        ),
+        '- Para nutricion, usa listas organizadas por categorias',
+        '- Para habitos de salud, usa listas practicas y deriva nutricion especifica al asesor nutricional'
+      ),
+      'sintomas, nutricion, prevencion y bienestar general',
+      'sintomas, prevencion, controles y bienestar general'
+    ),
+    'sintomas, nutrición, prevención y bienestar general',
+    'sintomas, prevencion, controles y bienestar general'
+  ),
+  welcome_message = replace(
+    replace(
+      welcome_message,
+      'sintomas, nutricion, prevencion y bienestar general',
+      'sintomas, prevencion, controles y bienestar general'
+    ),
+    'síntomas, nutrición, prevención y bienestar general',
+    'sintomas, prevencion, controles y bienestar general'
+  ),
+  quick_actions = '[
+    {"label": "Tengo dolor de cabeza", "prompt": "Tengo dolor de cabeza frecuente. Que podria estar causandolo?"},
+    {"label": "Chequeo preventivo", "prompt": "Quiero preparar un chequeo preventivo segun mi edad y antecedentes."},
+    {"label": "Sintomas de estres", "prompt": "Creo que tengo mucho estres. Que sintomas son normales y cuando debo preocuparme?"},
+    {"label": "Ejercicio para principiantes", "prompt": "Quiero empezar a hacer ejercicio. Por donde empiezo siendo principiante?"},
+    {"label": "Cuando ir al medico", "prompt": "Como se cuando un sintoma es grave y necesito ir al medico urgente?"}
+  ]',
+  capabilities = '["Orientacion de sintomas", "Prevencion", "Controles de salud", "Habitos saludables", "Bienestar general"]',
+  updated_at = NOW()
+WHERE id = 'health';
